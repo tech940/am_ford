@@ -133,7 +133,9 @@ export function VehicleCard({
                 ${v.price.toLocaleString()}
               </p>
               {v.msrp && v.msrp > v.price && (
-                <p className="text-xs text-slate-400 line-through">${v.msrp.toLocaleString()}</p>
+                <p className="text-xs font-semibold text-slate-600 line-through">
+                  ${v.msrp.toLocaleString()}
+                </p>
               )}
               <p className="mt-0.5 text-[11px] font-bold text-emerald-700">
                 ~${estMonthlyPayment(v.price)}/mo est.

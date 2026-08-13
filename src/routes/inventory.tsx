@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -33,10 +33,18 @@ import { breadcrumbSchema, crumbs, type Crumb } from "@/lib/breadcrumbs";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { DeliveryBanner } from "@/components/site/DeliveryBanner";
 import { InventoryInterlinks } from "@/components/site/InventoryInterlinks";
+import { FrequentSearches } from "@/components/site/FrequentSearches";
 import { SiteShell } from "@/components/site/SiteShell";
 import { LeadCaptureModal } from "@/components/site/LeadCaptureModal";
 import { VehicleCard } from "@/components/site/VehicleCard";
-import { vehicles, FILTER_OPTIONS, dealerInfo, DELIVERY_CLAIM, type Vehicle } from "@/lib/vehicles";
+import {
+  vehicles,
+  FILTER_OPTIONS,
+  FILTERABLE_CONDITIONS,
+  dealerInfo,
+  DELIVERY_CLAIM,
+  type Vehicle,
+} from "@/lib/vehicles";
 import { SectionTag } from "@/components/site/Home";
 import OfferPopup from "@/components/popups/OfferPopup";
 import { TradeValuatorModal } from "@/components/convert/TradeValuatorModal";
@@ -68,6 +76,30 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
   {
     q: `Can I trade in my current vehicle at AM Ford in ${dealerInfo.locality}?`,
     a: "Yes. AM Ford appraises trade-ins of any make or model using current market data, and your trade equity can be applied directly to any vehicle in our inventory.",
+  },
+  {
+    q: "Does AM Ford offer nationwide or home vehicle delivery?",
+    a: "Yes. AM Ford offers nationwide vehicle delivery and home delivery across Northeast Ohio and Ashtabula County. We handle documentation remotely and coordinate shipping directly to your driveway or workplace.",
+  },
+  {
+    q: "What warranties come with new Ford vehicles at AM Ford?",
+    a: "Every new Ford includes Ford's factory 3-year/36,000-mile Bumper-to-Bumper Limited Warranty and a 5-year/60,000-mile Powertrain Limited Warranty, along with 24/7 Ford Roadside Assistance.",
+  },
+  {
+    q: "Can I order a custom Ford vehicle directly from the factory?",
+    a: "Yes. If the exact trim, color, or package you want is not on our lot, AM Ford can place a factory custom order directly with Ford Motor Company or source it through our regional dealer network.",
+  },
+  {
+    q: "How does test drive booking work at AM Ford?",
+    a: "You can schedule a test drive online or by calling (440) 998-2151. We will have the vehicle prepped, cleaned, and waiting out front for your arrival.",
+  },
+  {
+    q: "Are there any hidden dealer documentation or add-on fees at AM Ford?",
+    a: "No. AM Ford practices straightforward, transparent pricing. The price quoted is the price you pay plus state tax and title fees; we do not add unexpected dealer prep or doc fees at signing.",
+  },
+  {
+    q: "What maintenance services does the AM Ford Service Center handle?",
+    a: "Our certified Ford Service Center handles oil changes, tire rotations, brake service, battery replacement, transmission service, and major recall work using genuine OEM Ford and Motorcraft parts.",
   },
 ];
 
@@ -124,7 +156,13 @@ const PRICE_FLOOR = 20000;
 const PRICE_CAP = 100000;
 const MILES_FLOOR = 0;
 const MILES_CAP = 50000;
-const PAGE_SIZE = 6;
+/**
+ * Vehicles per page. At 9, today's 6-vehicle lot is a single page, so the pager below does
+ * not render at all, which is deliberate rather than a bug. Everything downstream (the "Showing"
+ * counter, the pager, and the ItemList slice in head()) reads this constant and derives
+ * totalPages from it, so nothing has to be touched when the lot outgrows one page.
+ */
+const PAGE_SIZE = 9;
 const COMPARE_MAX = 3;
 
 /**
@@ -147,14 +185,10 @@ function parseList(value: unknown, resolve: (item: string) => string | undefined
 }
 
 /**
- * Conditions a URL is allowed to filter by.
- *
- * Vehicle["condition"] also permits "Used", and its absence here is deliberate: the lot
- * holds zero used units and the brief forbids advertising used stock, so ?condition=Used is
- * dropped by the validator rather than rendering an empty page a crawler could index. Add
- * "Used" here only alongside real used inventory, its own SEO label, and its own landing copy.
+ * Conditions a URL is allowed to filter by. Defined in @/lib/vehicles and re-exported here so
+ * the sitemap generator and this route cannot drift apart; see the note on the declaration.
  */
-export const FILTERABLE_CONDITIONS = ["New", "Certified Pre-Owned"] as const;
+export { FILTERABLE_CONDITIONS };
 type FilterableCondition = (typeof FILTERABLE_CONDITIONS)[number];
 const isFilterableCondition = (c: Vehicle["condition"] | undefined): c is FilterableCondition =>
   c !== undefined && (FILTERABLE_CONDITIONS as readonly string[]).includes(c);
@@ -333,14 +367,28 @@ const FILTER_KEYS = [
 const activeFilterKeys = (s: InventorySearch) => FILTER_KEYS.filter((k) => s[k] !== undefined);
 
 /**
- * A URL qualifies as a landing page when exactly ONE filter is active and it is
+ * `page` counts as a filter for INDEXING (it changes which vehicles a URL shows, so page 2 is
+ * never indexable), but it is not part of a page's IDENTITY. /inventory?type=Truck&page=2 is
+ * still the Ford Trucks landing page and has to keep that H1, that breadcrumb trail, that
+ * ItemList name, and that canonical; only the robots tag changes.
+ *
+ * Before this split, adding &page=2 to a landing URL silently demoted it to the generic
+ * "Vehicles for Sale" heading and canonicalled it to bare /inventory. That is invisible at
+ * six vehicles, where nothing paginates, and wrong the moment the lot outgrows one page.
+ */
+const IDENTITY_FILTER_KEYS = FILTER_KEYS.filter((k) => k !== "page");
+const activeIdentityKeys = (s: InventorySearch) =>
+  IDENTITY_FILTER_KEYS.filter((k) => s[k] !== undefined);
+
+/**
+ * A URL qualifies as a landing page when exactly ONE identity filter is active and it is
  * type, fuel, or condition. Those pages get unique titles, self-canonicals, and on-page
  * content; everything deeper is noindex,follow.
  */
 function soloFilter(
   s: InventorySearch,
 ): { kind: "type" | "fuel" | "condition"; value: string } | null {
-  if (activeFilterKeys(s).length !== 1) return null;
+  if (activeIdentityKeys(s).length !== 1) return null;
   if (s.type !== undefined) return { kind: "type", value: s.type };
   if (s.fuel !== undefined) return { kind: "fuel", value: s.fuel };
   // Guarded rather than a plain undefined check: a condition with no label (today "Used")
@@ -474,15 +522,32 @@ function buildInventorySeo(s: InventorySearch) {
   const solo = soloFilter(s);
   const activeKeys = activeFilterKeys(s);
 
+  /**
+   * Page 2 and beyond is never indexable, on a landing page or anywhere else, because it is a
+   * partial slice of a list whose page 1 is already indexed. It stays `follow` so the vehicle
+   * detail pages reachable only from a later page keep a crawl path. The canonical still points
+   * at the UNPAGINATED page for that same reason: the paginated URL is not a page in its own
+   * right, so it must not claim to be one.
+   *
+   * Note the validator refuses `page` values below 2, so ?page=1 is dropped before it gets
+   * here and can never become a second, indexable copy of the base URL.
+   */
+  const paginated = s.page !== undefined;
+  const paginatedRobots = paginated ? "noindex,follow" : undefined;
+
   if (solo?.kind === "condition" && isFilterableCondition(s.condition)) {
     const copy = CONDITION_SEO[s.condition];
     return {
       title: copy.title,
       description: copy.description,
-      // encodeURIComponent because "Certified Pre-Owned" carries a space; the canonical has
-      // to be the exact URL a crawler requested, so it must read ?condition=Certified%20Pre-Owned.
-      canonical: `https://amford.com/inventory?condition=${encodeURIComponent(s.condition)}`,
-      robots: undefined,
+      // "Certified Pre-Owned" carries a space, so the value has to be encoded. The space must
+      // come out as "+", NOT "%20": every internal link to this facet is built by the router,
+      // which serialises a query-string space as "+", so the crawler only ever requests
+      // ?condition=Certified+Pre-Owned. A "%20" canonical would point at a URL string nothing
+      // links to, stranding the facet's internal link equity on an orphan. encodeURIComponent
+      // is still the right escaper for every other character; only the space needs remapping.
+      canonical: `https://amford.com/inventory?condition=${encodeURIComponent(s.condition).replace(/%20/g, "+")}`,
+      robots: paginatedRobots,
     };
   }
 
@@ -496,7 +561,7 @@ function buildInventorySeo(s: InventorySearch) {
       title: `${label} for Sale in ${dealerInfo.city} | AM Ford`,
       description: `Shop ${conditionPhrase(matchingVehicles(s))} ${label} at AM Ford in ${dealerInfo.city}, serving Ashtabula County and Northeast Ohio. Compare pricing and specs.`,
       canonical: `https://amford.com/inventory?${param}`,
-      robots: undefined,
+      robots: paginatedRobots,
     };
   }
 
@@ -559,6 +624,30 @@ function badgeNamesFromSearch(value: string | undefined): string[] {
     .split(",")
     .map((slug) => slugToBadge(slug.trim()))
     .filter((b): b is string => b !== undefined);
+}
+
+/**
+ * Which page numbers the pager shows: always the first and last, plus `span` either side of
+ * the current one, with "gap" standing in for the stretch that is skipped.
+ *
+ * A pager that prints every page fits fine at three pages and overflows a 320px screen at
+ * eight, which is a bug that cannot be seen today because six vehicles at {@link PAGE_SIZE}
+ * per page is one page. Keeping the run bounded means the control is already correct at the
+ * point it first becomes visible.
+ */
+export function pageWindow(current: number, total: number, span = 1): (number | "gap")[] {
+  const wanted = new Set<number>([1, total]);
+  for (let p = current - span; p <= current + span; p++) {
+    if (p >= 1 && p <= total) wanted.add(p);
+  }
+  const out: (number | "gap")[] = [];
+  let previous = 0;
+  for (const p of [...wanted].sort((a, b) => a - b)) {
+    if (previous !== 0 && p - previous > 1) out.push("gap");
+    out.push(p);
+    previous = p;
+  }
+  return out;
 }
 
 /** Grid sort order. Shared by the component and by the ItemList schema in head(). */
@@ -1028,73 +1117,23 @@ export function InventoryPage() {
 
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <div className="grid items-center gap-8 lg:grid-cols-12">
-            {/* LEFT COLUMN: Clean typography directly over background with 100% vehicle visibility */}
-            <div className="lg:col-span-6">
-              <div className="flex flex-col items-start max-w-xl">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-[#002c5f]/90 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.25em] text-white shadow-md backdrop-blur-md">
-                  IN-STOCK INVENTORY
-                </span>
-                {/* The H1 carries the page's target query with crisp white drop shadow contrast */}
-                <h1 className="mt-4 text-balance text-4xl font-black text-white drop-shadow-2xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.05]">
-                  {landingLabel(search) ?? "Vehicles"} for Sale in{" "}
-                  <span className="text-white underline decoration-sky-400 decoration-wavy underline-offset-8">
-                    {dealerInfo.city}
-                  </span>
-                </h1>
-                <p className="mt-4 text-base font-medium text-white/95 drop-shadow-lg leading-relaxed">
-                  Browse real-time inventory at AM Ford in {dealerInfo.city}, serving Ashtabula
-                  County and Northeast Ohio. Compare pricing, check specs, and schedule your test
-                  drive today.
-                </p>
-
-                {/* Stats cards strip */}
-                <div className="mt-8 flex flex-wrap items-center gap-4">
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/80 bg-white/95 px-4 py-3 shadow-xl backdrop-blur-md">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#002c5f] text-white">
-                      <Car className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-extrabold text-slate-900 leading-none">
-                        {vehicles.length} Vehicles
-                      </p>
-                      <p className="mt-1 text-[11px] font-medium text-slate-600 leading-none">
-                        Available Now
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/80 bg-white/95 px-4 py-3 shadow-xl backdrop-blur-md">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white">
-                      <ShieldCheck className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-extrabold text-slate-900 leading-none">Verified</p>
-                      <p className="mt-1 text-[11px] font-medium text-slate-600 leading-none">
-                        Pre-Owned Stock
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* RIGHT COLUMN: CLEAN & VIBRANT OFFER FORM CARD */}
-            <div className="lg:col-span-6 lg:pl-4">
+            {/* CLAIM OFFER FORM CARD — Order-1 on mobile (comes first), Order-2 on desktop */}
+            <div className="order-1 lg:order-2 lg:col-span-6 lg:pl-4">
               <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
                 className="relative overflow-hidden rounded-[2.25rem] border-2 border-[#002c5f]/15 bg-white p-6 sm:p-7 shadow-2xl shadow-[#002c5f]/25"
               >
-                {/* Vibrant Deep Ford Blue Offer Header Box (No Yellow) */}
+                {/* Vibrant Deep Ford Blue Offer Header Box */}
                 <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#002c5f] via-[#003875] to-[#004085] p-5 sm:p-6 text-white shadow-md border border-[#002c5f]">
                   <div className="relative flex items-center justify-between gap-3">
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-xs font-bold text-white">
                       <Tag className="h-3.5 w-3.5 text-white" /> Exclusive Dealer Savings
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300">
-                      <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />{" "}
-                      Available today
+                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-300">
+                      <span className="h-2 w-2 animate-pulse rounded-full bg-sky-400" /> Available
+                      today
                     </span>
                   </div>
 
@@ -1205,7 +1244,7 @@ export function InventoryPage() {
                   {/* Trust row */}
                   <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[11px] font-semibold text-slate-500 pt-1">
                     <span className="inline-flex items-center gap-1.5">
-                      <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> No credit impact
+                      <ShieldCheck className="h-3.5 w-3.5 text-[#002c5f]" /> No credit impact
                     </span>
                     <span className="inline-flex items-center gap-1.5">
                       <Clock className="h-3.5 w-3.5 text-[#002c5f]" /> 30-sec response
@@ -1217,34 +1256,83 @@ export function InventoryPage() {
                 </form>
               </motion.div>
             </div>
+
+            {/* TEXT COLUMN — Order-2 on mobile (comes second below form), Order-1 on desktop (left) */}
+            <div className="order-2 lg:order-1 lg:col-span-6">
+              <div className="flex flex-col items-start max-w-xl">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-[#002c5f]/90 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.25em] text-white shadow-md backdrop-blur-md">
+                  IN-STOCK INVENTORY
+                </span>
+                <h1 className="mt-4 text-balance text-[34px] font-black text-white drop-shadow-2xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.05]">
+                  {landingLabel(search) ?? "Vehicles"} for Sale in{" "}
+                  <span className="text-white underline decoration-sky-400 decoration-wavy underline-offset-8">
+                    {dealerInfo.city}
+                  </span>
+                </h1>
+                <p className="mt-4 text-[15px] font-medium text-white/95 drop-shadow-lg leading-relaxed sm:text-base">
+                  Browse real-time inventory at AM Ford in {dealerInfo.city}, serving Ashtabula
+                  County and Northeast Ohio. Compare pricing, check specs, and schedule your test
+                  drive today.
+                </p>
+
+                {/* Stats cards strip */}
+                <div className="mt-8 flex flex-wrap items-center gap-4">
+                  <div className="flex items-center gap-3 rounded-2xl border border-white/80 bg-white/95 px-4 py-3 shadow-xl backdrop-blur-md">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#002c5f] text-white">
+                      <Car className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-extrabold text-slate-900 leading-none">
+                        {vehicles.length} Vehicles
+                      </p>
+                      <p className="mt-1 text-[11px] font-medium text-slate-600 leading-none">
+                        Available Now
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 rounded-2xl border border-white/80 bg-white/95 px-4 py-3 shadow-xl backdrop-blur-md">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#002c5f] to-[#004085] text-white">
+                      <ShieldCheck className="h-5 w-5 text-sky-300" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-extrabold text-slate-900 leading-none">Verified</p>
+                      <p className="mt-1 text-[11px] font-medium text-slate-600 leading-none">
+                        Pre-Owned Stock
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Main Sticky Control Toolbar */}
       <section className="sticky top-16 z-30 border-b border-slate-200 bg-white/90 backdrop-blur-xl sm:top-20">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-6 py-4">
-          {/* Search bar */}
-          <div className="relative min-w-[240px] flex-1">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-3 py-3 sm:px-6 sm:py-4 flex-nowrap overflow-hidden">
+          {/* Search bar — flex-1 min-w-0 */}
+          <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               value={qInput}
               onChange={(e) => setQInput(e.target.value)}
-              placeholder="Search by model (F-150, Bronco, Mustang, EV)..."
-              className="w-full rounded-full border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm font-medium text-slate-900 outline-none transition focus:border-[#002c5f] focus:ring-2 focus:ring-[#002c5f]/20 shadow-sm"
+              placeholder="Search model (F-150, Bronco)..."
+              className="w-full truncate rounded-full border border-slate-200 bg-white py-2 pl-9 pr-3 text-xs font-medium text-slate-900 outline-none transition focus:border-[#002c5f] focus:ring-2 focus:ring-[#002c5f]/20 shadow-sm sm:py-2.5 sm:pl-10 sm:pr-4 sm:text-sm"
             />
             {qInput && (
               <button
                 onClick={() => setQInput("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:text-slate-900"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:text-slate-900"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
           </div>
 
-          {/* Body Type Quick Chips */}
-          <div className="hidden flex-wrap items-center gap-1.5 md:flex">
+          {/* Body Type Quick Chips (desktop only) */}
+          <div className="hidden flex-wrap items-center gap-1.5 lg:flex">
             {FILTER_OPTIONS.types.map((t) => (
               <button
                 key={t}
@@ -1261,45 +1349,48 @@ export function InventoryPage() {
             ))}
           </div>
 
-          {/* Right Toolbar Actions */}
-          <div className="flex items-center gap-3">
-            {/* Sort Select */}
-            <div className="flex items-center gap-2">
-              <span className="hidden text-xs font-bold uppercase tracking-wider text-slate-500 lg:inline">
-                Sort:
-              </span>
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value as SortCode)}
-                className="rounded-full border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none transition focus:border-[#002c5f] shadow-sm"
-              >
-                {SORT_OPTIONS.map((s) => (
-                  <option key={s.code} value={s.code}>
-                    {s.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Primary Filter Button Trigger */}
-            <button
-              onClick={() => setDrawerOpen(true)}
-              className={cn(
-                "relative inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition-all shadow-md active:scale-95",
-                activeFilterCount > 0
-                  ? "bg-[#002c5f] text-white ring-2 ring-[#002c5f]/30"
-                  : "bg-[#002c5f] text-white hover:bg-[#001f44]",
-              )}
+          {/* Sort Select */}
+          <div className="shrink-0 flex items-center gap-1.5">
+            <label
+              htmlFor="inventory-sort-select"
+              className="hidden text-xs font-bold uppercase tracking-wider text-slate-500 lg:inline cursor-pointer"
             >
-              <SlidersHorizontal className="h-4 w-4" />
-              <span>Filters</span>
-              {activeFilterCount > 0 && (
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-[#002c5f]">
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
+              Sort:
+            </label>
+            <select
+              id="inventory-sort-select"
+              aria-label="Sort inventory"
+              value={sort}
+              onChange={(e) => setSort(e.target.value as SortCode)}
+              className="rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-bold text-slate-800 outline-none transition focus:border-[#002c5f] shadow-sm sm:px-3.5 sm:py-2.5"
+            >
+              {SORT_OPTIONS.map((s) => (
+                <option key={s.code} value={s.code}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
           </div>
+
+          {/* Primary Filter Button Trigger — Icon-only on mobile, full text on sm+ */}
+          <button
+            onClick={() => setDrawerOpen(true)}
+            className={cn(
+              "relative shrink-0 inline-flex items-center justify-center gap-1.5 rounded-full p-2.5 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-bold transition-all shadow-md active:scale-95",
+              activeFilterCount > 0
+                ? "bg-[#002c5f] text-white ring-2 ring-[#002c5f]/30"
+                : "bg-[#002c5f] text-white hover:bg-[#001f44]",
+            )}
+            aria-label="Filter vehicles"
+          >
+            <SlidersHorizontal className="h-4 w-4 shrink-0" />
+            <span className="hidden sm:inline">Filters</span>
+            {activeFilterCount > 0 && (
+              <span className="flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-white text-[10px] sm:text-xs font-bold text-[#002c5f]">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* Active Filter Pills Strip */}
@@ -1372,8 +1463,8 @@ export function InventoryPage() {
       {/* Main Vehicle Grid */}
       <section className="py-8">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-6 flex items-center justify-between text-sm">
-            <p className="text-slate-600 font-medium">
+          <div className="mb-6 flex flex-col gap-3 border-b border-slate-200/80 pb-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs sm:text-sm font-medium text-slate-600">
               {totalPages > 1 ? (
                 <>
                   Showing{" "}
@@ -1391,24 +1482,27 @@ export function InventoryPage() {
                 </>
               )}
             </p>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-nowrap items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 sm:gap-2.5">
               <button
                 onClick={() => setOfferOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3.5 py-1.5 font-bold text-amber-700 hover:bg-amber-500/20 transition"
+                className="inline-flex shrink-0 whitespace-nowrap items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-[11px] font-bold text-amber-800 shadow-sm transition hover:bg-amber-100 active:scale-95 sm:px-3 sm:py-1.5 sm:text-xs"
               >
-                <Tag className="h-3.5 w-3.5 text-amber-600" /> Claim $500 OFF
+                <Tag className="h-3 w-3 shrink-0 text-amber-600 sm:h-3.5 sm:w-3.5" />
+                <span>Claim $500 OFF</span>
               </button>
               <button
                 onClick={() => setTradeOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3.5 py-1.5 font-bold text-emerald-700 hover:bg-emerald-500/20 transition"
+                className="inline-flex shrink-0 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2 py-1 text-[11px] font-bold text-[#002c5f] shadow-sm transition hover:bg-slate-200 active:scale-95 sm:px-3 sm:py-1.5 sm:text-xs"
               >
-                <DollarSign className="h-3.5 w-3.5 text-emerald-600" /> Value Your Trade
+                <DollarSign className="h-3 w-3 shrink-0 text-[#002c5f] sm:h-3.5 sm:w-3.5" />
+                <span>Value Your Trade</span>
               </button>
               <button
                 onClick={() => setSpecialOrderOpen(true)}
-                className="inline-flex items-center gap-1.5 py-2 font-bold text-[#002c5f] hover:underline"
+                className="inline-flex shrink-0 whitespace-nowrap items-center gap-0.5 px-1.5 py-1 text-[11px] font-bold text-[#002c5f] hover:underline sm:px-2 sm:text-xs"
               >
-                Request Special Order <ChevronRight className="h-4 w-4" />
+                <span>Special Order</span>
+                <ChevronRight className="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
               </button>
             </div>
           </div>
@@ -1469,10 +1563,12 @@ export function InventoryPage() {
             </div>
           )}
 
-          {/* Pagination (only appears once inventory outgrows a single page) */}
+          {/* Pagination. Rendered only once the lot outgrows a single page, so at today's six
+              vehicles over PAGE_SIZE=9 there is no pager, no "Page 1 of 1" line, and no dead
+              Previous/Next pair. Nothing here invents a page that has no vehicles behind it. */}
           {totalPages > 1 && (
             <nav
-              className="mt-10 flex items-center justify-center gap-2"
+              className="mt-10 flex flex-wrap items-center justify-center gap-2"
               aria-label="Inventory pages"
             >
               <button
@@ -1482,21 +1578,32 @@ export function InventoryPage() {
               >
                 Previous
               </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <button
-                  key={p}
-                  onClick={() => setPage(p)}
-                  aria-current={p === currentPage ? "page" : undefined}
-                  className={cn(
-                    "h-10 w-10 rounded-full text-xs font-bold shadow-sm transition",
-                    p === currentPage
-                      ? "bg-[#002c5f] text-white"
-                      : "border border-slate-200 bg-white text-slate-700 hover:border-[#002c5f]/30",
-                  )}
-                >
-                  {p}
-                </button>
-              ))}
+              {pageWindow(currentPage, totalPages).map((entry, i) =>
+                entry === "gap" ? (
+                  <span
+                    key={`gap-${i}`}
+                    aria-hidden="true"
+                    className="grid h-10 w-6 place-items-center text-xs font-bold text-slate-400"
+                  >
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    key={entry}
+                    onClick={() => setPage(entry)}
+                    aria-label={`Page ${entry}`}
+                    aria-current={entry === currentPage ? "page" : undefined}
+                    className={cn(
+                      "h-10 w-10 rounded-full text-xs font-bold shadow-sm transition",
+                      entry === currentPage
+                        ? "bg-[#002c5f] text-white"
+                        : "border border-slate-200 bg-white text-slate-700 hover:border-[#002c5f]/30",
+                    )}
+                  >
+                    {entry}
+                  </button>
+                ),
+              )}
               <button
                 onClick={() => setPage(currentPage + 1)}
                 disabled={currentPage >= totalPages}
@@ -1511,6 +1618,8 @@ export function InventoryPage() {
           <RecentlyViewedStrip />
         </div>
       </section>
+
+      <InventoryBuyingGuide />
 
       <InventoryInterlinks activeType={search.type} activeFuel={search.fuel} />
 
@@ -1732,6 +1841,7 @@ export function InventoryPage() {
                   the structured data can never drift apart. */}
               {FAQ_ITEMS.map((faq, idx) => {
                 const isOpen = openFaq === idx;
+                const answerId = `inventory-faq-answer-${idx}`;
                 return (
                   <div
                     key={idx}
@@ -1739,6 +1849,8 @@ export function InventoryPage() {
                   >
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
+                      aria-expanded={isOpen}
+                      aria-controls={answerId}
                       className="flex w-full items-center justify-between p-5 text-left font-bold text-slate-900 transition hover:text-[#002c5f]"
                     >
                       <span className="flex items-center gap-3 text-sm sm:text-base">
@@ -1752,18 +1864,29 @@ export function InventoryPage() {
                         )}
                       />
                     </button>
-                    <AnimatePresence>
-                      {isOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="border-t border-slate-100 bg-slate-50/50 px-5 py-4 text-xs sm:text-sm text-slate-600 leading-relaxed"
-                        >
-                          {faq.a}
-                        </motion.div>
+                    {/*
+                      The answer is ALWAYS mounted and collapsed with a grid row, never
+                      conditionally rendered.
+
+                      Google honours FAQPage structured data only when the same answer text is
+                      on the page. The previous AnimatePresence version mounted the answer on
+                      click, so nine of the ten answers in the JSON-LD were simply absent from
+                      the HTML the crawler receives: identical in DevTools, invisible to a bot.
+                      Collapsing an answer that is present is fine; not shipping it is not.
+                    */}
+                    <div
+                      id={answerId}
+                      className={cn(
+                        "grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none",
+                        isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
                       )}
-                    </AnimatePresence>
+                    >
+                      <div className="overflow-hidden">
+                        <div className="border-t border-slate-100 bg-slate-50/50 px-5 py-4 text-xs leading-relaxed text-slate-600 sm:text-sm">
+                          {faq.a}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 );
               })}
@@ -1771,6 +1894,12 @@ export function InventoryPage() {
           </div>
         </div>
       </section>
+
+      {/* Frequent-searches hub. Last block before the footer on purpose: it is a dense
+          internal-link surface, so it belongs after the reading content rather than in
+          the middle of it. The "inventory" preset carries the refinement axes a listing
+          page needs (body style, price, fuel, condition, nearby). */}
+      <FrequentSearches variant="inventory" />
 
       {/* Right Slide-Out Sidebar Filter Drawer */}
       <AnimatePresence>
@@ -2325,6 +2454,393 @@ function CompareModal({ vehicles: list, onClose }: { vehicles: Vehicle[]; onClos
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/* Buying guide                                                                */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Deterministic thousands separator. `toLocaleString()` is locale-dependent and can differ
+ * between the Node render and the browser, which surfaces as a hydration mismatch in copy
+ * that has to be identical in the server HTML and on screen.
+ */
+const withCommas = (n: number) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+const money = (n: number) => `$${withCommas(n)}`;
+
+/** "a" / "a and b" / "a, b, and c". Used for both plain strings and link elements. */
+function joinPhrase(parts: ReactNode[]): ReactNode {
+  if (parts.length === 0) return null;
+  if (parts.length === 1) return parts[0];
+  return parts.map((part, i) => (
+    <span key={i}>
+      {i > 0 ? (i === parts.length - 1 ? (parts.length === 2 ? " and " : ", and ") : ", ") : null}
+      {part}
+    </span>
+  ));
+}
+
+const countWhere = (predicate: (v: Vehicle) => boolean) => vehicles.filter(predicate).length;
+const milesIn = (list: Vehicle[]) => list.map((v) => v.miles);
+
+/**
+ * Every figure the buying guide states is read from here, which is read from
+ * `src/lib/vehicles.ts`. Nothing below is a specification, a rating, an award, an inspection
+ * count, or a warranty term: only counts, listed prices, odometer readings, and model years
+ * that already exist in the vehicle records. A guide that hardcoded "six vehicles" would be
+ * wrong the first time a car sold, which is the failure mode this shape exists to prevent.
+ */
+const LOT = (() => {
+  const newVehicles = vehicles.filter((v) => v.condition === "New");
+  const prices = vehicles.map((v) => v.price);
+  const allMiles = milesIn(vehicles);
+  return {
+    total: vehicles.length,
+    newCount: newVehicles.length,
+    cpoCount: countWhere((v) => v.condition === "Certified Pre-Owned"),
+    usedCount: countWhere((v) => v.condition === "Used"),
+    priceLow: Math.min(...prices),
+    priceHigh: Math.max(...prices),
+    milesLow: Math.min(...allMiles),
+    milesHigh: Math.max(...allMiles),
+    newMilesHigh: newVehicles.length > 0 ? Math.max(...milesIn(newVehicles)) : 0,
+    years: [...new Set(vehicles.map((v) => v.year))].sort((a, b) => b - a),
+    types: (FILTER_OPTIONS.types.filter((t) => t !== "All") as Vehicle["type"][])
+      .map((type) => ({ type, count: countWhere((v) => v.type === type) }))
+      .filter((entry) => entry.count > 0),
+    fuels: (FILTER_OPTIONS.fuels.filter((f) => f !== "All") as Vehicle["fuel"][])
+      .map((fuel) => ({ fuel, count: countWhere((v) => v.fuel === fuel) }))
+      .filter((entry) => entry.count > 0),
+    drivetrains: (FILTER_OPTIONS.drivetrains.filter((d) => d !== "All") as Vehicle["drivetrain"][])
+      .map((drivetrain) => ({ drivetrain, count: countWhere((v) => v.drivetrain === drivetrain) }))
+      .filter((entry) => entry.count > 0),
+  };
+})();
+
+/** Singular and plural nouns. Exhaustive, so a new body style or fuel fails `tsc` here rather
+ * than rendering "1 undefined" into published copy. */
+const TYPE_WORDS: Record<Vehicle["type"], [string, string]> = {
+  Truck: ["truck", "trucks"],
+  SUV: ["SUV", "SUVs"],
+  Car: ["car", "cars"],
+  EV: ["electric Ford", "electric Fords"],
+};
+/** Anchor text for the body-style links. Descriptive on its own, as the brief requires, so it
+ * still says where it goes when a screen reader reads the links out of context. */
+const TYPE_LINK_TEXT: Record<Vehicle["type"], string> = {
+  Truck: "Ford trucks in stock",
+  SUV: "Ford SUVs in stock",
+  Car: "Ford cars in stock",
+  EV: "Ford EVs in stock",
+};
+const FUEL_WORDS: Record<Vehicle["fuel"], string> = {
+  Gas: "gas",
+  Hybrid: "hybrid",
+  Electric: "electric",
+};
+/** Spelled out, because "3 4WD" is a sentence nobody reads twice. */
+const DRIVE_WORDS: Record<Vehicle["drivetrain"], string> = {
+  "4WD": "four-wheel drive",
+  AWD: "all-wheel drive",
+  RWD: "rear-wheel drive",
+  FWD: "front-wheel drive",
+};
+
+const countedType = (type: Vehicle["type"], count: number) =>
+  `${count} ${TYPE_WORDS[type][count === 1 ? 0 : 1]}`;
+
+const PROSE_LINK =
+  "font-semibold text-[#002c5f] underline underline-offset-2 decoration-[#002c5f]/40 transition hover:decoration-[#002c5f]";
+
+function GuideTerm({ term, children }: { term: string; children: ReactNode }) {
+  return (
+    <div className="border-t border-slate-200 pt-5">
+      <dt className="text-sm font-bold tracking-tight text-slate-900">{term}</dt>
+      <dd className="mt-1.5 text-sm leading-relaxed text-slate-600 sm:text-[15px]">{children}</dd>
+    </div>
+  );
+}
+
+/**
+ * The part of this page written for a person rather than for a crawler: what a lot this size
+ * means for how you shop it, what each control does once you get past its label, what the two
+ * condition words are actually promising, and what a form submission sets in motion.
+ *
+ * Server-rendered with no effect gating, no counters that start at zero, and no claim that is
+ * not already sitting in the data modules this file imports.
+ */
+function InventoryBuyingGuide() {
+  const rwd = vehicles.filter((v) => v.drivetrain === "RWD");
+  const hasHybrid = vehicles.some((v) => v.fuel === "Hybrid");
+  const electric = vehicles.filter((v) => v.fuel === "Electric");
+  const hasElectric = electric.length > 0;
+
+  /**
+   * `type=EV` and `fuel=Electric` are two separate controls, and on a lot this small they can
+   * resolve to exactly the same cars, which looks like a bug to anyone clicking both. Say so
+   * when it is true, and say nothing when it stops being true, rather than asserting either
+   * from memory.
+   */
+  const evByType = vehicles.filter((v) => v.type === "EV").map((v) => v.id);
+  const evOverlapsElectric =
+    evByType.length > 0 &&
+    evByType.length === electric.length &&
+    evByType.every((id) => electric.some((v) => v.id === id));
+  const closedDays = dealerInfo.hours
+    .filter((h) => h.time.toLowerCase() === "closed")
+    .map((h) => h.day);
+
+  const typeLinks = LOT.types.map(({ type }) => (
+    <Link key={type} to="/inventory" search={{ type }} className={PROSE_LINK}>
+      {TYPE_LINK_TEXT[type]}
+    </Link>
+  ));
+
+  return (
+    <section className="border-t border-slate-200 bg-white py-16 sm:py-20">
+      <div className="mx-auto max-w-3xl px-5 sm:px-6">
+        <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
+          How this page works
+        </p>
+        <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          How to shop this lot
+        </h2>
+
+        <p className="mt-5 text-base leading-relaxed text-slate-600 sm:text-lg">
+          AM Ford lists {LOT.total} vehicles today, and this page shows up to {PAGE_SIZE} of them at
+          a time. That is short enough to read end to end before you narrow anything down, and
+          reading it first is worth the few minutes. On a national listing site, filters exist to
+          cut an unreadable list into a readable one. On a lot this size they do something more
+          useful: each control answers one question about vehicles you can already see all of, so
+          you can use them to test an idea rather than to survive the volume.
+        </p>
+        <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+          Every vehicle here is a Ford, and the split is {LOT.newCount} new alongside {LOT.cpoCount}{" "}
+          certified pre-owned. Listed prices run from {money(LOT.priceLow)} to{" "}
+          {money(LOT.priceHigh)}, across model {LOT.years.length === 1 ? "year" : "years"}{" "}
+          {joinPhrase(LOT.years.map(String))}. No filter or link on this page leads to a search this
+          lot cannot answer, so wherever a control exists, there is at least one vehicle standing
+          behind it.
+        </p>
+
+        <h3 className="mt-12 text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+          What the filters actually mean here
+        </h3>
+        <dl className="mt-6 space-y-5">
+          <GuideTerm term="Body style">
+            The lot holds {joinPhrase(LOT.types.map(({ type, count }) => countedType(type, count)))}
+            . Body style is the fastest first cut because it tracks how a vehicle is used rather
+            than how it is badged: an open bed carries loads you would not want inside the cabin, a
+            closed cargo area keeps the weather off, and a car sits lower and turns in sharper than
+            either. Go straight to the {joinPhrase(typeLinks)}.
+          </GuideTerm>
+
+          <GuideTerm term="Drivetrain">
+            Currently{" "}
+            {joinPhrase(
+              LOT.drivetrains.map(({ drivetrain, count }) => `${count} ${DRIVE_WORDS[drivetrain]}`),
+            )}
+            . From November through March this is the filter that earns its keep here. Four-wheel
+            drive is selected when traction runs out and is the usual answer for a vehicle that has
+            to pull out of a soft field or an unplowed drive. All-wheel drive works without being
+            asked for it, which suits road driving in lake-effect snow.{" "}
+            {rwd.length > 0
+              ? `Rear-wheel drive, today the ${joinPhraseText(rwd.map((v) => v.model))}, is workable here year round provided you budget for a winter tire set.`
+              : null}{" "}
+            Drivetrain sits in the filter drawer rather than in the link lists, because it narrows
+            the list without changing what kind of vehicle you are shopping for.
+          </GuideTerm>
+
+          <GuideTerm term="Fuel">
+            Today that is{" "}
+            {joinPhrase(LOT.fuels.map(({ fuel, count }) => `${count} ${FUEL_WORDS[fuel]}`))}. Gas is
+            the simplest to live with because you refuel wherever you already stop.
+            {hasHybrid ? (
+              <>
+                {" "}
+                A{" "}
+                <Link to="/inventory" search={{ fuel: "Hybrid" }} className={PROSE_LINK}>
+                  hybrid Ford
+                </Link>{" "}
+                is charged by its own engine and by braking rather than by a plug, so the benefit
+                lands in the stop and start driving around town rather than on the highway run to
+                Cleveland or Erie.
+              </>
+            ) : null}
+            {hasElectric ? (
+              <>
+                {" "}
+                An{" "}
+                <Link to="/inventory" search={{ fuel: "Electric" }} className={PROSE_LINK}>
+                  electric Ford
+                </Link>{" "}
+                is charged where you park, so the question to settle before you buy is less about
+                range than about whether a charger can go where you sleep. Ask us about that before
+                you commit rather than after.
+              </>
+            ) : null}{" "}
+            If you are weighing one against the other, read{" "}
+            <Link to="/compare/f-150-vs-f-150-lightning" className={PROSE_LINK}>
+              the F-150 compared with the F-150 Lightning
+            </Link>{" "}
+            and{" "}
+            <Link to="/compare/explorer-vs-escape" className={PROSE_LINK}>
+              the Explorer compared with the Escape
+            </Link>
+            .
+            {evOverlapsElectric
+              ? ` One thing worth knowing before you click both: the EV body style and the electric fuel filter are separate controls that return the same ${electric.length === 1 ? "vehicle" : "vehicles"} on today's lot, so either one gets you there.`
+              : null}
+          </GuideTerm>
+
+          <GuideTerm term="Price">
+            Listed prices span {money(LOT.priceLow)} to {money(LOT.priceHigh)}, and the price
+            shortcuts on this site are cut from that real spread rather than from round numbers, so
+            each band has stock behind it. The slider filters the listed price of the vehicle. It
+            knows nothing about your trade, your down payment, sales tax, or title fees, which is
+            why the figure you finance is worked out with the finance team and not on this page. No
+            rate and no monthly payment is published anywhere on this site, because the terms depend
+            on the lender and on your application rather than on the car. To turn a listed price
+            into a real number, you can{" "}
+            <Link to="/financing" className={PROSE_LINK}>
+              start a Ford finance application
+            </Link>
+            ,{" "}
+            <Link to="/trade-in" className={PROSE_LINK}>
+              have your current vehicle appraised
+            </Link>
+            , or read{" "}
+            <Link to="/finance/bad-credit" className={PROSE_LINK}>
+              how financing works when your credit needs rebuilding
+            </Link>
+            .
+          </GuideTerm>
+
+          <GuideTerm term="Mileage">
+            Odometer readings across the lot run from {withCommas(LOT.milesLow)} to{" "}
+            {withCommas(LOT.milesHigh)} miles. The mileage slider is the quickest way to separate
+            delivery miles from real use.
+            {LOT.newCount > 0
+              ? ` The ${LOT.newCount} new vehicles here read ${withCommas(LOT.newMilesHigh)} miles or fewer, which is transport and lot movement rather than driving.`
+              : null}
+          </GuideTerm>
+        </dl>
+
+        <h3 className="mt-12 text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+          What the condition labels mean
+        </h3>
+        <dl className="mt-6 space-y-5">
+          <GuideTerm term={`New (${LOT.newCount} of ${LOT.total})`}>
+            You are the first name on the title, the equipment is whatever the current model year
+            carries, and the odometer reads delivery miles rather than someone else's commute.{" "}
+            <Link to="/inventory" search={{ condition: "New" }} className={PROSE_LINK}>
+              Browse the new Fords in stock
+            </Link>
+            .
+          </GuideTerm>
+
+          <GuideTerm term={`Certified Pre-Owned (${LOT.cpoCount} of ${LOT.total})`}>
+            Certification is the entire difference between a certified pre-owned Ford and an
+            ordinary second-hand car. Ford, not the dealership, decides which vehicles are eligible,
+            defines the inspection a technician has to complete, and requires the vehicle history to
+            be reviewed before anything can be listed as certified. What the coverage includes is
+            set by that program and documented for the individual vehicle, so ask us for the
+            paperwork on the exact unit you are considering and read it before you sign. We do not
+            print a figure or a term for it on this page, because the document that governs it
+            travels with the car.{" "}
+            <Link
+              to="/inventory"
+              search={{ condition: "Certified Pre-Owned" }}
+              className={PROSE_LINK}
+            >
+              Browse the certified pre-owned Fords in stock
+            </Link>
+            .
+          </GuideTerm>
+
+          {LOT.usedCount === 0 ? (
+            <GuideTerm term="Used (none on the lot)">
+              There is no used option in the condition filter, and that is not an oversight. The lot
+              holds no used vehicles at all right now, so a used search here would hand you an empty
+              page. Everything listed is new or certified pre-owned. If an ordinary used Ford is
+              specifically what you are after,{" "}
+              <Link to="/contact" className={PROSE_LINK}>
+                tell us what you are looking for
+              </Link>{" "}
+              and we will be straight with you about whether we have it.
+            </GuideTerm>
+          ) : null}
+        </dl>
+
+        <h3 className="mt-12 text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+          What happens after you enquire
+        </h3>
+        <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+          Every form and every phone number on this page reaches the same sales team at{" "}
+          {dealerInfo.address}. There is one AM Ford and no branch network, so nobody hands you
+          sideways to another store.
+        </p>
+        <dl className="mt-6 space-y-5">
+          <GuideTerm term="If you asked about a specific vehicle">
+            We confirm it is still standing here, because a lot this size changes faster than a page
+            can, and we send the stock number and the VIN for that exact unit so you can run your
+            own history check instead of taking ours on trust.
+          </GuideTerm>
+          <GuideTerm term="If you have something to trade">
+            Send photographs and the mileage and we appraise it against current market data without
+            you driving in first. Any make, not only Fords.{" "}
+            <Link to="/trade-in" className={PROSE_LINK}>
+              Start a trade appraisal
+            </Link>
+            .
+          </GuideTerm>
+          <GuideTerm term="If you applied for financing">
+            The application goes to the finance team, who come back with the terms a lender will
+            write for you. Nothing is approved on this page, and no number is quoted before an
+            application exists, which is why you will not find a rate anywhere on this site.{" "}
+            <Link to="/financing" className={PROSE_LINK}>
+              Apply for Ford financing
+            </Link>
+            .
+          </GuideTerm>
+          <GuideTerm term="If you are not local">
+            {DELIVERY_CLAIM} The credit application, the trade appraisal, and the paperwork can all
+            be completed without a showroom visit, which is the point of that offer rather than a
+            footnote to it.{" "}
+            <Link to="/nationwide-vehicle-delivery" className={PROSE_LINK}>
+              How delivery and shipping work
+            </Link>
+            .
+          </GuideTerm>
+          <GuideTerm term="After you take it home">
+            Service, parts, and recall work happen at the same address you bought it from.{" "}
+            <Link to="/service" className={PROSE_LINK}>
+              Book service at the {dealerInfo.locality} shop
+            </Link>
+            .
+          </GuideTerm>
+        </dl>
+
+        <p className="mt-8 text-sm leading-relaxed text-slate-500">
+          {closedDays.length > 0
+            ? `The showroom is closed on ${joinPhraseText(closedDays)}. Any other day, `
+            : "Any day we are open, "}
+          <a href={dealerInfo.phoneHref} className={PROSE_LINK}>
+            {dealerInfo.phone}
+          </a>{" "}
+          reaches the sales desk directly.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/** Plain-text sibling of joinPhrase, for strings interpolated inside a template literal. */
+function joinPhraseText(parts: string[]): string {
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0];
+  if (parts.length === 2) return `${parts[0]} and ${parts[1]}`;
+  return `${parts.slice(0, -1).join(", ")}, and ${parts[parts.length - 1]}`;
+}
+
 /** "Your garage" — saved cars with a still-available nudge. */
 function SavedCarsStrip() {
   const [ids, setIds] = useState<string[]>([]);
@@ -2348,7 +2864,7 @@ function SavedCarsStrip() {
         <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
           Your garage
         </p>
-        <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-200">
+        <span className="rounded-full bg-[#002c5f]/10 px-2.5 py-0.5 text-[11px] font-bold text-[#002c5f] ring-1 ring-[#002c5f]/20">
           Still available
         </span>
       </div>

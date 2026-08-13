@@ -34,11 +34,23 @@ export type Vehicle = {
   stockNumber?: string;
   /** New / used / certified status — the brief requires this to be explicit. */
   condition: "New" | "Used" | "Certified Pre-Owned";
+  /**
+   * Free-text notes about this specific unit, written the way a salesperson would describe
+   * it in person. The dealership can rewrite these at any time.
+   *
+   * Everything here must be derivable from the record above: trim, condition, odometer,
+   * drivetrain, colours, and the `features` list. Do NOT write ownership history, accident
+   * history, service history, inspection results, or warranty terms. None of that is in the
+   * data, and the brief treats an unverifiable claim as unpublishable.
+   */
+  sellerNotes?: string;
 };
 
 export const vehicles: Vehicle[] = [
   {
     id: "f150-platinum-2025",
+    sellerNotes:
+      "Platinum sits at the top of the F-150 range, so this one already carries the equipment most buyers otherwise add a piece at a time. Heated and cooled front seats, a 360 degree camera that earns its keep in a tight yard or backing to a trailer, and BlueCruise for hands-free highway miles. Pro Power Onboard turns the bed into a generator on a job site or during an outage. Four-wheel drive, delivery miles only.",
     condition: "New",
     make: "Ford",
     model: "F-150",
@@ -67,6 +79,8 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: "mustang-gt-2025",
+    sellerNotes:
+      "The GT Premium is the V8 car. Brembo brakes and MagneRide suspension are the parts that matter once the road stops being straight, and the Recaro seats hold you in place while they work. Active exhaust keeps it civil leaving the neighborhood. It is rear-wheel drive, so if this is a year-round car here, budget for a proper winter tire set and it will surprise you.",
     condition: "New",
     make: "Ford",
     model: "Mustang",
@@ -95,6 +109,8 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: "explorer-st-2025",
+    sellerNotes:
+      "ST is the performance version of the Explorer, built around the 3.0L EcoBoost V6 with all-wheel drive underneath. The useful part is that nothing practical was given up for it: three rows are still here, and so is the tow package. Adaptive cruise and the B&O system make the long drives easier. Agate Black over Ebony leather.",
     condition: "New",
     make: "Ford",
     model: "Explorer",
@@ -122,6 +138,8 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: "f150-lightning-2025",
+    sellerNotes:
+      "The electric F-150, in Lariat trim with the extended range battery. Pro Power Onboard runs at 9.6kW on this one, which is enough for tools on site or key circuits at home when the power goes out. The frunk is a genuinely usable lockable, drainable box rather than a novelty. Worth a conversation about charging before you commit, and we are happy to walk through what your driveway would need.",
     condition: "New",
     make: "Ford",
     model: "F-150 Lightning",
@@ -149,6 +167,8 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: "bronco-outer-banks-2025",
+    sellerNotes:
+      "Outer Banks pairs the Bronco off-road hardware with the more finished interior, so it works as a daily vehicle rather than only a weekend one. The roof and doors come off, G.O.A.T. modes and Trail Control handle the rough stuff, and the locking differential is there for when traction genuinely runs out. Heated seats for February.",
     condition: "New",
     make: "Ford",
     model: "Bronco",
@@ -176,6 +196,8 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: "escape-titanium-2024",
+    sellerNotes:
+      "Our certified pre-owned Escape, in Titanium trim with the hybrid powertrain and all-wheel drive. At 8,420 miles it has barely started. The hybrid suits stop-and-go driving and the short winter trips where a cold engine never fully warms up. Panoramic roof, B&O audio, adaptive cruise, and wireless charging are all fitted. Ask us for the certified pre-owned paperwork and the vehicle history report.",
     condition: "Certified Pre-Owned",
     make: "Ford",
     model: "Escape",
@@ -203,6 +225,22 @@ export const vehicles: Vehicle[] = [
     ],
   },
 ];
+
+/**
+ * Conditions a URL is allowed to filter by, and the single source of truth for that list.
+ *
+ * Vehicle["condition"] also permits "Used", and its absence here is deliberate: the lot holds
+ * zero used units and the brief forbids advertising used stock, so ?condition=Used is dropped
+ * by the inventory validator rather than rendering an empty page a crawler could index. Add
+ * "Used" here only alongside real used inventory, its own SEO label, and its own landing copy.
+ *
+ * This lives in the data module, not in the route, because BOTH the route (which gives each
+ * of these facets a self-canonical and an indexable title) and scripts/generate-sitemap.ts
+ * (which must list exactly the facets the route makes indexable) have to agree on it. They
+ * previously kept separate lists and silently drifted: the route made ?condition=... indexable
+ * while the sitemap omitted it.
+ */
+export const FILTERABLE_CONDITIONS = ["New", "Certified Pre-Owned"] as const;
 
 export const FILTER_OPTIONS = {
   types: ["All", "Truck", "SUV", "Car", "EV"] as const,

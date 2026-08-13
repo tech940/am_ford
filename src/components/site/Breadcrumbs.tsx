@@ -13,7 +13,7 @@ export function Breadcrumbs({ items, className }: { items: Crumb[]; className?: 
   if (items.length < 2) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className={className ?? "mx-auto max-w-7xl px-6 pt-6"}>
+    <nav aria-label="Breadcrumb" className={className ?? "mx-auto max-w-7xl px-6  pb-2"}>
       <ol className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-xs font-medium text-muted-foreground">
         {items.map((c, i) => {
           const last = i === items.length - 1;

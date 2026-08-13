@@ -36,23 +36,20 @@ export function HomeNav() {
       initial={{ y: -32, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 120, damping: 20, delay: 0.15 }}
-      className="fixed inset-x-0 top-0 z-50"
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/95 border-b border-slate-200/90 backdrop-blur-md shadow-md"
+          : "bg-white border-b border-slate-200/80 shadow-sm"
+      }`}
     >
-      <div
-        className={`mx-auto mt-4 flex max-w-6xl items-center justify-between rounded-full px-5 py-3.5 transition-all duration-500 sm:px-7 ${
-          scrolled
-            ? "bg-[#002c5f]/95 border border-white/25 backdrop-blur-2xl shadow-xl shadow-[#002c5f]/30 mx-4 sm:mx-auto"
-            : "bg-[#002c5f]/90 border border-white/20 backdrop-blur-xl shadow-lg shadow-[#002c5f]/20 mx-4 sm:mx-auto"
-        }`}
-      >
-        <Link
-          to="/"
-          className="inline-flex items-center rounded-2xl bg-white px-3.5 py-1.5 shadow-sm transition hover:bg-white/95 hover:scale-[1.02]"
-        >
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-7">
+        <Link to="/" className="inline-flex items-center transition hover:opacity-90">
           <img
             src="https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/Am-ford.png"
             alt="AM Ford"
-            className="h-7 sm:h-9 w-auto object-contain transition"
+            width={260}
+            height={80}
+            className="h-8 sm:h-10 w-auto object-contain transition"
           />
         </Link>
 
@@ -61,8 +58,8 @@ export function HomeNav() {
             <Link
               key={l.to}
               to={l.to}
-              className="rounded-full px-4 py-2 text-[13px] font-medium text-white/80 transition-colors duration-300 hover:text-white hover:bg-white/10"
-              activeProps={{ className: "text-white font-extrabold bg-white/15" }}
+              className="rounded-lg px-4 py-2 text-[13px] font-semibold text-slate-700 transition-colors duration-300 hover:bg-slate-100 hover:text-[#002c5f]"
+              activeProps={{ className: "text-[#002c5f] font-extrabold bg-slate-100" }}
             >
               {l.label}
             </Link>
@@ -72,14 +69,14 @@ export function HomeNav() {
         <div className="flex items-center gap-3">
           <a
             href={dealerInfo.phoneHref}
-            className="hidden items-center gap-2 rounded-full bg-white px-4 py-2 text-[13px] font-extrabold text-[#002c5f] shadow-md transition-all duration-300 hover:bg-slate-100 hover:scale-[1.02] sm:inline-flex"
+            className="hidden items-center gap-2 rounded-xl bg-[#002c5f] px-4 py-2 text-[13px] font-extrabold text-white shadow-md transition-all duration-300 hover:bg-[#002c5f]/90 hover:scale-[1.02] sm:inline-flex"
           >
             <Phone className="h-3.5 w-3.5" aria-hidden />
             {dealerInfo.phone}
           </a>
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 text-slate-800 md:hidden hover:bg-slate-200"
             aria-expanded={open}
             aria-controls="hm-mobile-menu"
             aria-label={open ? "Close menu" : "Open menu"}
@@ -103,7 +100,7 @@ export function HomeNav() {
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={{ opacity: 0, y: -12, filter: "blur(8px)" }}
             transition={{ type: "spring", stiffness: 200, damping: 24 }}
-            className="hm-glass-strong mx-4 mt-2 rounded-3xl p-4 md:hidden"
+            className="bg-white border-b border-slate-200 p-4 md:hidden shadow-xl"
           >
             <ul className="flex flex-col">
               {LINKS.map((l) => (
@@ -111,16 +108,16 @@ export function HomeNav() {
                   <Link
                     to={l.to}
                     onClick={() => setOpen(false)}
-                    className="block rounded-2xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-[#002c5f]/10 hover:text-[#002c5f]"
+                    className="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-[#002c5f]"
                   >
                     {l.label}
                   </Link>
                 </li>
               ))}
-              <li className="mt-2 border-t border-[#002c5f]/10 pt-3">
+              <li className="mt-2 border-t border-slate-100 pt-3">
                 <a
                   href={dealerInfo.phoneHref}
-                  className="flex items-center gap-2 rounded-2xl bg-[#002c5f] px-4 py-3 text-sm font-semibold text-white"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-[#002c5f] px-4 py-3 text-sm font-bold text-white shadow-md"
                 >
                   <Phone className="h-4 w-4" aria-hidden />
                   {dealerInfo.phone}

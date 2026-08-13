@@ -36,7 +36,7 @@ function buildSourceLabel(pageSource: string): string {
   return "500 off Popup (" + (labels[pageSource] || pageSource) + ")";
 }
 
-export default function OfferPopup({
+export function OfferPopup({
   onClose,
   onSubmitted,
   pageSource = "",
@@ -345,3 +345,5 @@ export default function OfferPopup({
     </div>
   );
 }
+
+export default OfferPopup;

@@ -1,14 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowUpRight,
-  BadgeDollarSign,
-  Briefcase,
-  Car,
-  CarFront,
-  Truck,
-  Zap,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowUpRight, BadgeDollarSign, Car, CarFront, Truck, type LucideIcon } from "lucide-react";
 import { DELIVERY_CLAIM, dealerInfo } from "@/lib/vehicles";
 import { cn } from "@/lib/utils";
 import { Reveal, SectionHeading, Stagger, StaggerItem } from "../fx/Reveal";
@@ -76,20 +67,6 @@ const USED_SUVS: Category = {
   anchor: "Browse Used SUVs",
 };
 
-const ELECTRIFIED: Category = {
-  icon: Zap,
-  title: "Electric and Hybrid",
-  copy: "Lightning, Mach-E, and hybrid models. Ask us what charging looks like in your driveway.",
-  anchor: "Browse Electric and Hybrid Vehicles",
-};
-
-const COMMERCIAL: Category = {
-  icon: Briefcase,
-  title: "Commercial Vehicles",
-  copy: "Transit vans, Super Duty pickups, and chassis cab work trucks. Tell us the job and we can source the right build and ship it to you.",
-  anchor: "Ask About Commercial Vehicles",
-};
-
 const TRADE: Category = {
   icon: BadgeDollarSign,
   title: "Value Your Trade",
@@ -114,7 +91,7 @@ export function ShopByCategory() {
         copy="Most people arrive knowing the job the vehicle has to do. Pick the closest fit and we will take it from there."
       />
 
-      <Stagger className="mt-14 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3" gap={0.08}>
+      <Stagger className="mt-14 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4" gap={0.08}>
         <StaggerItem>
           <Link to="/inventory" search={{ type: "Truck" }} className={cardCls}>
             <CardFace {...NEW_FORD} />
@@ -128,16 +105,6 @@ export function ShopByCategory() {
         <StaggerItem>
           <Link to="/inventory" search={{ type: "SUV" }} className={cardCls}>
             <CardFace {...USED_SUVS} />
-          </Link>
-        </StaggerItem>
-        <StaggerItem>
-          <Link to="/inventory" search={{ type: "EV" }} className={cardCls}>
-            <CardFace {...ELECTRIFIED} />
-          </Link>
-        </StaggerItem>
-        <StaggerItem>
-          <Link to="/commercial" className={cardCls}>
-            <CardFace {...COMMERCIAL} />
           </Link>
         </StaggerItem>
         <StaggerItem>

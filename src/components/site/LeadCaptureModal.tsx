@@ -313,12 +313,17 @@ export function LeadCaptureModal({
                     </div>
 
                     <div>
-                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      <label
+                        htmlFor="lead-preferred-time-select"
+                        className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground"
+                      >
                         Preferred Time
                       </label>
                       <div className="relative">
                         <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <select
+                          id="lead-preferred-time-select"
+                          aria-label="Preferred Time"
                           value={preferredTime}
                           onChange={(e) => setPreferredTime(e.target.value)}
                           className="w-full rounded-xl border border-border bg-card py-2.5 pl-9 pr-3 text-sm outline-none transition focus:border-primary"

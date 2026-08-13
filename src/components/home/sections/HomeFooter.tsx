@@ -84,7 +84,7 @@ export function HomeFooter() {
         </div>
 
         {/* Bottom Copyright Bar */}
-        <div className="mt-8 border-t border-white/10 pt-4 text-center text-[11px] font-medium text-white/50">
+        <div className="mt-8 border-t border-white/10 pt-4 text-center text-[11px] font-semibold text-slate-200">
           © {new Date().getFullYear()} {dealerInfo.name}. All rights reserved.
         </div>
       </div>

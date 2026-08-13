@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Phone, MapPin, Clock, Mail } from "lucide-react";
 import { dealerInfo, DELIVERY_CLAIM } from "@/lib/vehicles";
+import { buildFrequentSearchGroups, FrequentSearchRow } from "@/components/site/FrequentSearches";
 
 /**
  * Site-wide footer navigation. Every page type in the SEO architecture needs at least one
@@ -37,6 +38,16 @@ const FOOTER_COLUMNS = [
     ],
   },
 ] as const;
+
+/**
+ * Compact grouped link block under the columns above.
+ *
+ * The four columns are curated hub links. This block is the crawl surface: every model page,
+ * every city and county page, every guide and comparison, and the body style filters, reachable
+ * from the bottom of every page on the site. It is built from the same derived data the
+ * "Frequent Searches" hub uses, so the two can never disagree about which routes exist.
+ */
+const FOOTER_LINK_GROUPS = buildFrequentSearchGroups(["models", "bodyStyle", "nearby", "research"]);
 
 export function SiteFooter() {
   return (
@@ -112,7 +123,28 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-white/10 pt-4 text-[11px] font-medium text-white/50 sm:flex-row">
+        <nav
+          aria-label="Ford models, areas served, and research"
+          className="mt-8 border-t border-white/10 pt-6"
+        >
+          <h2 className="text-xs font-bold uppercase tracking-widest text-white/60">
+            More ways to browse AM Ford
+          </h2>
+          <div className="mt-4 space-y-4">
+            {FOOTER_LINK_GROUPS.map((group) => (
+              <FrequentSearchRow
+                key={group.id}
+                group={group}
+                idPrefix="footer-links"
+                headingClassName="text-[10px] font-bold uppercase tracking-[0.18em] text-white/50"
+                linkClassName="px-0.5 text-[11px] font-medium text-white/80 hover:text-white"
+                separatorClassName="text-white/25"
+              />
+            ))}
+          </div>
+        </nav>
+
+        <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-white/10 pt-4 text-[11px] font-semibold text-slate-200 sm:flex-row">
           <span>© {new Date().getFullYear()} AM Ford. All rights reserved.</span>
           <span>Jefferson, Ohio · Serving Ashtabula County and beyond.</span>
         </div>

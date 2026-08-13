@@ -4,12 +4,14 @@
  *
  * Indexing policy (mirrors the meta-robots logic in src/routes/inventory.tsx):
  *  - Static pages and vehicle detail pages: indexed, in the sitemap.
- *  - Single type/fuel inventory filters: indexable landing pages with self-canonicals, in the sitemap.
+ *  - Single type/fuel/condition inventory filters: indexable landing pages with self-canonicals,
+ *    in the sitemap. The condition list is imported rather than restated so this file and
+ *    src/routes/inventory.tsx cannot disagree about which facets are indexable.
  *  - Deeper filter combinations, search, and pagination: meta noindex,follow — never listed here.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { vehicles, FILTER_OPTIONS } from "../src/lib/vehicles";
+import { vehicles, FILTER_OPTIONS, FILTERABLE_CONDITIONS } from "../src/lib/vehicles";
 import { SERVICE_AREAS } from "../src/lib/serviceAreas";
 import { FORD_MODELS } from "../src/lib/fordModels";
 import { GUIDES, COMPARISONS } from "../src/lib/contentPages";
@@ -29,6 +31,13 @@ const entries: Entry[] = [
   ...FILTER_OPTIONS.fuels
     .filter((f) => f !== "All")
     .map((f) => ({ path: `/inventory?fuel=${f}`, priority: "0.7", changefreq: "daily" })),
+  // "Certified Pre-Owned" carries a space. It must be encoded as "+", not "%20", to match both
+  // the router-built internal links and the self-canonical the route emits for this facet.
+  ...FILTERABLE_CONDITIONS.map((c) => ({
+    path: `/inventory?condition=${encodeURIComponent(c).replace(/%20/g, "+")}`,
+    priority: "0.7",
+    changefreq: "daily",
+  })),
   ...vehicles.map((v) => ({
     path: `/vehicle/${v.id}`,
     priority: "0.8",

@@ -1,5 +1,6 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 
+import { IMAGES } from "@/assets/images.gen";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -173,9 +174,34 @@ export const Route = createRootRoute({
       { name: "twitter:image", content: "https://amford.com/og-default.jpg" },
     ],
     links: [
+      {
+        rel: "icon",
+        type: "image/png",
+        href: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQliImsHZ3as1_rCrG6O6KHQSFLPgBkVthMNugVUvEw4Wf65GWivtz41Hg&s=10",
+      },
+      {
+        rel: "shortcut icon",
+        href: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQliImsHZ3as1_rCrG6O6KHQSFLPgBkVthMNugVUvEw4Wf65GWivtz41Hg&s=10",
+      },
+      {
+        rel: "apple-touch-icon",
+        href: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQliImsHZ3as1_rCrG6O6KHQSFLPgBkVthMNugVUvEw4Wf65GWivtz41Hg&s=10",
+      },
+      {
+        rel: "preload",
+        as: "image",
+        href: IMAGES["hero-truck"]?.variants[3]?.avif || "",
+        type: "image/avif",
+        fetchPriority: "high",
+      },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "preload",
+        as: "style",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
+      },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",

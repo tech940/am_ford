@@ -105,7 +105,7 @@ function CarCard({ v }: { v: Vehicle }) {
               className="text-lg font-bold tabular-nums text-[#002c5f]"
             />
             {v.msrp ? (
-              <p className="text-[12px] text-slate-400 line-through">
+              <p className="text-[12px] font-semibold text-slate-600 line-through">
                 ${v.msrp.toLocaleString("en-US")}
               </p>
             ) : null}

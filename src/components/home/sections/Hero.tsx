@@ -1,124 +1,208 @@
-import { useEffect, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, ChevronRight, Search, ShieldCheck, Tag } from "lucide-react";
 import { ResponsiveImage } from "@/components/site/ResponsiveImage";
 import { dealerInfo, vehicles } from "@/lib/vehicles";
-import { MagneticButton, ctaGhost, ctaPrimary } from "../fx/ui";
+import { cn } from "@/lib/utils";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
-const CAROUSEL_MS = 3800;
 
 /**
- * 2-Card Widescreen Glassmorphism Auto Carousel
- * Features 2 fixed glassmorphism card containers positioned on the right with smooth image cross-fading.
+ * "Find your right car" Quick Search Widget (Aligned with AM Ford Brand System)
+ * Styled in Ford Midnight Navy (#002c5f) and slate typography, positioned on the right side.
  */
-function HeroCarousel() {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const reduced = useReducedMotion();
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+function FindYourRightCarCard() {
+  const navigate = useNavigate();
+  const [conditionTab, setConditionTab] = useState<"New" | "Used">("New");
+  const [filterBy, setFilterBy] = useState<"budget" | "body">("budget");
+  const [budget, setBudget] = useState<string>("all");
+  const [bodyType, setBodyType] = useState<string>("All");
 
-  const total = vehicles.length;
-
-  useEffect(() => {
-    if (paused || reduced) return;
-    timer.current = setInterval(() => {
-      setIndex((prev) => (prev + 2) % total);
-    }, CAROUSEL_MS);
-    return () => {
-      if (timer.current) clearInterval(timer.current);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const searchParams: Record<string, string | number | undefined> = {
+      condition: conditionTab === "New" ? "New" : "Used",
+      type: bodyType !== "All" ? bodyType : undefined,
     };
-  }, [paused, reduced, total]);
 
-  const v1 = vehicles[index % total];
-  const v2 = vehicles[(index + 1) % total];
+    if (budget === "under_30k") {
+      searchParams.priceMax = 30000;
+    } else if (budget === "30k_45k") {
+      searchParams.priceMin = 30000;
+      searchParams.priceMax = 45000;
+    } else if (budget === "45k_60k") {
+      searchParams.priceMin = 45000;
+      searchParams.priceMax = 60000;
+    } else if (budget === "above_60k") {
+      searchParams.priceMin = 60000;
+    }
+
+    navigate({
+      to: "/inventory",
+      search: searchParams,
+    });
+  };
 
   return (
-    <div
-      className="relative flex w-full max-w-lg flex-col items-center gap-4 lg:max-w-2xl xl:max-w-3xl ml-auto"
-      onPointerEnter={() => setPaused(true)}
-      onPointerLeave={() => setPaused(false)}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.25 }}
+      className="relative w-full overflow-hidden rounded-[2rem] border border-[#002c5f]/15 bg-white p-6 sm:p-7 shadow-2xl shadow-[#002c5f]/15"
     >
-      {/* 2 Widescreen Fixed Glassmorphism Cards Grid */}
-      <div className="grid w-full grid-cols-2 gap-4 sm:gap-6">
-        {/* Card 1 */}
-        <div className="group relative aspect-[16/10] w-full overflow-hidden rounded-3xl border border-white/30 bg-white/40 p-1.5 shadow-xl backdrop-blur-2xl transition-all duration-500 hover:border-white/60 hover:bg-white/60 hover:shadow-2xl">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.img
-              key={v1.id}
-              src={v1.image}
-              alt={`${v1.year} ${v1.make} ${v1.model}`}
-              initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-              className="h-full w-full rounded-[1.25rem] object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-            />
-          </AnimatePresence>
-        </div>
-
-        {/* Card 2 */}
-        <div className="group relative aspect-[16/10] w-full overflow-hidden rounded-3xl border border-white/30 bg-white/40 p-1.5 shadow-xl backdrop-blur-2xl transition-all duration-500 hover:border-white/60 hover:bg-white/60 hover:shadow-2xl">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.img
-              key={v2.id}
-              src={v2.image}
-              alt={`${v2.year} ${v2.make} ${v2.model}`}
-              initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-              className="h-full w-full rounded-[1.25rem] object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-            />
-          </AnimatePresence>
-        </div>
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-black tracking-tight text-slate-900">Find your right car</h2>
+        <span className="inline-flex items-center gap-1 rounded-full bg-[#002c5f]/10 px-2.5 py-0.5 text-[10px] font-extrabold text-[#002c5f] uppercase tracking-wider">
+          AM FORD
+        </span>
       </div>
 
-      {/* Slide Indicators */}
-      <div className="flex items-center gap-2 pt-1">
-        {Array.from({ length: Math.ceil(total / 2) }).map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => setIndex(i * 2)}
-            aria-label={`Go to slide ${i + 1}`}
-            className={`relative h-2 rounded-full transition-all duration-500 after:absolute after:-inset-3 after:content-[''] ${
-              Math.floor(index / 2) === i
-                ? "w-8 bg-[#002c5f]"
-                : "w-2.5 bg-[#002c5f]/25 hover:bg-[#002c5f]/45"
-            }`}
+      {/* New / Used Car Tabs */}
+      <div className="mt-4 grid grid-cols-2 gap-1 rounded-2xl bg-slate-100 p-1">
+        <button
+          type="button"
+          onClick={() => setConditionTab("New")}
+          className={cn(
+            "rounded-xl py-2.5 text-xs font-black transition-all",
+            conditionTab === "New"
+              ? "bg-[#002c5f] text-white shadow-sm"
+              : "text-slate-600 hover:text-slate-900",
+          )}
+        >
+          NEW CAR
+        </button>
+        <button
+          type="button"
+          onClick={() => setConditionTab("Used")}
+          className={cn(
+            "rounded-xl py-2.5 text-xs font-black transition-all",
+            conditionTab === "Used"
+              ? "bg-[#002c5f] text-white shadow-sm"
+              : "text-slate-600 hover:text-slate-900",
+          )}
+        >
+          USED CAR
+        </button>
+      </div>
+
+      {/* Radio Filter Toggle: By Budget / By Body Style */}
+      <div className="mt-4 flex items-center gap-6 text-xs font-extrabold text-slate-700">
+        <label className="flex items-center gap-2 cursor-pointer select-none">
+          <input
+            type="radio"
+            name="filterBy"
+            checked={filterBy === "budget"}
+            onChange={() => setFilterBy("budget")}
+            className="h-4 w-4 accent-[#002c5f] cursor-pointer"
           />
-        ))}
+          <span>By Budget</span>
+        </label>
+        <label className="flex items-center gap-2 cursor-pointer select-none">
+          <input
+            type="radio"
+            name="filterBy"
+            checked={filterBy === "body"}
+            onChange={() => setFilterBy("body")}
+            className="h-4 w-4 accent-[#002c5f] cursor-pointer"
+          />
+          <span>By Body Style</span>
+        </label>
       </div>
-    </div>
+
+      {/* Search Form */}
+      <form onSubmit={handleSearch} className="mt-4 flex flex-col gap-3.5">
+        {/* Dropdown 1: Select Budget */}
+        <div>
+          <label
+            htmlFor="hero-budget-select"
+            className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500"
+          >
+            Select Budget
+          </label>
+          <select
+            id="hero-budget-select"
+            aria-label="Select Budget"
+            value={budget}
+            onChange={(e) => setBudget(e.target.value)}
+            className="w-full rounded-2xl border border-slate-200 bg-white px-3.5 py-3 text-xs font-bold text-slate-900 outline-none transition focus:border-[#002c5f] focus:ring-2 focus:ring-[#002c5f]/20 shadow-sm"
+          >
+            <option value="all">All Budget Ranges</option>
+            <option value="under_30k">Under $30,000</option>
+            <option value="30k_45k">$30,000 – $45,000</option>
+            <option value="45k_60k">$45,000 – $60,000</option>
+            <option value="above_60k">$60,000+</option>
+          </select>
+        </div>
+
+        {/* Dropdown 2: Vehicle Types */}
+        <div>
+          <label
+            htmlFor="hero-body-type-select"
+            className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500"
+          >
+            Vehicle Type / Body Style
+          </label>
+          <select
+            id="hero-body-type-select"
+            aria-label="Vehicle Type or Body Style"
+            value={bodyType}
+            onChange={(e) => setBodyType(e.target.value)}
+            className="w-full rounded-2xl border border-slate-200 bg-white px-3.5 py-3 text-xs font-bold text-slate-900 outline-none transition focus:border-[#002c5f] focus:ring-2 focus:ring-[#002c5f]/20 shadow-sm"
+          >
+            <option value="All">All Vehicle Types</option>
+            <option value="Truck">Trucks (F-150, Super Duty)</option>
+            <option value="SUV">SUVs (Explorer, Bronco, Escape)</option>
+            <option value="Car">Cars & Muscle (Mustang)</option>
+            <option value="Commercial">Commercial & Work Trucks</option>
+          </select>
+        </div>
+
+        {/* Primary Ford Midnight Navy Search CTA Button */}
+        <button
+          type="submit"
+          className="group relative mt-1 flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-[#002c5f] py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-xl shadow-[#002c5f]/25 hover:bg-[#001f44] active:scale-[0.98] transition-all"
+        >
+          <Search className="h-4 w-4 transition-transform group-hover:scale-110" />
+          <span>SEARCH INVENTORY</span>
+        </button>
+
+        {/* Footer Link */}
+        <div className="flex items-center justify-between text-xs pt-1">
+          <span className="text-slate-500 font-medium">{vehicles.length} Vehicles Available</span>
+          <Link
+            to="/inventory"
+            className="inline-flex items-center gap-1 font-bold text-[#002c5f] hover:underline"
+          >
+            <span>Advanced Search</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      </form>
+    </motion.div>
   );
 }
 
 /**
- * Hero section: Left-aligned text overlay + far-right 2-card widescreen carousel.
+ * Hero section: Left Text Overlay + Right "Find your right car" Search Widget.
  */
 export function Hero() {
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll();
-  const stageY = useTransform(scrollYProgress, [0, 0.18], [0, 60]);
-  const stageOpacity = useTransform(scrollYProgress, [0, 0.16], [1, 0.35]);
+  const stageY = useTransform(scrollYProgress, [0, 0.18], [0, 50]);
+  const stageOpacity = useTransform(scrollYProgress, [0, 0.16], [1, 0.4]);
 
   return (
-    <section className="relative flex min-h-[100svh] flex-col overflow-hidden" aria-label="Hero">
+    <section
+      className="relative flex min-h-[92svh] lg:min-h-[105svh] flex-col justify-center overflow-hidden"
+      aria-label="Hero"
+    >
       {/* Background HD Ford Vehicle Stage */}
       <motion.div
         style={reduced ? undefined : { y: stageY, opacity: stageOpacity }}
         className="absolute inset-0 z-0"
       >
-        {/* Scale-only intro: never animate opacity on the LCP element, or the
-            largest paint is deferred until hydration finishes. */}
-        <motion.div
-          initial={{ scale: 1.04 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1.4, ease: "easeOut" }}
-          className="absolute inset-0"
-        >
+        <div className="absolute inset-0">
           <ResponsiveImage
             name="hero-truck"
             alt={`New Ford F-150 at AM Ford in ${dealerInfo.locality}, Ohio`}
@@ -126,121 +210,85 @@ export function Hero() {
             priority
             className="h-full w-full object-cover object-center"
           />
-          {/* Light overlay gradients for text contrast */}
+          {/* Scrim for text legibility & crisp vehicle visibility */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, rgba(248,250,252,0.75) 0%, rgba(248,250,252,0.45) 40%, rgba(248,250,252,0.92) 88%, #F8FAFC 100%)",
+                "linear-gradient(90deg, rgba(248,250,252,0.70) 0%, rgba(248,250,252,0.40) 45%, rgba(248,250,252,0.10) 75%, transparent 100%), linear-gradient(180deg, rgba(248,250,252,0.15) 0%, transparent 45%, rgba(248,250,252,0.65) 88%, #F8FAFC 100%)",
             }}
           />
-          {/* Radial Ford Blue backlight glow */}
-          <div
-            className="pointer-events-none absolute left-1/3 top-1/2 h-[30rem] w-[50rem] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-35"
-            style={{
-              background: "radial-gradient(ellipse at center, rgba(0,44,95,0.25), transparent 70%)",
-              filter: "blur(60px)",
-            }}
-          />
-        </motion.div>
+        </div>
       </motion.div>
 
-      {/* Main hero grid: Left text overlay + Far Right bottom 2-card glassmorphism carousel */}
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-4 sm:px-8 lg:px-12 pb-20 pt-32 sm:pb-24">
-        <div className="grid items-end gap-10 lg:grid-cols-12">
-          {/* LEFT SIDE: Text Overlay (Left aligned) */}
-          <div className="flex min-w-0 flex-col items-start text-left lg:col-span-6 xl:col-span-6">
-            {/* Above the fold: transform-only intros. Opacity stays at 1 so the
-                text is in the server HTML and paints on the first frame. */}
-            <motion.p
-              initial={{ y: 24 }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.4 }}
-              className="text-[11px] font-bold uppercase tracking-[0.38em] text-[#002c5f]"
-            >
-              Family-owned since the Nassief Ford days · {dealerInfo.locality}, Ohio
-            </motion.p>
+      {/* Main hero grid: Left Text Headline + Right "Find your right car" Search Widget */}
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 sm:px-8 lg:px-12 pb-24 pt-24 sm:pt-32 sm:pb-32 lg:pt-36 lg:pb-36">
+        <div className="grid items-center gap-8 lg:grid-cols-12">
+          {/* LEFT SIDE (col-span-7): Headline & Brand Messaging */}
+          <div className="flex flex-col items-start lg:col-span-7 xl:col-span-7">
+            <p className="inline-flex items-center gap-2 rounded-full border border-[#002c5f]/20 bg-white/80 px-4 py-1 text-[11px] font-bold uppercase tracking-[0.3em] text-[#002c5f] shadow-sm backdrop-blur-md">
+              Family-owned · {dealerInfo.locality}, Ohio
+            </p>
 
-            <motion.h1
-              initial={{ y: 48 }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1.05, ease: EASE_OUT, delay: 0.55 }}
-              className="mt-4 max-w-xl text-5xl font-extrabold leading-[1.04] tracking-tight text-slate-900 max-[360px]:text-4xl sm:text-6xl lg:text-6xl xl:text-7xl"
-            >
-              Your Ford dealership in
+            <h1 className="mt-4 max-w-2xl text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+              Your Ford dealership in{" "}
               <span className="bg-gradient-to-r from-[#002c5f] via-[#004085] to-[#0056b3] bg-clip-text text-transparent">
-                {" "}
                 {dealerInfo.locality}, Ohio
               </span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={{ y: 28 }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.75 }}
-              className="mt-5 max-w-lg text-base font-medium leading-relaxed text-slate-700 sm:text-lg"
+            <p className="mt-4 max-w-xl text-base font-medium leading-relaxed text-slate-700 sm:text-lg drop-shadow-sm">
+              Browse real-time inventory at AM Ford in {dealerInfo.city}, serving Ashtabula County
+              and Northeast Ohio. New Ford trucks and SUVs, certified pre-owned stock, transparent
+              pricing, and instant trade-in valuations.
+            </p>
+
+            {/* CTAs & Trust Badges Row */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, ease: EASE_OUT, delay: 0.65 }}
+              className="mt-6 flex flex-wrap items-center gap-4"
             >
-              A family-owned Ford dealership serving Ashtabula County, Northeast Ohio, and
-              Northwestern Pennsylvania. New Ford trucks and SUVs, quality used vehicles, and
-              straightforward help with financing, trade-ins, and service.
-            </motion.p>
+              <Link
+                to="/inventory"
+                className="inline-flex items-center gap-2 rounded-2xl bg-[#002c5f] px-6 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-xl shadow-[#002c5f]/25 hover:bg-[#001f44] transition active:scale-95"
+              >
+                <span>Browse Inventory</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <motion.div
-                initial={{ y: 20 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.95 }}
+              <Link
+                to="/financing"
+                className="inline-flex items-center gap-2 rounded-2xl border-2 border-[#002c5f]/20 bg-white/90 px-5 py-3 text-xs font-black uppercase tracking-wider text-[#002c5f] shadow-md hover:bg-white transition active:scale-95"
               >
-                <MagneticButton>
-                  <Link to="/inventory" className={ctaPrimary}>
-                    Browse inventory
-                    <ArrowRight className="h-4 w-4" aria-hidden />
-                  </Link>
-                </MagneticButton>
-              </motion.div>
-              <motion.div
-                initial={{ y: 20 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.7, ease: EASE_OUT, delay: 1.1 }}
-              >
-                <MagneticButton>
-                  <Link to="/contact" className={ctaGhost}>
-                    Book a test drive
-                  </Link>
-                </MagneticButton>
-              </motion.div>
+                <Tag className="h-4 w-4 text-[#002c5f]" />
+                <span>Get Financed</span>
+              </Link>
+            </motion.div>
+
+            {/* Quick Feature Pills */}
+            <div className="mt-8 flex flex-wrap items-center gap-3 pt-4 border-t border-slate-900/10 w-full">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                <ShieldCheck className="h-4 w-4 text-[#002c5f]" /> Factory Warranty Included
+              </span>
+              <span className="text-slate-400">·</span>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                <Tag className="h-4 w-4 text-[#002c5f]" /> Real Trade-In Appraisals
+              </span>
+              <span className="text-slate-400">·</span>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                Home Delivery Available
+              </span>
             </div>
           </div>
 
-          {/* RIGHT SIDE (Far Right): Widescreen 2-card Carousel */}
-          <motion.div
-            initial={{ y: 36, scale: 0.96 }}
-            animate={{ y: 0, scale: 1 }}
-            transition={{ duration: 1, ease: EASE_OUT, delay: 0.85 }}
-            className="flex min-w-0 justify-end lg:col-span-6 xl:col-span-6 ml-auto w-full translate-x-2 sm:translate-x-4 lg:translate-x-6"
-          >
-            <HeroCarousel />
-          </motion.div>
+          {/* RIGHT SIDE (col-span-5): "Find your right car" Search Widget */}
+          <div className="lg:col-span-5 xl:col-span-5">
+            <FindYourRightCarCard />
+          </div>
         </div>
       </div>
-
-      {/* Scroll cue */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, duration: 1 }}
-        className="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 hidden sm:block"
-        aria-hidden
-      >
-        <motion.div
-          animate={reduced ? undefined : { y: [0, 6, 0] }}
-          transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-0.5 text-[#002c5f]/70"
-        >
-          <span className="text-[10px] font-semibold uppercase tracking-[0.3em]">Scroll</span>
-          <ChevronDown className="h-3.5 w-3.5" />
-        </motion.div>
-      </motion.div>
     </section>
   );
 }

@@ -1,45 +1,45 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import { SectionHeading } from "../fx/Reveal";
+import { Clock, MapPin, Navigation, Phone, Star } from "lucide-react";
 
 const REVIEWS = [
   {
+    name: "Jason M.",
+    location: "Jefferson, OH",
+    vehicle: "F-150 Lariat",
+    quote:
+      "Great experience! The team at AM Ford Jefferson was professional, helpful, and made the vehicle delivery process so easy. Highly recommend!",
+  },
+  {
     name: "Marcus T.",
+    location: "Ashtabula, OH",
     vehicle: "F-150 Platinum",
     quote:
       "Felt more like a private showroom than a dealership. They had the truck detailed and the paperwork ready — I was on the road in forty minutes.",
   },
   {
     name: "Elena R.",
+    location: "Conneaut, OH",
     vehicle: "Escape Titanium Hybrid",
     quote:
       "No pressure, no games. They walked me through the inspection report line by line before I even asked. That's what earned my trust.",
   },
   {
-    name: "David K.",
-    vehicle: "Mustang GT Premium",
-    quote:
-      "I've bought a lot of cars. This is the first time the experience felt as premium as the vehicle itself.",
-  },
-  {
     name: "Sarah W.",
+    location: "Geneva, OH",
     vehicle: "Bronco Outer Banks",
     quote:
-      "They found the exact spec I wanted in three days. Communication was constant without being pushy — genuinely impressive.",
+      "They found the exact spec I wanted in three days. Communication was constant without being pushy — genuinely impressive dealership.",
   },
 ];
 
-const AUTO_MS = 5200;
+const AUTO_MS = 5000;
 
-/** Floating card carousel: auto-advances, springs between slides, pauses on hover. */
 export function Reviews() {
   const [[index, dir], setIndex] = useState<[number, 1 | -1]>([0, 1]);
   const [paused, setPaused] = useState(false);
   const reduced = useReducedMotion();
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const go = (d: 1 | -1) => setIndex(([i]) => [(i + d + REVIEWS.length) % REVIEWS.length, d]);
 
   useEffect(() => {
     if (paused || reduced) return;
@@ -51,103 +51,172 @@ export function Reviews() {
     };
   }, [paused, reduced, index]);
 
-  const r = REVIEWS[index];
+  const currentReview = REVIEWS[index];
 
   return (
-    <section
-      className="relative z-10 mx-auto max-w-4xl px-6 py-28 sm:py-36"
-      aria-label="Customer reviews"
-    >
-      <SectionHeading
-        eyebrow="Owner stories"
-        title={
-          <>
-            Trusted by the
-            <span className="text-slate-500 font-normal"> drivers who matter</span>
-          </>
-        }
-      />
+    <section className="py-16 sm:py-24 bg-slate-50 border-b border-slate-200/80 overflow-hidden">
+      <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          {/* LEFT CARD: What Our Customers Say */}
+          <div
+            className="lg:col-span-5 flex flex-col justify-between rounded-[2.5rem] border border-slate-200/90 bg-white p-7 sm:p-9 shadow-xl relative min-h-[380px]"
+            onPointerEnter={() => setPaused(true)}
+            onPointerLeave={() => setPaused(false)}
+          >
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#002c5f] tracking-tight">
+                What Our Customers Say
+              </h2>
 
-      <div
-        className="relative mt-14"
-        onPointerEnter={() => setPaused(true)}
-        onPointerLeave={() => setPaused(false)}
-      >
-        <motion.div
-          animate={reduced ? undefined : { y: [0, -7, 0] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <div className="relative min-h-[22rem] sm:min-h-[16rem]">
-            <AnimatePresence mode="wait" custom={dir} initial={false}>
-              <motion.figure
-                key={index}
-                custom={dir}
-                initial={reduced ? { opacity: 0 } : { opacity: 0, x: dir * 90, scale: 0.96 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={reduced ? { opacity: 0 } : { opacity: 0, x: dir * -90, scale: 0.96 }}
-                transition={{ type: "spring", stiffness: 190, damping: 24 }}
-                whileHover={reduced ? undefined : { scale: 1.02 }}
-                className="hm-glass-strong absolute inset-0 flex flex-col justify-between rounded-[2rem] p-8 sm:p-10"
+              <div
+                className="mt-4 flex items-center gap-1"
+                role="img"
+                aria-label="5 out of 5 stars rating"
               >
-                <div>
-                  <div className="flex gap-1" role="img" aria-label="Rated 5 out of 5 stars">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-[#002c5f] text-[#002c5f]" aria-hidden />
-                    ))}
-                  </div>
-                  <blockquote className="mt-5 text-pretty text-lg font-medium leading-relaxed text-slate-800">
-                    “{r.quote}”
-                  </blockquote>
-                </div>
-                <figcaption className="mt-6 flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-bold text-slate-900">{r.name}</p>
-                    <p className="text-[12px] font-medium text-slate-500">
-                      Purchased · {r.vehicle}
-                    </p>
-                  </div>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#002c5f] text-sm font-bold text-white shadow-sm">
-                    {r.name.charAt(0)}
-                  </div>
-                </figcaption>
-              </motion.figure>
-            </AnimatePresence>
-          </div>
-        </motion.div>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" aria-hidden />
+                ))}
+              </div>
 
-        {/* Controls */}
-        <div className="mt-8 flex items-center justify-center gap-5">
-          <button
-            type="button"
-            onClick={() => go(-1)}
-            aria-label="Previous review"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#002c5f]/20 bg-white/80 text-[#002c5f] transition-all hover:bg-[#002c5f] hover:text-white shadow-sm"
-          >
-            <ChevronLeft className="h-4 w-4" aria-hidden />
-          </button>
-          <div className="flex gap-2" role="tablist" aria-label="Review slides">
-            {REVIEWS.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                role="tab"
-                aria-selected={i === index}
-                aria-label={`Review ${i + 1}`}
-                onClick={() => setIndex(([cur]) => [i, i > cur ? 1 : -1])}
-                className={`relative h-1.5 rounded-full transition-all duration-500 after:absolute after:-inset-3 after:content-[''] ${
-                  i === index ? "w-7 bg-[#002c5f]" : "w-3 bg-[#002c5f]/25 hover:bg-[#002c5f]/40"
-                }`}
-              />
-            ))}
+              <div className="relative mt-5 min-h-[120px]">
+                <AnimatePresence mode="wait" custom={dir} initial={false}>
+                  <motion.blockquote
+                    key={index}
+                    initial={{ opacity: 0, x: dir * 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: dir * -30 }}
+                    transition={{ duration: 0.35, ease: "easeOut" }}
+                    className="text-sm sm:text-base font-medium italic leading-relaxed text-slate-700"
+                  >
+                    “{currentReview.quote}”
+                  </motion.blockquote>
+                </AnimatePresence>
+              </div>
+            </div>
+
+            {/* Author Row + Pagination Dots */}
+            <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-5">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#002c5f] text-sm font-extrabold text-white shadow-md">
+                  {currentReview.name.charAt(0)}
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 leading-tight">
+                    {currentReview.name}
+                  </h3>
+                  <p className="text-xs font-medium text-slate-500">{currentReview.location}</p>
+                </div>
+              </div>
+
+              {/* Indicator Dots */}
+              <div className="flex items-center gap-0.5">
+                {REVIEWS.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setIndex(([cur]) => [i, i > cur ? 1 : -1])}
+                    className="flex h-11 w-11 items-center justify-center rounded-full p-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#002c5f]/30"
+                    aria-label={`Go to review slide ${i + 1}`}
+                  >
+                    <span
+                      className={`block h-2.5 rounded-full transition-all ${
+                        i === index ? "w-7 bg-[#002c5f]" : "w-2.5 bg-slate-300 hover:bg-slate-400"
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={() => go(1)}
-            aria-label="Next review"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#002c5f]/20 bg-white/80 text-[#002c5f] transition-all hover:bg-[#002c5f] hover:text-white shadow-sm"
-          >
-            <ChevronRight className="h-4 w-4" aria-hidden />
-          </button>
+
+          {/* RIGHT CARD: Visit Our Dealership */}
+          <div className="lg:col-span-7 rounded-[2.5rem] bg-[#002c5f] text-white shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[380px]">
+            {/* Info Column */}
+            <div className="md:col-span-6 p-7 sm:p-9 flex flex-col justify-between">
+              <div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                  Visit Our Dealership
+                </h3>
+
+                <div className="mt-6 flex flex-col gap-5">
+                  {/* Address */}
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-sky-300 backdrop-blur-sm">
+                      <MapPin className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-wider text-sky-300">
+                        MAIN FLAGSHIP SHOWROOM
+                      </p>
+                      <p className="mt-0.5 text-xs font-semibold text-slate-200 leading-snug">
+                        1999 S Lake St, Jefferson, OH 44047
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Phone */}
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-sky-300 backdrop-blur-sm">
+                      <Phone className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-wider text-sky-300">
+                        CALL US
+                      </p>
+                      <a
+                        href="tel:4405761010"
+                        className="mt-0.5 block text-xs font-bold text-slate-200 hover:text-white transition"
+                      >
+                        (440) 576-1010
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Hours */}
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-sky-300 backdrop-blur-sm">
+                      <Clock className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-wider text-sky-300">
+                        BUSINESS HOURS
+                      </p>
+                      <p className="mt-0.5 text-xs font-semibold text-slate-200 leading-snug">
+                        Mon - Sat: 9:00 AM - 7:00 PM
+                        <br />
+                        Sunday: Closed
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Get Directions Button */}
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=AM+Ford+1999+S+Lake+St+Jefferson+OH+44047"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-white py-3.5 px-6 text-xs font-black uppercase tracking-wider text-[#002c5f] shadow-lg hover:bg-slate-100 transition active:scale-95"
+              >
+                <Navigation className="h-4 w-4 text-[#002c5f]" />
+                <span>GET DIRECTIONS</span>
+              </a>
+            </div>
+
+            {/* Embedded Google Map Column */}
+            <div className="md:col-span-6 relative min-h-[260px] md:min-h-full w-full bg-slate-900">
+              <iframe
+                src="https://maps.google.com/maps?q=1999%20S%20Lake%20St,%20Jefferson,%20OH%2044047&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-full w-full object-cover min-h-[260px]"
+                title="AM Ford Dealership Location Map"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
