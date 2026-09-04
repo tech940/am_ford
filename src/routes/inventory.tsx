@@ -10,7 +10,6 @@ import {
   ChevronRight,
   Filter,
   Tag,
-  ArrowRight,
   ShieldCheck,
   Award,
   Car,
@@ -18,15 +17,8 @@ import {
   HelpCircle,
   ChevronDown,
   DollarSign,
-  Gift,
-  User,
-  Phone,
-  Zap,
-  Lock,
-  Clock,
 } from "lucide-react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import carExplorer from "@/assets/car-explorer.jpg";
 import { getRecentlyViewed } from "@/lib/recentlyViewed";
 import { GARAGE_EVENT, getSavedVehicles } from "@/lib/garage";
 import { breadcrumbSchema, crumbs, type Crumb } from "@/lib/breadcrumbs";
@@ -122,35 +114,6 @@ const SORT_OPTIONS = [
 ] as const;
 type SortCode = (typeof SORT_OPTIONS)[number]["code"];
 
-/**
- * The client brief forbids publishing APR figures or monthly payments, so the financing
- * option advertises a personalized quote rather than a rate. Do not reintroduce a number
- * here without written approval from the dealership.
- */
-type OfferChoice = "trade" | "finance" | "vip";
-const ACTIVE_OFFERS: Record<
-  OfferChoice,
-  { value: string; label: string; sub: string; option: string }
-> = {
-  trade: {
-    value: "$500",
-    label: "Trade-In Bonus",
-    sub: "on top of your vehicle's market value",
-    option: "$500 Trade Bonus",
-  },
-  finance: {
-    value: "Rate",
-    label: "Personalized Rate Quote",
-    sub: "terms from our Ohio and national lenders",
-    option: "Financing Rate Quote",
-  },
-  vip: {
-    value: "VIP",
-    label: "Price Match Promise",
-    sub: "we match any written local offer",
-    option: "VIP Price Match",
-  },
-};
 
 const PRICE_FLOOR = 20000;
 const PRICE_CAP = 100000;
@@ -922,8 +885,6 @@ export function InventoryPage() {
   const [selectedVehicleForOtp, setSelectedVehicleForOtp] = useState<Vehicle | null>(null);
 
   // Hero offer-ticket state
-  const [offerVehicleId, setOfferVehicleId] = useState(vehicles[0].id);
-  const [offerChoice, setOfferChoice] = useState<OfferChoice>("trade");
 
   // FAQ Accordion state
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -1102,210 +1063,39 @@ export function InventoryPage() {
     <SiteShell>
       <Breadcrumbs items={breadcrumbs} />
 
-      {/* Page Header with 100% visible vehicle image and sleek dark-scrim typography */}
-      <section className="relative overflow-hidden w-full border-b border-slate-800 bg-slate-950 py-14 lg:py-20">
-        {/* Widescreen Background Stage - Crystal Clear Vehicle Image */}
-        <div className="absolute inset-0 z-0 h-full w-full overflow-hidden">
-          <img
-            src={carExplorer}
-            alt="Ford Explorer Inventory Stage"
-            className="h-full w-full object-cover object-center opacity-100"
-          />
-          {/* Gentle dark gradient overlay for text readability without obscuring vehicle */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/45 to-transparent pointer-events-none" />
-        </div>
-
-        <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <div className="grid items-center gap-8 lg:grid-cols-12">
-            {/* CLAIM OFFER FORM CARD — Order-1 on mobile (comes first), Order-2 on desktop */}
-            <div className="order-1 lg:order-2 lg:col-span-6 lg:pl-4">
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-                className="relative overflow-hidden rounded-[2.25rem] border-2 border-[#002c5f]/15 bg-white p-6 sm:p-7 shadow-2xl shadow-[#002c5f]/25"
-              >
-                {/* Vibrant Deep Ford Blue Offer Header Box */}
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#002c5f] via-[#003875] to-[#004085] p-5 sm:p-6 text-white shadow-md border border-[#002c5f]">
-                  <div className="relative flex items-center justify-between gap-3">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-xs font-bold text-white">
-                      <Tag className="h-3.5 w-3.5 text-white" /> Exclusive Dealer Savings
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-300">
-                      <span className="h-2 w-2 animate-pulse rounded-full bg-sky-400" /> Available
-                      today
-                    </span>
-                  </div>
-
-                  <div className="relative mt-4 flex items-baseline justify-between gap-3">
-                    <div>
-                      <p className="text-4xl sm:text-5xl font-black text-white tracking-tight drop-shadow-sm">
-                        {ACTIVE_OFFERS[offerChoice].value}
-                      </p>
-                      <p className="mt-1 text-base font-extrabold text-white">
-                        {ACTIVE_OFFERS[offerChoice].label}
-                      </p>
-                    </div>
-                    <p className="text-right text-xs font-medium text-slate-200/90 max-w-[140px]">
-                      {ACTIVE_OFFERS[offerChoice].sub}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Form Inputs */}
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setSelectedVehicleForOtp(
-                      vehicles.find((v) => v.id === offerVehicleId) ?? vehicles[0],
-                    );
-                    setOtpOpen(true);
-                  }}
-                  className="mt-5 flex flex-col gap-4"
-                >
-                  {/* Full Name */}
-                  <div>
-                    <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-[#002c5f]">
-                      Full Name
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#002c5f]" />
-                      <input
-                        type="text"
-                        required
-                        placeholder="John Doe"
-                        className="w-full rounded-2xl border-2 border-slate-200 bg-white py-3.5 pl-11 pr-4 text-sm font-semibold text-slate-900 outline-none transition focus:border-[#002c5f] focus:ring-4 focus:ring-[#002c5f]/15"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Phone Number */}
-                  <div>
-                    <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-[#002c5f]">
-                      Phone Number
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#002c5f]" />
-                      <input
-                        type="tel"
-                        required
-                        placeholder="(440) 555-0199"
-                        className="w-full rounded-2xl border-2 border-slate-200 bg-white py-3.5 pl-11 pr-4 text-sm font-semibold text-slate-900 outline-none transition focus:border-[#002c5f] focus:ring-4 focus:ring-[#002c5f]/15"
-                      />
-                    </div>
-                  </div>
-
-                  {/* 2-Column Grid */}
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <div>
-                      <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-[#002c5f]">
-                        Vehicle Interest
-                      </label>
-                      <select
-                        value={offerVehicleId}
-                        onChange={(e) => setOfferVehicleId(e.target.value)}
-                        className="w-full rounded-2xl border-2 border-slate-200 bg-white px-3.5 py-3.5 text-sm font-semibold text-slate-900 outline-none transition focus:border-[#002c5f] focus:ring-4 focus:ring-[#002c5f]/15"
-                      >
-                        {vehicles.map((v) => (
-                          <option key={v.id} value={v.id}>
-                            {v.year} {v.make} {v.model} {v.trim}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-[#002c5f]">
-                        Offer Choice
-                      </label>
-                      <select
-                        value={offerChoice}
-                        onChange={(e) => setOfferChoice(e.target.value as OfferChoice)}
-                        className="w-full rounded-2xl border-2 border-slate-200 bg-white px-3.5 py-3.5 text-sm font-semibold text-slate-900 outline-none transition focus:border-[#002c5f] focus:ring-4 focus:ring-[#002c5f]/15"
-                      >
-                        {(Object.keys(ACTIVE_OFFERS) as OfferChoice[]).map((key) => (
-                          <option key={key} value={key}>
-                            {ACTIVE_OFFERS[key].option}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* High-converting submit button */}
-                  <button
-                    type="submit"
-                    className="group relative mt-1 flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-[#002c5f] via-[#003875] to-[#004085] py-4 text-base font-black text-white shadow-xl shadow-[#002c5f]/30 hover:shadow-2xl hover:shadow-[#002c5f]/40 hover:scale-[1.01] active:scale-[0.98] transition-all"
-                  >
-                    <span>Claim Offer Now</span>
-                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </button>
-
-                  {/* Trust row */}
-                  <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[11px] font-semibold text-slate-500 pt-1">
-                    <span className="inline-flex items-center gap-1.5">
-                      <ShieldCheck className="h-3.5 w-3.5 text-[#002c5f]" /> No credit impact
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5 text-[#002c5f]" /> 30-sec response
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <Lock className="h-3.5 w-3.5 text-[#002c5f]" /> Private & secure
-                    </span>
-                  </div>
-                </form>
-              </motion.div>
-            </div>
-
-            {/* TEXT COLUMN — Order-2 on mobile (comes second below form), Order-1 on desktop (left) */}
-            <div className="order-2 lg:order-1 lg:col-span-6">
-              <div className="flex flex-col items-start max-w-xl">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-[#002c5f]/90 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.25em] text-white shadow-md backdrop-blur-md">
-                  IN-STOCK INVENTORY
-                </span>
-                <h1 className="mt-4 text-balance text-[34px] font-black text-white drop-shadow-2xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.05]">
-                  {landingLabel(search) ?? "Vehicles"} for Sale in{" "}
-                  <span className="text-white underline decoration-sky-400 decoration-wavy underline-offset-8">
-                    {dealerInfo.city}
-                  </span>
-                </h1>
-                <p className="mt-4 text-[15px] font-medium text-white/95 drop-shadow-lg leading-relaxed sm:text-base">
-                  Browse real-time inventory at AM Ford in {dealerInfo.city}, serving Ashtabula
-                  County and Northeast Ohio. Compare pricing, check specs, and schedule your test
-                  drive today.
-                </p>
-
-                {/* Stats cards strip */}
-                <div className="mt-8 flex flex-wrap items-center gap-4">
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/80 bg-white/95 px-4 py-3 shadow-xl backdrop-blur-md">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#002c5f] text-white">
-                      <Car className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-extrabold text-slate-900 leading-none">
-                        {vehicles.length} Vehicles
-                      </p>
-                      <p className="mt-1 text-[11px] font-medium text-slate-600 leading-none">
-                        Available Now
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/80 bg-white/95 px-4 py-3 shadow-xl backdrop-blur-md">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#002c5f] to-[#004085] text-white">
-                      <ShieldCheck className="h-5 w-5 text-sky-300" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-extrabold text-slate-900 leading-none">Verified</p>
-                      <p className="mt-1 text-[11px] font-medium text-slate-600 leading-none">
-                        Pre-Owned Stock
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      {/*
+       * Page header. Replaces the old full-bleed hero: a studio photo of a vehicle we do not
+       * stock, a "$500 Trade-In Bonus" card whose Name and Phone inputs had no value, onChange,
+       * name, or ref and therefore captured nothing, a "30-sec response / No credit impact"
+       * trust row, a hardcoded "Verified Pre-Owned Stock" badge, and a vehicle-count chip read
+       * from the placeholder feed. None of those claims had a source, so the replacement
+       * carries only what is true: the H1 the landing pages need, one sentence of copy, and
+       * the dealership phone line. Leads still have the card CTAs, the chat widget, and the
+       * toolbar's trade-in link.
+       * NOTE kept from the deleted offer block: the client brief forbids publishing APR
+       * figures or monthly payments. Do not reintroduce a rate or a dollar-amount offer here
+       * without written approval from the dealership.
+       */}
+      <section className="border-b border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-x-10 gap-y-5 px-6 pb-9 pt-4 sm:pb-11 sm:pt-5">
+          <div className="max-w-2xl">
+            <h1 className="display text-balance text-[32px] text-slate-900 sm:text-4xl lg:text-[2.75rem]">
+              {landingLabel(search) ?? "Vehicles"} for sale in {dealerInfo.city}
+            </h1>
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-600">
+              Browse the current lot at AM Ford, serving Ashtabula County and Northeast Ohio.
+              Compare pricing, check specs, and schedule a test drive.
+            </p>
           </div>
+          <p className="pb-1 text-sm font-medium text-slate-500">
+            Questions before you visit?{" "}
+            <a
+              href={dealerInfo.phoneHref}
+              className="font-bold text-[#002c5f] underline-offset-4 hover:underline"
+            >
+              Call {dealerInfo.phone}
+            </a>
+          </p>
         </div>
       </section>
 

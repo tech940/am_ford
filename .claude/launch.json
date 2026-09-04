@@ -6,6 +6,12 @@
       "runtimeExecutable": "bun",
       "runtimeArgs": ["run", "dev", "--port", "3100", "--strictPort"],
       "port": 3100
+    },
+    {
+      "name": "v1prod",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["wrangler", "dev", "--port", "3200", "--config", "v1.wrangler.jsonc"],
+      "port": 3200
     }
   ]
 }
