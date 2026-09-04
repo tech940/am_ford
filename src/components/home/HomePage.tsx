@@ -8,6 +8,9 @@ import { ShopByCategory } from "./sections/ShopByCategory";
 import { HomeFooter } from "./sections/HomeFooter";
 
 // Lazy load below-the-fold home page sections to minimize main thread JS parse/eval work
+const WhatWeSell = lazy(() =>
+  import("./sections/WhatWeSell").then((m) => ({ default: m.WhatWeSell })),
+);
 const MostSearchedCars = lazy(() =>
   import("./sections/MostSearchedCars").then((m) => ({ default: m.MostSearchedCars })),
 );
@@ -57,6 +60,9 @@ export function HomePage() {
         <Hero />
         <ShopByCategory />
         <Suspense fallback={null}>
+          {/* Ported from the v2 redesign at the client's request: the full Ford lineup with
+              the official model renders. */}
+          <WhatWeSell />
           <MostSearchedCars />
           <FeaturedSpotlight />
           <ExtraordinaryCarousel />

@@ -1,0 +1,10 @@
+{
+  // Deploys THIS (v1) line to the amford-v1 worker. The repo's own wrangler.jsonc still
+  // names "tanstack-start-app", which is the v2 redesign's worker — deploying with that
+  // config from this branch would overwrite the new site. Always use this file here.
+  "name": "amford-v1",
+  "compatibility_date": "2025-09-24",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "dist/server/server.js",
+  "assets": { "directory": "dist/client" }
+}

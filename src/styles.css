@@ -42,6 +42,24 @@
   --color-ink: var(--ink);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+
+  /* Ported for the WhatWeSell section (brought over from the v2 redesign). Additive only:
+     nothing existing is redefined, and the values are v1's own palette so the section reads
+     as native — brand is the navy this site already paints in literals, the greys are the
+     slate steps the rest of the page uses. */
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  --color-brand: var(--brand);
+  --color-available: var(--available);
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.35;
+  --text-meta: 0.8125rem;
+  --text-meta--line-height: 1.45;
+  --text-ui: 0.9375rem;
+  --text-ui--line-height: 1.45;
+  --text-h3: 1.3125rem;
+  --text-h3--line-height: 1.25;
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -71,6 +89,12 @@
   --ink: #05214f;
   --surface: #f1f5f9;
   --surface-2: #e2e8f0;
+  /* Ported-section values, in v1's own register. */
+  --ink-2: #334155;
+  --ink-3: #64748b;
+  --rule: #e2e8f0;
+  --brand: #002c5f;
+  --available: #15803d;
 
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.18 0.03 256);

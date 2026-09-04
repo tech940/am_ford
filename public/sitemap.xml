@@ -2,325 +2,325 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://amford.com/</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?type=Truck</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?type=SUV</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?type=Car</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?type=EV</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?fuel=Gas</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?fuel=Hybrid</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?fuel=Electric</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?condition=New</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?condition=Certified+Pre-Owned</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/f150-platinum-2025</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/mustang-gt-2025</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/explorer-st-2025</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/f150-lightning-2025</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/bronco-outer-banks-2025</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/escape-titanium-2024</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-models</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/f-150</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/mustang</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/explorer</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/f-150-lightning</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/bronco</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/escape</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/areas-we-serve</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/county/ashtabula-oh</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/county/lake-oh</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/county/geauga-oh</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/county/trumbull-oh</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/ashtabula-oh</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/geneva-oh</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/conneaut-oh</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/austinburg-oh</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/madison-oh</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/chardon-oh</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/erie-pa</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/cleveland-oh</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/nationwide-vehicle-delivery</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/guides</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/guides/is-a-used-ford-f-150-reliable</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/guides/is-ford-ecoboost-reliable</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/guides/what-to-check-before-buying-a-used-ford</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/guides/best-ford-suv-for-families</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/compare</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/compare/explorer-vs-escape</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/compare/f-150-vs-f-150-lightning</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/compare/bronco-vs-explorer</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/trade-in</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/finance/bad-credit</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/commercial</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/financing</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/service</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/contact</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/about</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
