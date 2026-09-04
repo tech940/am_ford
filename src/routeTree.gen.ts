@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TradeInRouteImport } from './routes/trade-in'
 import { Route as ServiceRouteImport } from './routes/service'
 import { Route as NationwideVehicleDeliveryRouteImport } from './routes/nationwide-vehicle-delivery'
+import { Route as LedgerRouteImport } from './routes/ledger'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as FordModelsRouteImport } from './routes/ford-models'
 import { Route as FinancingRouteImport } from './routes/financing'
@@ -51,6 +52,11 @@ const NationwideVehicleDeliveryRoute =
     path: '/nationwide-vehicle-delivery',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LedgerRoute = LedgerRouteImport.update({
+  id: '/ledger',
+  path: '/ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InventoryRoute = InventoryRouteImport.update({
   id: '/inventory',
   path: '/inventory',
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/financing': typeof FinancingRoute
   '/ford-models': typeof FordModelsRoute
   '/inventory': typeof InventoryRoute
+  '/ledger': typeof LedgerRoute
   '/nationwide-vehicle-delivery': typeof NationwideVehicleDeliveryRoute
   '/service': typeof ServiceRoute
   '/trade-in': typeof TradeInRoute
@@ -203,6 +210,7 @@ export interface FileRoutesByTo {
   '/financing': typeof FinancingRoute
   '/ford-models': typeof FordModelsRoute
   '/inventory': typeof InventoryRoute
+  '/ledger': typeof LedgerRoute
   '/nationwide-vehicle-delivery': typeof NationwideVehicleDeliveryRoute
   '/service': typeof ServiceRoute
   '/trade-in': typeof TradeInRoute
@@ -231,6 +239,7 @@ export interface FileRoutesById {
   '/financing': typeof FinancingRoute
   '/ford-models': typeof FordModelsRoute
   '/inventory': typeof InventoryRoute
+  '/ledger': typeof LedgerRoute
   '/nationwide-vehicle-delivery': typeof NationwideVehicleDeliveryRoute
   '/service': typeof ServiceRoute
   '/trade-in': typeof TradeInRoute
@@ -260,6 +269,7 @@ export interface FileRouteTypes {
     | '/financing'
     | '/ford-models'
     | '/inventory'
+    | '/ledger'
     | '/nationwide-vehicle-delivery'
     | '/service'
     | '/trade-in'
@@ -287,6 +297,7 @@ export interface FileRouteTypes {
     | '/financing'
     | '/ford-models'
     | '/inventory'
+    | '/ledger'
     | '/nationwide-vehicle-delivery'
     | '/service'
     | '/trade-in'
@@ -314,6 +325,7 @@ export interface FileRouteTypes {
     | '/financing'
     | '/ford-models'
     | '/inventory'
+    | '/ledger'
     | '/nationwide-vehicle-delivery'
     | '/service'
     | '/trade-in'
@@ -342,6 +354,7 @@ export interface RootRouteChildren {
   FinancingRoute: typeof FinancingRoute
   FordModelsRoute: typeof FordModelsRoute
   InventoryRoute: typeof InventoryRoute
+  LedgerRoute: typeof LedgerRoute
   NationwideVehicleDeliveryRoute: typeof NationwideVehicleDeliveryRoute
   ServiceRoute: typeof ServiceRoute
   TradeInRoute: typeof TradeInRoute
@@ -382,6 +395,13 @@ declare module '@tanstack/react-router' {
       path: '/nationwide-vehicle-delivery'
       fullPath: '/nationwide-vehicle-delivery'
       preLoaderRoute: typeof NationwideVehicleDeliveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ledger': {
+      id: '/ledger'
+      path: '/ledger'
+      fullPath: '/ledger'
+      preLoaderRoute: typeof LedgerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inventory': {
@@ -550,6 +570,7 @@ const rootRouteChildren: RootRouteChildren = {
   FinancingRoute: FinancingRoute,
   FordModelsRoute: FordModelsRoute,
   InventoryRoute: InventoryRoute,
+  LedgerRoute: LedgerRoute,
   NationwideVehicleDeliveryRoute: NationwideVehicleDeliveryRoute,
   ServiceRoute: ServiceRoute,
   TradeInRoute: TradeInRoute,

@@ -40,7 +40,15 @@ export type QuickLeadInput = {
   name?: string;
   phone: string;
   email?: string;
+  /** The customer's own sentence. Goes into the CRM first, alone, unprefixed. */
   message: string;
+  /**
+   * Machine context — vehicle, price, intent, whichever option was tapped. Kept on its own
+   * line BELOW the message so the sales desk reads a human before it reads a robot.
+   */
+  meta?: string;
+  /** Rough window the customer chose, e.g. "Weekend". Lands in `leads.preferred_time`. */
+  preferredTime?: string;
   financingDetails?: Record<string, unknown>;
 };
 
@@ -56,7 +64,8 @@ export async function submitQuickLead(input: QuickLeadInput) {
     full_name: input.name?.trim() || "Not provided",
     email: input.email?.trim() ?? "",
     phone: input.phone.trim(),
-    message: `${input.message.trim()} ${consentStamp()}`,
+    message: [input.message.trim(), input.meta, consentStamp()].filter(Boolean).join("\n"),
+    preferred_time: input.preferredTime,
     financing_details: input.financingDetails,
   });
   if (result.success) markLeadSubmitted();
@@ -80,7 +89,7 @@ export function estMonthlyPayment(price: number): number {
 /** Pre-filled "text us" deep link (the ?& form keeps iOS and Android both happy). */
 export function smsLink(vehicle?: Vehicle): string {
   const body = vehicle
-    ? `Hi AM Ford — I'm interested in the ${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.trim} listed at $${vehicle.price.toLocaleString()}. Is it still available?`
-    : `Hi AM Ford — I have a question about your inventory.`;
+    ? `Hi AM Ford, I am interested in the ${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.trim} listed at $${vehicle.price.toLocaleString()}. Is it still available?`
+    : `Hi AM Ford, I have a question about your inventory.`;
   return `sms:${dealerInfo.phoneHref.replace("tel:", "")}?&body=${encodeURIComponent(body)}`;
 }

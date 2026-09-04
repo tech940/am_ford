@@ -4,8 +4,27 @@
     {
       "name": "dev",
       "runtimeExecutable": "bun",
-      "runtimeArgs": ["run", "dev", "--port", "3100", "--strictPort"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--port",
+        "3100",
+        "--strictPort"
+      ],
       "port": 3100
+    },
+    {
+      "name": "prod",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "wrangler",
+        "dev",
+        "--port",
+        "3200",
+        "--config",
+        "dist/server/wrangler.json"
+      ],
+      "port": 3200
     }
   ]
 }

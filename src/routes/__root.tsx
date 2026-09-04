@@ -33,8 +33,11 @@ const autoDealerSchema = {
   "@id": "https://amford.com/#dealer",
   name: "AM Ford",
   alternateName: "Nassief Ford",
+  // Describes the stock that exists: new Ford plus certified pre-owned Ford. This node used
+  // to advertise "used vehicles, commercial vehicles" to Google against a lot that holds
+  // neither, which invites clicks the dealership cannot convert.
   description:
-    "Family-owned Ford dealership in Jefferson, Ohio serving Ashtabula County, Northeast Ohio, and Northwestern Pennsylvania with new Ford trucks and SUVs, used vehicles, commercial vehicles, financing, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
+    "Family-owned Ford dealership in Jefferson, Ohio serving Ashtabula County, Northeast Ohio, and Northwestern Pennsylvania with new Ford trucks, SUVs, and EVs, certified pre-owned Ford models, financing, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
   url: "https://amford.com",
   telephone: "+14409982151",
   priceRange: "$$$",
@@ -131,18 +134,27 @@ export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "theme-color", content: "#002c5f" },
+      // `interactive-widget=resizes-content` is what makes a pinned dialog footer real on
+      // Chrome Android: without it the layout viewport stays full height when the software
+      // keyboard opens and the submit button sits underneath it.
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1, interactive-widget=resizes-content",
+      },
+      // The ONE literal colour left in the codebase, and it has to be one: the browser
+      // chrome reads this meta before any stylesheet is parsed, so it cannot be var(--brand).
+      // Keep it in sync with --brand when the palette lands.
+      { name: "theme-color", content: "#0b0d0f" },
       { title: "AM Ford | Ford Dealer in Jefferson, OH Serving Ashtabula County" },
       {
         name: "description",
         content:
-          "Family-owned Ford dealership in Jefferson, Ohio. Shop new Ford trucks and SUVs, quality used vehicles, and commercial vehicles with financing, trade-ins, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
+          "Family-owned Ford dealership in Jefferson, Ohio. Shop new Ford trucks, SUVs, and EVs plus certified pre-owned Ford models, with financing, trade-ins, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
       },
       {
         name: "keywords",
         content:
-          "Ford dealer Jefferson Ohio, Ford dealership Jefferson OH, Ford dealer Ashtabula County, used trucks Ashtabula County, Ford service Jefferson Ohio, used cars Jefferson Ohio, Ford dealer Northeast Ohio",
+          "Ford dealer Jefferson Ohio, Ford dealership Jefferson OH, Ford dealer Ashtabula County, certified pre-owned Ford Ashtabula County, Ford service Jefferson Ohio, new Ford F-150 Jefferson Ohio, Ford dealer Northeast Ohio",
       },
       { name: "author", content: "AM Ford" },
       { property: "og:site_name", content: "AM Ford" },
@@ -153,7 +165,7 @@ export const Route = createRootRoute({
       {
         property: "og:description",
         content:
-          "Shop new Ford trucks and SUVs, quality used vehicles, and commercial vehicles. Financing for many credit situations, trade-in appraisals, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
+          "Shop new Ford trucks, SUVs, and EVs plus certified pre-owned Ford models. Financing for many credit situations, trade-in appraisals, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
       },
       { property: "og:type", content: "website" },
       // Matches the homepage canonical exactly (with trailing slash). Every other route
@@ -195,17 +207,11 @@ export const Route = createRootRoute({
         fetchPriority: "high",
       },
       { rel: "stylesheet", href: appCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "preload",
-        as: "style",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
-      },
+      // The header and footer logos are still served from a third-party bucket, so the
+      // connection is worth opening early. Self-hosting that PNG would be better again.
+      // Fonts are self-hosted from src/assets/fonts (Archivo, latin subset). The four
+      // Google Fonts links that used to sit here made first paint wait on a third-party
+      // round trip for a face that is no longer used.
     ],
     scripts: [
       {

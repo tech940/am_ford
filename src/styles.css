@@ -4,19 +4,160 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* AM Ford — premium light theme. Navy accent only. */
+/* ============================================================================
+   AM Ford — "Ledger"
+   Photography sells, typography informs, and they never share a register.
+   Self-hosted Archivo; no font CDN. One accent. Square structure, 2px controls.
+   ========================================================================= */
+
+/* Archivo, latin subset, self-hosted. Replaces the Google Fonts CDN link that
+   previously blocked first paint on every route. `swap` so text is never invisible. */
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/archivo-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/fonts/archivo-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./assets/fonts/archivo-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/archivo-latin-700-normal.woff2") format("woff2");
+}
+/* Overpass — Red Hat's open redrawing of FHWA Series, the lettering on US highway signs.
+   This dealership's address is 1059 State Route 46 North. The type language of the place is
+   road signage: the route shield, the mile marker, the exit board, the number a buyer 200
+   miles out is following to get here. A display face drawn from that source is an argument no
+   other business can borrow, which is the whole point.
+   HEADLINES ONLY: h1, h2, section titles. It is not a body face and it is not a UI face. */
+@font-face {
+  font-family: "Overpass";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./assets/fonts/overpass-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Overpass";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/overpass-latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Overpass";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("./assets/fonts/overpass-latin-800-normal.woff2") format("woff2");
+}
+
+/* Overpass Mono — the same source, monospaced. Every FIGURE on this site is set in it:
+   price, odometer, year, VIN, stock number, phone, hours, economy, output.
+   WHY A MONO AT ALL. A car buyer compares. Monospaced figures make a column of prices align
+   digit for digit down a results page, so $64,995 beside $71,990 can be SCANNED rather than
+   read. Proportional figures turn that column into prose. Numbers here are data off a window
+   sticker, not sentences, and they are set like it.
+   This replaces Archivo Expanded, which carried the figures at 125% width and read as
+   stretched — which is exactly what it was. */
+@font-face {
+  font-family: "Overpass Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/fonts/overpass-mono-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Overpass Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./assets/fonts/overpass-mono-latin-600-normal.woff2") format("woff2");
+}
 
 @theme inline {
-  --font-sans: "Inter", "Lato", system-ui, -apple-system, sans-serif;
-  --font-display: "Inter", "Metropolis", system-ui, sans-serif;
+  /* Three roles, two families, one idea. Overpass and Overpass Mono are siblings drawn from
+     US highway lettering; Archivo carries the prose. See the @font-face comments above. */
+  --font-sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Overpass", "Archivo", system-ui, sans-serif;
+  --font-mono: "Overpass Mono", ui-monospace, "Cascadia Mono", Menlo, monospace;
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  /* Radius means STATE, not structure. Structural surfaces are square; controls get 2px;
+     rounded-full survives for status chips only. Every legacy rounded-* utility collapses
+     to 2px deliberately — that single lever removes the card-soup the audit found. */
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 2px;
+  --radius-2xl: 2px;
+  --radius-3xl: 2px;
+  --radius-4xl: 2px;
+
+  /* One scale, 1.25 ratio. Eight steps, each with exactly one job. The audit found eight
+     sizes crammed between 10px and 18px doing undifferentiated work. */
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.35;
+  --text-micro--letter-spacing: 0.09em;
+  --text-meta: 0.8125rem;
+  --text-meta--line-height: 1.45;
+  --text-ui: 0.9375rem;
+  --text-ui--line-height: 1.45;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.6;
+  --text-h3: 1.3125rem;
+  --text-h3--line-height: 1.25;
+  --text-h3--letter-spacing: -0.01em;
+  --text-h2: 1.875rem;
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h1: 2.75rem;
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: -0.025em;
+  --text-display: 4rem;
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.03em;
+
+  /* FIGURES. Two steps, both monospaced, both tabular. `figure-lg` is the price at the top of
+     a window sticker; `figure` is every row beneath it. Nothing else on the site uses these,
+     so the mono face itself means "this is vehicle data". */
+  --text-figure: 0.9375rem;
+  --text-figure--line-height: 1.3;
+  --text-figure--letter-spacing: 0em;
+  --text-figure-lg: 2.125rem;
+  --text-figure-lg--line-height: 1;
+  --text-figure-lg--letter-spacing: -0.02em;
+
+  /* Semantic, never decorative. */
+  /* The soothing set, now reachable as utilities. These were defined in :root and never
+     exposed to Tailwind, which is why the whole site rendered as navy on grey. */
+  --color-sage: var(--sage);
+  --color-sage-tint: var(--sage-tint);
+  --color-sage-deep: var(--sage-deep);
+  --color-rust: var(--rust);
+  --color-rust-tint: var(--rust-tint);
+  --color-rust-deep: var(--rust-deep);
+  --color-brand-tint: var(--brand-tint);
+  --color-brand-bright: var(--brand-bright);
+  --color-silver: var(--silver);
+  --color-asphalt: var(--asphalt);
+  --color-available: var(--available);
+  --color-attention: var(--attention);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -42,6 +183,24 @@
   --color-ink: var(--ink);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+
+  /* Ford Midnight Navy, the homepage's accent. Exposing these here is what makes
+     `bg-brand`, `text-brand/70`, `ring-brand`, `border-brand-deep` and friends work, so the
+     colour lives in one place instead of 165 arbitrary-value class literals. */
+  --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-lift: var(--brand-lift);
+  --color-brand-tint: var(--brand-tint);
+  --color-brand-bright: var(--brand-bright);
+  --color-silver: var(--silver);
+  --color-asphalt: var(--asphalt);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  --color-sage: var(--sage);
+  --color-sage-tint: var(--sage-tint);
+  --color-rust: var(--rust);
+  --color-rust-tint: var(--rust-tint);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -58,38 +217,73 @@
 }
 
 :root {
-  --radius: 0.875rem;
+  /* Controls only. Structural surfaces are square — see the radius scale in @theme. */
+  --radius: 2px;
 
-  /* Brand - AM Ford Navy #05214F */
-  --primary: #05214f;
+  /* ---- AM FORD RE-ART-DIRECTION (client brief, Aug 2026) --------------------
+     Asphalt-dominant automotive identity. Deep black is a MAJOR ground, not an accent;
+     Ford blue is the one brand colour; neutrals are cool metal, not warm paper.
+     The warm parchment palette this replaces read as generic premium-minimalism, which
+     the client rejected in writing. Do not reintroduce beige. */
+  --asphalt: #0b0d0f;
+  --brand: #0057b8;
+  --brand-rgb: 0 87 184;
+  --brand-deep: #062b5c;
+  --brand-lift: #0a66cc;
+  --brand-tint: #e9f1fa;
+  /* Ford blue on asphalt measures 2.4:1 — illegible. Anything blue sitting ON a dark
+     ground uses this instead (7.0:1 on asphalt). Buttons keep --brand; text swaps. */
+  --brand-bright: #4d9fff;
+
+  --primary: var(--brand);
   --primary-foreground: #ffffff;
-  --primary-glow: rgba(5, 33, 79, 0.4);
+  --primary-glow: rgb(var(--brand-rgb) / 0.35);
 
-  /* Surfaces & Typography */
-  --background: #f8fafc;
-  --foreground: #05214f;
-  --ink: #05214f;
-  --surface: #f1f5f9;
-  --surface-2: #e2e8f0;
+  /* Metallic silver, the secondary neutral of the brief. */
+  --silver: #b8bdc3;
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.03 256);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.03 256);
+  /* Vehicle-adjacent supports, cooled from the old warm sage/rust. Same semantic jobs:
+     sage = positive facts (savings, open), rust = attention. */
+  --sage: #23684a;
+  --sage-tint: #e7f3ec;
+  --sage-deep: #174b34;
+  --rust: #9b3b24;
+  --rust-tint: #fdf0ec;
+  --rust-deep: #7e2d1a;
 
-  --secondary: oklch(0.96 0.006 250);
-  --secondary-foreground: oklch(0.21 0.06 256);
-  --muted: oklch(0.96 0.006 250);
-  --muted-foreground: oklch(0.5 0.02 256);
-  --accent: oklch(0.94 0.012 256);
-  --accent-foreground: oklch(0.21 0.06 256);
+  /* ---- Ground & Surfaces: pure white contrast over cool grey supports, with asphalt
+     as the recurring dark band that gives the site its automotive weight. */
+  --background: #ffffff;
+  --foreground: #0b0d0f;
+  --ink: #0b0d0f;
+  --ink-2: #3c4249;
+  --ink-3: #667077;
+  --surface: #eef0f2;
+  --surface-2: #e2e6ea;
+  --rule: #d8dce0;
 
-  --destructive: oklch(0.6 0.22 27);
-  --destructive-foreground: oklch(0.985 0 0);
+  /* ---- Semantic Aliases ------------------------------------------------- */
+  --available: var(--sage);
+  --attention: var(--rust);
 
-  --border: oklch(0.91 0.008 256);
-  --input: oklch(0.92 0.008 256);
-  --ring: oklch(0.21 0.06 256);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+
+  --secondary: var(--surface);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface);
+  --muted-foreground: var(--ink-3);
+  --accent: var(--surface-2);
+  --accent-foreground: var(--ink);
+
+  --destructive: var(--attention);
+  --destructive-foreground: #ffffff;
+
+  --border: var(--rule);
+  --input: var(--rule);
+  --ring: var(--brand);
 
   --chart-1: oklch(0.21 0.06 256);
   --chart-2: oklch(0.55 0.15 256);
@@ -167,38 +361,25 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  /* Headings are highway lettering; prose is not. h3 stays on Archivo deliberately: below
+     ~21px the FHWA forms lose the width that makes them read as signage and start to look
+     merely condensed. Any h1/h2 that wants the body face opts out with `font-sans`. */
+  h1,
+  h2 {
+    font-family: var(--font-display);
+  }
   ::selection {
-    background: oklch(0.21 0.06 256);
+    background: var(--brand);
     color: white;
   }
 }
 
 @layer utilities {
-  .glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid var(--glass-border);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.6) inset,
-      var(--shadow-soft);
-  }
-  .glass-strong {
-    background: var(--glass-bg-strong);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid var(--glass-border);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.8) inset,
-      var(--shadow-elevated);
-  }
-  .glass-navy {
-    background: linear-gradient(135deg, rgba(0, 20, 46, 0.85), rgba(0, 20, 46, 0.7));
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: white;
-  }
+  /* .glass, .glass-strong and .glass-navy deleted. Frosted-blur panels are named on the
+     client's avoid list, and a backdrop-filter over a photograph is also the most expensive
+     thing this page could composite on a mid-range Android. Surfaces get a ground and a rule
+     instead. */
+
   .text-balance {
     text-wrap: balance;
   }
@@ -206,15 +387,10 @@
     text-wrap: pretty;
   }
 
-  .grid-bg {
-    background-image:
-      linear-gradient(to right, rgba(0, 20, 46, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 20, 46, 0.05) 1px, transparent 1px);
-    background-size: 48px 48px;
-  }
-  .noise {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.45'/></svg>");
-  }
+  /* .grid-bg and .noise removed. A hairline grid tiled at a fixed 48px cell and an
+     feTurbulence noise wash are decoration standing in for structure, and neither surface
+     that used them (the vehicle detail header, the footer) is a canvas, map or blueprint.
+     In Ledger, structure comes from rules and ground. */
 
   .shadow-soft {
     box-shadow: var(--shadow-soft);
@@ -243,465 +419,103 @@
     font-weight: 800;
   }
 
-  /* Marquee */
-  @keyframes marquee {
+  /* Indeterminate progress rule, pinned to the top edge of a dialog footer while a lead is in
+     flight. A third-width bar crossing the footer, not a spinner: there is no spinner glyph in
+     icons.tsx, and a rule is what this system draws structure with.
+     Reduced motion is handled at the call site (motion-reduce:animate-none + w-full), because
+     a frozen third-width bar is indistinguishable from a rendering bug. */
+  @keyframes leadprogress {
     from {
-      transform: translateX(0);
+      transform: translateX(-100%);
     }
     to {
-      transform: translateX(-50%);
+      transform: translateX(300%);
     }
   }
-  .animate-marquee {
-    animation: marquee 30s linear infinite;
-  }
 
-  /* Float */
-  @keyframes floaty {
-    0%,
-    100% {
-      transform: translateY(0);
+  /* HERO DRIFT — the one scroll-linked movement on a photograph.
+     The hero image runs at a constant 1.06 overscan and drifts down 3% across the first
+     viewport of scroll, so the photograph reads as slower than the page: the classic
+     automotive-campaign move, done by the compositor off the scroll position with zero
+     JavaScript. The overscan is what hides the edges the drift would otherwise expose.
+     At scroll position zero the drift is zero, so the fold renders exactly the composition
+     the contrast numbers were measured against. Small on purpose: 3% is movement you feel,
+     not a vestibular ride, and reduced-motion opts out entirely. */
+  @keyframes hero-drift {
+    from {
+      transform: scale(1.06) translateY(0);
     }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-  .animate-floaty {
-    animation: floaty 6s ease-in-out infinite;
-  }
-
-  /* Shine */
-  @keyframes shine {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
+    to {
+      transform: scale(1.06) translateY(3%);
     }
   }
-  .text-shine {
-    background: linear-gradient(
-      90deg,
-      currentColor 0%,
-      currentColor 40%,
-      rgba(255, 255, 255, 0.9) 50%,
-      currentColor 60%,
-      currentColor 100%
-    );
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shine 4s linear infinite;
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      .parallax-hero {
+        animation: hero-drift linear both;
+        animation-timeline: scroll();
+        animation-range: 0vh 100vh;
+      }
+    }
   }
 
-  .focus-ring {
-    outline: none;
-    box-shadow: 0 0 0 3px oklch(0.21 0.06 256 / 0.18);
+  /* IMAGE SETTLE — below-fold photography arrives at 1.04 and settles to rest as it enters.
+     An entry reveal, not a loop: it finishes inside the first 45% of entry and never runs
+     again. Never applied to the LCP image, because an entry animation on the largest paint
+     is a self-inflicted delay. Same triple gating as the section reveal. */
+  @keyframes img-settle {
+    from {
+      transform: scale(1.04);
+    }
+    to {
+      transform: none;
+    }
   }
-}
 
-/* Reduce motion */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .img-reveal {
+        animation: img-settle cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 45%;
+      }
+    }
   }
-}
 
-/* -------------------------------------------------------------------------- */
-/* OTP & Marketing Popups (Imported from otp_popup)                           */
-/* -------------------------------------------------------------------------- */
-:root {
-  --brand-color: #05214f;
-}
+  /* SECTION REVEAL — the only scroll-linked motion on this site.
+     It is a CSS scroll-driven animation, not an IntersectionObserver. The layer this project
+     deleted ran 25 observers and ~86 reveal wrappers to do this, which is what made the old
+     homepage feel like it was animating at you. This costs zero JavaScript, zero observers and
+     zero React state: the compositor drives it off the scroll position directly.
+     6px and 260ms of travel. Emil's frequency rule applies to scrolling too: a visitor passes
+     seven of these on one page, so it has to be something you notice only by its absence.
+     Gated three ways. Browsers without scroll-driven animations (Safari, Firefox today) simply
+     render the content, which is the correct fallback for a reveal: the content was never
+     hidden by JavaScript, so there is nothing to un-hide. Reduced motion opts out entirely
+     rather than relying on the global duration override, because a scroll-linked animation
+     with a 0.001ms duration is still driven by the scroll position. */
+  @keyframes section-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 
-.otp-overlay {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100dvh;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(8px);
-  z-index: 99999;
-  font-family: var(--font-sans);
-  padding: 16px;
-}
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .reveal {
+        animation: section-reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 26%;
+      }
+    }
+  }
 
-.otp-card {
-  position: relative;
-  background: #fff;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 900px;
-  overflow: hidden;
-  max-height: min(90vh, calc(100dvh - 32px));
-  overflow-y: auto;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-.otp-flex-container {
-  display: flex;
-  min-height: 480px;
-  position: relative;
-  align-items: stretch;
-}
-
-.otp-sidebar {
-  width: 320px;
-  min-width: 280px;
-  max-width: 38%;
-  background: var(--brand-color);
-  padding: 32px 24px;
-  display: flex;
-  flex-direction: column;
-}
-
-.otp-sidebar-inner {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.otp-form-panel {
-  flex: 1;
-  padding: 36px 40px;
-  min-width: 0;
-  position: relative;
-}
-
-.otp-input-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px 20px;
-}
-
-.offer-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 100dvh;
-  padding: 16px;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(8px);
-}
-
-.offer-popup {
-  width: 100%;
-  max-width: 580px;
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
-}
-
-.offer-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.offer-header {
-  position: relative;
-  padding: 28px 30px 20px;
-  background:
-    radial-gradient(circle at top right, #ff6b00 0%, transparent 40%),
-    linear-gradient(135deg, #00142e 0%, #05214f 100%);
-}
-
-.offer-logo {
-  max-width: 130px;
-  background: #fff;
-  border-radius: 8px;
-  padding: 6px 12px;
-  margin: 0 auto 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.offer-main {
-  text-align: center;
-}
-
-.amount {
-  font-size: 54px;
-  font-weight: 900;
-  color: white;
-  font-style: italic;
-}
-
-.off {
-  font-size: 26px;
-  color: #ffd633;
-  font-weight: 900;
-  font-style: italic;
-  margin-left: 6px;
-}
-
-.offer-main h2 {
-  color: white;
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-
-.stars {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 8px;
-  color: #ffd633;
-  font-size: 13px;
-}
-
-.offer-body {
-  padding: 24px 30px;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.field label {
-  display: block;
-  margin-bottom: 4px;
-  font-size: 10px;
-  font-weight: 800;
-  color: #475569;
-}
-
-.field input {
-  width: 100%;
-  height: 42px;
-  border-radius: 8px;
-  border: 1.5px solid #e2e8f0;
-  padding: 0 12px;
-  font-size: 14px;
-  background: #f8fafc;
-}
-
-.field input:focus {
-  outline: none;
-  border-color: #05214f;
-  background: #fff;
-}
-
-.offer-btn {
-  width: 100%;
-  margin-top: 16px;
-  border: none;
-  cursor: pointer;
-  border-radius: 10px;
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, #05214f, #00142e);
-  color: white;
-  box-shadow: 0 4px 14px rgba(5, 33, 79, 0.35);
-}
-
-.trust-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 16px;
-  font-size: 11px;
-  color: #64748b;
-}
-
-.trust-box {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.offer-footer {
-  margin-top: 16px;
-  text-align: center;
-  font-size: 11px;
-  color: #94a3b8;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Trade Offer Popup */
-.trade-offer-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(8px);
-  padding: 16px;
-}
-
-.trade-offer-shell {
-  position: relative;
-  width: 100%;
-  max-width: 720px;
-  background: #ffffff;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
-}
-
-.trade-offer-shell--success {
-  max-width: 520px;
-  padding: 40px;
-  text-align: center;
-}
-
-.trade-offer-close {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  font-size: 24px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  color: #05214f;
-}
-
-.trade-offer-hero {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  min-height: 180px;
-}
-
-.trade-offer-promo {
-  background: #05214f;
-  color: #ffffff;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.trade-offer-promo-amount {
-  font-size: 48px;
-  font-weight: 900;
-  line-height: 1;
-  color: #38bdf8;
-}
-
-.trade-offer-promo-copy {
-  font-size: 20px;
-  font-weight: 800;
-  line-height: 1.1;
-  margin-top: 6px;
-}
-
-.trade-offer-hero-image-wrap {
-  position: relative;
-  min-height: 180px;
-}
-
-.trade-offer-hero-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.trade-offer-body {
-  padding: 24px;
-}
-
-.trade-offer-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.trade-offer-field-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  color: #475569;
-  margin-bottom: 4px;
-}
-
-.trade-offer-field-input {
-  width: 100%;
-  height: 42px;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 0 12px;
-  font-size: 14px;
-}
-
-.trade-offer-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.trade-offer-primary {
-  flex: 1;
-  height: 44px;
-  background: #05214f;
-  color: white;
-  font-weight: 700;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-.trade-offer-secondary {
-  flex: 1;
-  height: 44px;
-  background: #f1f5f9;
-  color: #475569;
-  font-weight: 600;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-/* ============================================================================
-   MOBILE TYPE SCALE
-   Below the `sm` breakpoint, display sizes drop 2px and body/label sizes drop
-   1px. Only the unprefixed utilities are adjusted: responsive variants such as
-   `sm:text-6xl` never apply at these widths, so nothing is double-shrunk.
-
-   These rules sit outside Tailwind's @layer so they win over the utilities
-   without needing !important. Only font-size is touched; each utility's
-   line-height is left alone so vertical rhythm stays intact.
-   ========================================================================== */
-@media (max-width: 639px) {
   /* Small type: 1px down */
   .text-\[10px\] {
     font-size: 9px;

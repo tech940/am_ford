@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Compass, MapPin, Phone } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
+import { SectionTag } from "@/components/site/SectionTag";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { FORD_MODELS } from "@/lib/fordModels";
@@ -107,13 +107,13 @@ function FordModelsHub() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to="/inventory"
-              className="inline-flex items-center gap-2 rounded-full bg-[#002c5f] px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-[#001f44]"
+              className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-brand-deep"
             >
               Browse every vehicle in stock <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
             <a
               href={dealerInfo.phoneHref}
-              className="inline-flex items-center gap-2 rounded-full border border-[#002c5f]/25 bg-white px-6 py-3.5 text-sm font-bold text-[#002c5f] transition hover:bg-slate-50"
+              className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-white px-6 py-3.5 text-sm font-bold text-brand transition hover:bg-slate-50"
             >
               <Phone className="h-4 w-4" aria-hidden /> Call {dealerInfo.phone}
             </a>
@@ -130,14 +130,14 @@ function FordModelsHub() {
                 key={m.slug}
                 to="/ford/$model"
                 params={{ model: m.slug }}
-                className="group flex flex-col rounded-3xl bg-card p-7 ring-1 ring-border transition hover:ring-[#002c5f]/40"
+                className="group flex flex-col rounded-3xl bg-card p-7 ring-1 ring-border transition hover:ring-brand/40"
               >
                 <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary">
                   {m.bodyStyle === "EV" ? "Electric" : m.bodyStyle}
                 </span>
                 <h3 className="mt-4 text-lg font-bold text-ink">{m.name}</h3>
                 <p className="mt-2 text-sm font-semibold text-muted-foreground">{m.tagline}</p>
-                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-[#002c5f] group-hover:underline">
+                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand group-hover:underline">
                   Read the {m.name} buying guide
                   <ArrowRight className="h-4 w-4" aria-hidden />
                 </span>
@@ -187,7 +187,7 @@ function FordModelsHub() {
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
                 to="/nationwide-vehicle-delivery"
-                className="inline-flex items-center gap-2 rounded-full bg-[#002c5f] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#001f44]"
+                className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-bold text-white transition hover:bg-brand-deep"
               >
                 See how home delivery and shipping work
                 <ArrowRight className="h-4 w-4" aria-hidden />

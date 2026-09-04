@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle2, Loader2 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
+import { SectionTag } from "@/components/site/SectionTag";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { dealerInfo } from "@/lib/vehicles";
@@ -191,7 +191,7 @@ function ContactForm() {
         </label>
       </div>
       <label className="mt-5 flex items-start gap-2.5">
-        <input type="checkbox" required className="mt-0.5 h-6 w-6 shrink-0 accent-[#002c5f]" />
+        <input type="checkbox" required className="mt-0.5 h-6 w-6 shrink-0 accent-brand" />
         <span className="text-xs leading-relaxed text-muted-foreground">{CONSENT_TEXT}</span>
       </label>
       {error && <p className="mt-3 text-sm font-medium text-red-600">{error}</p>}

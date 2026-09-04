@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, ChevronLeft, ChevronRight, Phone, Sparkles, User, X } from "lucide-react";
 import { CONSENT_TEXT, RESPONSE_PROMISE, submitQuickLead } from "@/lib/leads";
+import { IconCheck, IconChevronRight, IconClose, IconPhone } from "@/components/ledger";
 import { cn } from "@/lib/utils";
 
-const NAVY = "#002c5f";
+/** Reads the token, so a palette swap reaches inline styles too. */
+const NAVY = "var(--brand)";
 const TOTAL_STEPS = 6;
 
 const YEARS = Array.from({ length: 17 }, (_, i) => 2026 - i);
@@ -26,8 +27,8 @@ const MAKES = [
 
 const MILEAGE_CHIPS = [
   { label: "Under 30k", value: 25000 },
-  { label: "30–60k", value: 45000 },
-  { label: "60–100k", value: 80000 },
+  { label: "30 to 60k", value: 45000 },
+  { label: "60-100k", value: 80000 },
   { label: "100k+", value: 120000 },
 ];
 
@@ -185,7 +186,7 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
 
     const message =
       `Trade-in valuation: ${year} ${make} ${model.trim()}, ~${miles.toLocaleString()} miles, ` +
-      `${condition} condition. Estimate shown: $${estimate.lo.toLocaleString()}–` +
+      `${condition} condition. Estimate shown: $${estimate.lo.toLocaleString()}-` +
       `$${estimate.hi.toLocaleString()}.`;
 
     const result = await submitQuickLead({ phone, name: name || undefined, message });
@@ -200,20 +201,20 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
 
   const gridButton = (selected: boolean) =>
     cn(
-      "flex min-h-11 items-center justify-center rounded-xl px-2 py-2.5 text-sm font-semibold",
+      "flex min-h-11 items-center justify-center rounded-sm px-2 py-2.5 text-sm font-semibold",
       "ring-1 transition",
       selected
-        ? "bg-[#002c5f] text-white ring-[#002c5f] shadow-sm"
-        : "bg-slate-50 text-slate-700 ring-slate-200 hover:ring-[#002c5f]/50 hover:text-[#002c5f]",
+        ? "bg-brand text-white ring-brand"
+        : "bg-surface text-ink-2 ring-rule hover:ring-brand/50 hover:text-brand",
     );
 
   const inputClass =
-    "w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 " +
-    "outline-none transition focus:border-[#002c5f] focus:ring-2 focus:ring-[#002c5f]/15";
+    "w-full rounded-sm border border-rule bg-surface px-4 py-3 text-sm text-ink " +
+    "outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/15";
 
   const primaryButton =
-    "flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#002c5f] text-sm " +
-    "font-semibold text-white shadow-md transition hover:opacity-90 disabled:cursor-not-allowed " +
+    "flex h-12 w-full items-center justify-center gap-2 rounded-sm bg-brand text-sm " +
+    "font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed " +
     "disabled:opacity-40";
 
   return (
@@ -230,7 +231,7 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         onClick={onClose}
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
+        className="fixed inset-0 bg-surface/60"
       />
 
       {/* Card */}
@@ -238,23 +239,22 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
         initial={{ opacity: 0, scale: 0.92, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 320, damping: 28 }}
-        className="relative z-10 my-8 w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl
-          ring-1 ring-slate-200"
+        className="relative z-10 my-8 w-full max-w-md overflow-hidden rounded-sm bg-white
+          ring-1 ring-rule"
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-rule px-5 py-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-[#002c5f]" />
-            <h3 className="text-base font-bold text-slate-900">Trade-In Value Estimator</h3>
+            <h3 className="text-base font-bold text-ink">Trade-In Value Estimator</h3>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="grid h-10 w-10 place-items-center rounded-full bg-slate-100 text-slate-600
-              transition hover:bg-slate-200"
+            className="grid h-10 w-10 place-items-center rounded-sm bg-surface text-ink-2
+              transition hover:bg-surface"
           >
-            <X className="h-4 w-4" />
+            <IconClose className="h-4 w-4" />
           </button>
         </div>
 
@@ -262,25 +262,25 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
         {!revealed && (
           <div className="px-5 pt-4">
             <div className="mb-1.5 flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-ink-3">
                 Step {step} of {TOTAL_STEPS}
               </span>
               {step > 1 && (
                 <button
                   type="button"
                   onClick={goBack}
-                  className="flex min-h-10 items-center gap-1 rounded-full px-2 text-xs
-                    font-semibold text-slate-500 transition hover:text-[#002c5f]"
+                  className="flex min-h-10 items-center gap-1 rounded-sm px-2 text-xs
+                    font-semibold text-ink-3 transition hover:text-brand"
                 >
-                  <ChevronLeft className="h-4 w-4" /> Back
+                  <IconChevronRight className="h-4 w-4" /> Back
                 </button>
               )}
             </div>
-            <div className="h-1 w-full overflow-hidden rounded-full bg-slate-100">
+            <div className="h-1 w-full overflow-hidden rounded-sm bg-surface">
               <motion.div
                 animate={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
                 transition={{ type: "spring", stiffness: 260, damping: 30 }}
-                className="h-full rounded-full"
+                className="h-full rounded-sm"
                 style={{ backgroundColor: NAVY }}
               />
             </div>
@@ -300,40 +300,34 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
               {revealed && estimate !== null ? (
                 <div className="py-2 text-center">
                   <div
-                    className="mx-auto flex h-16 w-16 items-center justify-center rounded-full
+                    className="mx-auto flex h-16 w-16 items-center justify-center rounded-sm
                       bg-green-100 text-green-600"
                   >
-                    <CheckCircle2 className="h-8 w-8" />
+                    <IconCheck className="h-8 w-8" />
                   </div>
-                  <h4 className="mt-4 text-xl font-bold text-slate-900">
+                  <h4 className="mt-4 text-xl font-bold text-ink">
                     Here&rsquo;s your trade-in estimate
                   </h4>
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p className="mt-1 text-sm text-ink-3">
                     {year} {make} {model.trim()} · {miles.toLocaleString()} miles · {condition}
                   </p>
-                  <p className="mt-4 text-3xl font-extrabold tracking-tight text-[#002c5f]">
-                    ${estimate.lo.toLocaleString()} – ${estimate.hi.toLocaleString()}
+                  <p className="mt-4 text-3xl font-extrabold tracking-tight text-brand">
+                    ${estimate.lo.toLocaleString()} - ${estimate.hi.toLocaleString()}
                   </p>
-                  <div
-                    className="mt-4 rounded-2xl bg-[#002c5f]/5 px-4 py-3 text-sm font-semibold
-                      text-[#002c5f]"
-                  >
-                    + $500 AM Ford trade bonus on top when you trade toward any vehicle in stock
-                  </div>
-                  <p className="mt-3 text-xs leading-relaxed text-slate-500">
+                  <p className="mt-3 text-xs leading-relaxed text-ink-3">
                     Rough starting range based on age, mileage, and condition only. It does not read
                     your make or model, so it is not a valuation and not an offer. The real figure
                     comes from an appraisal.
                   </p>
                   {errorMessage ? (
                     <p
-                      className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm font-medium
+                      className="mt-3 rounded-sm bg-amber-50 px-4 py-3 text-sm font-medium
                         text-amber-800 ring-1 ring-amber-200"
                     >
                       {errorMessage}
                     </p>
                   ) : (
-                    <p className="mt-3 text-sm font-medium text-slate-600">{RESPONSE_PROMISE}</p>
+                    <p className="mt-3 text-sm font-medium text-ink-2">{RESPONSE_PROMISE}</p>
                   )}
                   <button type="button" onClick={onClose} className={cn(primaryButton, "mt-5")}>
                     Done
@@ -341,7 +335,7 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
                 </div>
               ) : step === 1 ? (
                 <div>
-                  <h4 className="mb-3 text-lg font-bold text-slate-900">{STEP_TITLES[0]}</h4>
+                  <h4 className="mb-3 text-lg font-bold text-ink">{STEP_TITLES[0]}</h4>
                   <div className="grid grid-cols-4 gap-2">
                     {YEARS.map((y) => (
                       <button
@@ -360,7 +354,7 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
                 </div>
               ) : step === 2 ? (
                 <div>
-                  <h4 className="mb-3 text-lg font-bold text-slate-900">{STEP_TITLES[1]}</h4>
+                  <h4 className="mb-3 text-lg font-bold text-ink">{STEP_TITLES[1]}</h4>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     {MAKES.map((m) => (
                       <button
@@ -379,7 +373,7 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
                 </div>
               ) : step === 3 ? (
                 <div>
-                  <h4 className="mb-3 text-lg font-bold text-slate-900">{STEP_TITLES[2]}</h4>
+                  <h4 className="mb-3 text-lg font-bold text-ink">{STEP_TITLES[2]}</h4>
                   <input
                     type="text"
                     required
@@ -395,12 +389,12 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
                     onClick={() => setStep(4)}
                     className={cn(primaryButton, "mt-4")}
                   >
-                    Next <ChevronRight className="h-4 w-4" />
+                    Next <IconChevronRight className="h-4 w-4" />
                   </button>
                 </div>
               ) : step === 4 ? (
                 <div>
-                  <h4 className="mb-3 text-lg font-bold text-slate-900">{STEP_TITLES[3]}</h4>
+                  <h4 className="mb-3 text-lg font-bold text-ink">{STEP_TITLES[3]}</h4>
                   <input
                     type="number"
                     inputMode="numeric"
@@ -418,10 +412,10 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
                         type="button"
                         onClick={() => setMilesText(String(chip.value))}
                         className={cn(
-                          "min-h-10 rounded-full px-4 py-2 text-xs font-semibold ring-1 transition",
+                          "min-h-10 rounded-sm px-4 py-2 text-xs font-semibold ring-1 transition",
                           milesText === String(chip.value)
-                            ? "bg-[#002c5f] text-white ring-[#002c5f]"
-                            : "bg-slate-50 text-slate-600 ring-slate-200 hover:text-[#002c5f]",
+                            ? "bg-brand text-white ring-brand"
+                            : "bg-surface text-ink-2 ring-rule hover:text-brand",
                         )}
                       >
                         {chip.label}
@@ -434,12 +428,12 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
                     onClick={() => setStep(5)}
                     className={cn(primaryButton, "mt-4")}
                   >
-                    Next <ChevronRight className="h-4 w-4" />
+                    Next <IconChevronRight className="h-4 w-4" />
                   </button>
                 </div>
               ) : step === 5 ? (
                 <div>
-                  <h4 className="mb-3 text-lg font-bold text-slate-900">{STEP_TITLES[4]}</h4>
+                  <h4 className="mb-3 text-lg font-bold text-ink">{STEP_TITLES[4]}</h4>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {CONDITIONS.map((c) => (
                       <button
@@ -450,44 +444,44 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
                           setStep(6);
                         }}
                         className={cn(
-                          "w-full rounded-2xl p-4 text-left transition",
+                          "w-full rounded-sm p-4 text-left transition",
                           condition === c.key
-                            ? "bg-[#002c5f]/5 ring-2 ring-[#002c5f]"
-                            : "bg-slate-50 ring-1 ring-slate-200 hover:ring-[#002c5f]/50",
+                            ? "bg-brand/5 ring-2 ring-brand"
+                            : "bg-surface ring-1 ring-rule hover:ring-brand/50",
                         )}
                       >
                         <span
                           className={cn(
                             "block text-sm font-bold",
-                            condition === c.key ? "text-[#002c5f]" : "text-slate-900",
+                            condition === c.key ? "text-brand" : "text-ink",
                           )}
                         >
                           {c.key}
                         </span>
-                        <span className="mt-0.5 block text-xs text-slate-500">{c.blurb}</span>
+                        <span className="mt-0.5 block text-xs text-ink-3">{c.blurb}</span>
                       </button>
                     ))}
                   </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit}>
-                  <h4 className="text-lg font-bold text-slate-900">{STEP_TITLES[5]}</h4>
-                  <p className="mt-1 text-sm text-slate-500">
+                  <h4 className="text-lg font-bold text-ink">{STEP_TITLES[5]}</h4>
+                  <p className="mt-1 text-sm text-ink-3">
                     Tell us where to send it and we&rsquo;ll unlock your estimate for your {year}{" "}
                     {make} {model.trim()}.
                   </p>
 
                   {errorMessage && (
-                    <div className="mt-3 rounded-xl bg-red-50 p-3 text-xs font-semibold text-red-600">
+                    <div className="mt-3 rounded-sm bg-red-50 p-3 text-xs font-semibold text-red-600">
                       {errorMessage}
                     </div>
                   )}
 
                   <div className="mt-4 space-y-3">
                     <div className="relative">
-                      <User
+                      <IconCheck
                         className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2
-                          text-slate-400"
+                          text-ink-3"
                       />
                       <input
                         type="text"
@@ -499,9 +493,9 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
                       />
                     </div>
                     <div className="relative">
-                      <Phone
+                      <IconPhone
                         className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2
-                          text-slate-400"
+                          text-ink-3"
                       />
                       <input
                         type="tel"
@@ -517,17 +511,17 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
                   </div>
 
                   <label
-                    className="mt-3 flex cursor-pointer items-start gap-3 rounded-xl bg-slate-50
-                      p-3 ring-1 ring-slate-200"
+                    className="mt-3 flex cursor-pointer items-start gap-3 rounded-sm bg-surface
+                      p-3 ring-1 ring-rule"
                   >
                     <input
                       type="checkbox"
                       required
                       checked={consent}
                       onChange={(e) => setConsent(e.target.checked)}
-                      className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-[#002c5f]"
+                      className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-brand"
                     />
-                    <span className="text-xs leading-relaxed text-slate-500">{CONSENT_TEXT}</span>
+                    <span className="text-xs leading-relaxed text-ink-3">{CONSENT_TEXT}</span>
                   </label>
 
                   <button

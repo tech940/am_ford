@@ -1,338 +1,227 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { ChevronDown, Menu, Phone, X } from "lucide-react";
 import { dealerInfo } from "@/lib/vehicles";
+import logo from "@/assets/am-ford-logo.png";
 import {
-  bodyStyleItems,
-  cityItems,
-  compareItems,
-  countyItems,
-  guideItems,
-  modelItems,
-  FrequentSearchLink,
-  type FrequentSearchItem,
-} from "@/components/site/FrequentSearches";
-import { cn } from "@/lib/utils";
+  Button,
+  IconPhone,
+  Sheet,
+  SheetBody,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ledger";
 
 /**
- * Primary navigation.
+ * The site frame, top. Four routes and the phone, on their own plane.
  *
- * The three dropdowns exist so the model, city, county, guide, and comparison pages are
- * reachable from every page rather than from the sitemap alone. Two things about how they
- * are built are load-bearing:
+ * ONE NAV FOR EVERY PAGE. This replaces two: a 338-line bar with three mega-menus on 24
+ * routes, and this one on the homepage. The mega-menus are not ported. The brief asks for
+ * "logo, a handful of nav links, a phone number", and every destination those menus reached
+ * has a hub page that the footer links to directly: /ford-models, /areas-we-serve, /guides
+ * and /compare. A nav should not be the only path to forty links.
  *
- *  1. The panel contents are ALWAYS in the DOM. Nothing is mounted on hover or on click, so
- *     the links are in the server rendered HTML and `curl` sees them. Only VISIBILITY is
- *     toggled, by CSS, using `group-hover` and `group-focus-within`.
- *  2. `visibility: hidden` also removes the links from the tab order, which is what stops a
- *     25 link block from becoming an invisible keyboard trap. Focusing the trigger applies
- *     `group-focus-within`, the panel becomes visible, and the next Tab lands inside it.
+ * It sells nothing, it has no headline, and it never changes on scroll. The bar is opaque and
+ * ruled from the first frame, so there is nothing for a scroll listener to reveal: the
+ * server HTML is the final HTML, with zero client state and zero effects outside the Sheet.
  *
- * Each trigger is itself a real link to that section's hub page, so the menu never depends on
- * JavaScript to be useful. On mobile the same content renders inside native `<details>`
- * disclosures: present in the HTML, collapsed by default, and usable at 320px.
+ * CELL carries structure only. TanStack concatenates `activeProps.className` onto `className`
+ * with a plain space and no tailwind-merge, so any property set in both is decided by
+ * generated-CSS order rather than by us. That is why rest colour and weight live in
+ * `inactiveProps`. The bar this replaces had the same latent bug, setting `text-brand` on the
+ * active link over a `text-slate-700` base.
+ *
+ * The logo is still hotlinked from the dealership's CDN. Vendoring it into src/assets is the
+ * one item of this rebuild left open, and the `preconnect` in __root.tsx stays until it lands.
  */
+const CELL =
+  "relative inline-flex h-full items-center whitespace-nowrap border-l border-white/10 px-2.5 " +
+  "font-sans text-meta transition-colors duration-150 hover:bg-white/10 hover:text-white " +
+  "focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-bright " +
+  "lg:px-4 lg:text-ui xl:px-5";
 
-type NavMenu = {
-  label: string;
-  /** The hub page the trigger navigates to. */
-  to: string;
-  /** How that hub is described when it is listed as a link rather than used as the trigger. */
-  hubLabel: string;
-  columns: { heading: string; items: FrequentSearchItem[] }[];
-  /** Related hubs that are not the trigger's own destination. */
-  extraHubs: { to: string; label: string }[];
-};
+const CELL_REST = "font-medium text-white/70";
 
-const MODELS_MENU: NavMenu = {
-  label: "Models",
-  to: "/ford-models",
-  hubLabel: "Every Ford model we cover",
-  columns: [
-    { heading: "Ford models we stock", items: modelItems() },
-    { heading: "Shop by body style", items: bodyStyleItems() },
-  ],
-  extraHubs: [{ to: "/inventory", label: "Every Ford in stock in Jefferson OH" }],
-};
+/** Current route: a 2px Ford-blue bar at the cell's bottom edge AND a weight change, never
+    colour alone. brand-bright, because Ford blue proper is 2.4:1 on asphalt. */
+const CELL_ACTIVE =
+  "font-semibold text-white after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-brand-bright";
 
-const AREAS_MENU: NavMenu = {
-  label: "Areas",
-  to: "/areas-we-serve",
-  hubLabel: "Every area AM Ford serves",
-  columns: [
-    { heading: "Towns and cities we serve", items: cityItems() },
-    { heading: "Counties we serve", items: countyItems() },
-  ],
-  extraHubs: [
-    { to: "/nationwide-vehicle-delivery", label: "Ford home delivery and nationwide shipping" },
-  ],
-};
+const SHEET_ROW =
+  "flex min-h-14 items-center border-b border-rule px-5 font-sans text-h3 font-semibold text-ink " +
+  "transition-colors duration-150 hover:bg-surface " +
+  "focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand";
 
-const RESEARCH_MENU: NavMenu = {
-  label: "Research",
-  to: "/guides",
-  hubLabel: "All Ford buying guides",
-  columns: [
-    { heading: "Ford buying guides", items: guideItems() },
-    { heading: "Ford model comparisons", items: compareItems() },
-  ],
-  extraHubs: [{ to: "/compare", label: "All Ford model comparisons" }],
-};
-
-type NavEntry = { kind: "link"; to: string; label: string } | { kind: "menu"; menu: NavMenu };
-
-/** The six original links, in their original order, with the three menus folded in. */
-const NAV_ENTRIES: NavEntry[] = [
-  { kind: "link", to: "/", label: "Home" },
-  { kind: "link", to: "/inventory", label: "Inventory" },
-  { kind: "menu", menu: MODELS_MENU },
-  { kind: "link", to: "/financing", label: "Financing" },
-  { kind: "menu", menu: AREAS_MENU },
-  { kind: "menu", menu: RESEARCH_MENU },
-  { kind: "link", to: "/service", label: "Service" },
-  { kind: "link", to: "/about", label: "About" },
-  { kind: "link", to: "/contact", label: "Contact" },
-];
-
-const menuSlug = (menu: NavMenu) => menu.label.toLowerCase();
-
-const DESKTOP_LINK =
-  "rounded-lg px-3 py-2 text-[13px] font-semibold text-slate-700 transition-colors duration-300 hover:bg-slate-100 hover:text-[#002c5f]";
-const DESKTOP_ACTIVE = { className: "bg-slate-100 text-[#002c5f] font-extrabold" };
-const MOBILE_LINK =
-  "rounded-xl px-4 py-3 text-base font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-[#002c5f]";
-const HUB_LINK =
-  "inline-flex min-h-6 items-center rounded-sm text-[12px] font-bold text-[#002c5f] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current";
+const SHEET_SUB =
+  "flex min-h-12 items-center border-b border-rule px-5 font-sans text-ui font-medium text-ink-2 " +
+  "transition-colors duration-150 hover:bg-surface hover:text-ink " +
+  "focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand";
 
 export function SiteNav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const close = () => setOpen(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <>
-      <header
-        className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-          scrolled
-            ? "bg-white/95 border-b border-slate-200/90 backdrop-blur-md shadow-md"
-            : "bg-white border-b border-slate-200/80 shadow-sm",
-        )}
-      >
-        <nav
-          aria-label="Primary"
-          className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-7"
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-asphalt">
+      <div className="mx-auto flex h-14 max-w-[1200px] items-stretch px-5 md:px-6 lg:h-16 lg:px-16">
+        <Link
+          to="/"
+          className="mr-auto flex items-center pr-3 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-bright md:pr-4"
         >
-          <Link to="/" className="inline-flex items-center transition hover:opacity-90">
-            <img
-              src="https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/Am-ford.png"
-              alt="AM Ford"
-              width={260}
-              height={80}
-              className="h-8 sm:h-10 w-auto object-contain transition"
-            />
-          </Link>
+          {/* The dealership's own lockup, client-supplied. Navy artwork on transparency, so it
+              rides a white plate on the asphalt bar. */}
+          <span className="flex items-center bg-white px-2.5 py-1.5">
+            <img src={logo} alt="AM Ford" width={520} height={161} className="h-6 w-auto lg:h-7" />
+          </span>
+          <span className="sr-only">AM Ford home</span>
+        </Link>
 
-          <div className="hidden items-center gap-0.5 xl:flex">
-            {NAV_ENTRIES.map((entry) =>
-              entry.kind === "link" ? (
-                <Link
-                  key={entry.to}
-                  to={entry.to}
-                  className={DESKTOP_LINK}
-                  activeProps={DESKTOP_ACTIVE}
-                  activeOptions={{ exact: entry.to === "/" }}
-                >
-                  {entry.label}
-                </Link>
-              ) : (
-                <div key={entry.menu.label} className="group relative">
-                  <Link
-                    to={entry.menu.to}
-                    className={cn(DESKTOP_LINK, "inline-flex items-center gap-1")}
-                    activeProps={DESKTOP_ACTIVE}
-                  >
-                    {entry.menu.label}
-                    <ChevronDown
-                      aria-hidden="true"
-                      className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180"
-                    />
-                  </Link>
-
-                  {/*
-                    Rendered on the server, always. `invisible` is the only thing hiding it,
-                    so the links below are in the HTML a crawler receives.
-                  */}
-                  <div className="invisible absolute top-full left-1/2 z-50 w-[min(40rem,calc(100vw-2rem))] -translate-x-1/2 pt-3 opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xl">
-                      <div className="grid gap-5 sm:grid-cols-2">
-                        {entry.menu.columns.map((column, columnIndex) => {
-                          const headingId = `nav-${menuSlug(entry.menu)}-${columnIndex}`;
-                          return (
-                            <div key={column.heading}>
-                              <h2
-                                id={headingId}
-                                className="text-[10px] font-bold tracking-[0.18em] text-[#002c5f] uppercase"
-                              >
-                                {column.heading}
-                              </h2>
-                              <ul aria-labelledby={headingId} className="mt-2">
-                                {column.items.map((item) => (
-                                  <li key={item.key}>
-                                    <FrequentSearchLink
-                                      item={item}
-                                      className="text-[12px] font-medium text-slate-700 hover:text-[#002c5f]"
-                                    />
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 border-t border-slate-200 pt-3">
-                        {entry.menu.extraHubs.map((hub) => (
-                          <Link key={hub.to} to={hub.to} className={HUB_LINK}>
-                            {hub.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ),
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <a
-              href={dealerInfo.phoneHref}
-              className="hidden items-center gap-2 rounded-xl bg-[#002c5f] px-4 py-2 text-[13px] font-extrabold text-white shadow-md transition-all duration-300 hover:bg-[#002c5f]/90 hover:scale-[1.02] sm:inline-flex"
-            >
-              <Phone className="h-3.5 w-3.5" /> {dealerInfo.phone}
-            </a>
-            <button
-              onClick={() => setOpen(true)}
-              className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-slate-100 text-slate-800 shadow-sm xl:hidden hover:bg-slate-200"
-              aria-label="Open menu"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-          </div>
-        </nav>
-      </header>
-
-      {/* Mobile sheet */}
-      <div
-        inert={!open}
-        className={cn(
-          "fixed inset-0 z-[60] xl:hidden",
-          open ? "visible pointer-events-auto" : "invisible pointer-events-none",
-        )}
-      >
-        <div
-          className={cn(
-            "absolute inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity",
-            open ? "opacity-100" : "opacity-0",
-          )}
-          onClick={close}
-        />
-        <div
-          className={cn(
-            "absolute right-3 top-3 max-h-[calc(100dvh-1.5rem)] w-[min(360px,calc(100%-1.5rem))] overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white p-6 text-slate-900 shadow-2xl transition-[opacity,transform] duration-300",
-            open ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0",
-          )}
-        >
-          <div className="mb-6 flex items-center justify-between">
-            <span className="text-lg font-bold text-slate-900">Menu</span>
-            <button
-              onClick={close}
-              className="grid h-9 w-9 place-items-center rounded-xl border border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200"
-              aria-label="Close menu"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-
-          <nav aria-label="Site sections" className="flex flex-col gap-1">
-            {NAV_ENTRIES.map((entry) =>
-              entry.kind === "link" ? (
-                <Link
-                  key={entry.to}
-                  to={entry.to}
-                  onClick={close}
-                  className={MOBILE_LINK}
-                  activeProps={DESKTOP_ACTIVE}
-                  activeOptions={{ exact: entry.to === "/" }}
-                >
-                  {entry.label}
-                </Link>
-              ) : (
-                /*
-                  A native disclosure: the links are in the HTML whether it is open or shut,
-                  and nothing is dumped into the sheet until the reader asks for it.
-                */
-                <details key={entry.menu.label} className="rounded-xl border border-slate-200">
-                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-xl px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-100 [&::-webkit-details-marker]:hidden">
-                    <span>{entry.menu.label}</span>
-                    <ChevronDown aria-hidden="true" className="h-4 w-4 shrink-0" />
-                  </summary>
-                  <div className="space-y-4 px-4 pt-1 pb-4">
-                    {entry.menu.columns.map((column, columnIndex) => {
-                      const headingId = `sheet-${menuSlug(entry.menu)}-${columnIndex}`;
-                      return (
-                        <div key={column.heading}>
-                          <h2
-                            id={headingId}
-                            className="text-[10px] font-bold tracking-[0.18em] text-[#002c5f] uppercase"
-                          >
-                            {column.heading}
-                          </h2>
-                          <ul aria-labelledby={headingId} className="mt-1.5">
-                            {column.items.map((item) => (
-                              <li key={item.key}>
-                                <FrequentSearchLink
-                                  item={item}
-                                  onNavigate={close}
-                                  className="py-1.5 text-[13px] font-medium text-slate-700 hover:text-[#002c5f]"
-                                />
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      );
-                    })}
-                    <div className="flex flex-col gap-1.5 border-t border-slate-200 pt-3">
-                      <Link to={entry.menu.to} onClick={close} className={HUB_LINK}>
-                        {entry.menu.hubLabel}
-                      </Link>
-                      {entry.menu.extraHubs.map((hub) => (
-                        <Link key={hub.to} to={hub.to} onClick={close} className={HUB_LINK}>
-                          {hub.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </details>
-              ),
-            )}
-          </nav>
-
-          <a
-            href={dealerInfo.phoneHref}
-            className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-[#002c5f] py-3.5 text-center text-sm font-extrabold text-white shadow-lg transition hover:bg-[#002c5f]/90"
+        <nav aria-label="Primary" className="hidden items-stretch md:flex">
+          <Link
+            to="/inventory"
+            search={{ condition: "New" }}
+            className={CELL}
+            activeProps={{ className: CELL_ACTIVE }}
+            inactiveProps={{ className: CELL_REST }}
           >
-            <Phone className="h-4 w-4" /> Call {dealerInfo.phone}
-          </a>
-        </div>
+            New Vehicles
+          </Link>
+          {/* Unfiltered on purpose: FILTERABLE_CONDITIONS is New and Certified Pre-Owned, the
+              feed holds no `Used`, and the search validator would drop condition: "Used". */}
+          <Link
+            to="/inventory"
+            activeOptions={{ exact: true, includeSearch: true }}
+            className={CELL}
+            activeProps={{ className: CELL_ACTIVE }}
+            inactiveProps={{ className: CELL_REST }}
+          >
+            Used Vehicles
+          </Link>
+          <Link
+            to="/service"
+            className={CELL}
+            activeProps={{ className: CELL_ACTIVE }}
+            inactiveProps={{ className: CELL_REST }}
+          >
+            Schedule Service
+          </Link>
+          <Link
+            to="/trade-in"
+            className={CELL}
+            activeProps={{ className: CELL_ACTIVE }}
+            inactiveProps={{ className: CELL_REST }}
+          >
+            Value Your Trade
+          </Link>
+        </nav>
+
+        <a
+          href={dealerInfo.phoneHref}
+          className="inline-flex h-full min-w-11 items-center justify-center border-l border-white/10 px-3 font-mono text-meta font-semibold tabular-nums text-brand-bright transition-colors duration-150 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-bright lg:px-5 lg:text-ui"
+        >
+          <span className="sr-only">Call AM Ford at {dealerInfo.phone}</span>
+          {/* Below 360px the digits do not fit beside the wordmark and the menu trigger, so
+              the icon carries the whole action rather than the number being truncated. */}
+          <IconPhone className="h-[18px] w-[18px] min-[360px]:hidden" />
+          <span aria-hidden className="hidden min-[360px]:inline">
+            {dealerInfo.phone}
+          </span>
+        </a>
+
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="secondary"
+              size="md"
+              className="ml-3 self-center border-white/30 text-white hover:border-white hover:bg-white/10 md:hidden"
+            >
+              Menu
+            </Button>
+          </SheetTrigger>
+
+          {/* Bottom sheet: the rows land where the thumb is, and Radix supplies the focus trap,
+              scroll lock, Escape and aria-modal the hand-rolled dropdown never had. */}
+          <SheetContent side="bottom">
+            <SheetHeader className="py-3.5">
+              <SheetTitle>Menu</SheetTitle>
+            </SheetHeader>
+
+            <SheetBody className="p-0">
+              <nav aria-label="Primary">
+                <ul>
+                  <li>
+                    <SheetClose asChild>
+                      <Link to="/inventory" search={{ condition: "New" }} className={SHEET_ROW}>
+                        New Vehicles
+                      </Link>
+                    </SheetClose>
+                  </li>
+                  <li>
+                    <SheetClose asChild>
+                      <Link to="/inventory" className={SHEET_ROW}>
+                        Used Vehicles
+                      </Link>
+                    </SheetClose>
+                  </li>
+                  <li>
+                    <SheetClose asChild>
+                      <Link to="/service" className={SHEET_ROW}>
+                        Schedule Service
+                      </Link>
+                    </SheetClose>
+                  </li>
+                  <li>
+                    <SheetClose asChild>
+                      <Link to="/trade-in" className={SHEET_ROW}>
+                        Value Your Trade
+                      </Link>
+                    </SheetClose>
+                  </li>
+                </ul>
+              </nav>
+
+              {/* One ruled column, one grammar. The separation is a heavier rule, not a label. */}
+              <nav aria-label="Secondary" className="border-t border-ink/15">
+                <ul>
+                  <li>
+                    <SheetClose asChild>
+                      <Link to="/ford-models" className={SHEET_SUB}>
+                        Ford Models
+                      </Link>
+                    </SheetClose>
+                  </li>
+                  <li>
+                    <SheetClose asChild>
+                      <Link to="/financing" className={SHEET_SUB}>
+                        Financing
+                      </Link>
+                    </SheetClose>
+                  </li>
+                  <li>
+                    <SheetClose asChild>
+                      <Link to="/about" className={SHEET_SUB}>
+                        About
+                      </Link>
+                    </SheetClose>
+                  </li>
+                  <li>
+                    <SheetClose asChild>
+                      <Link to="/contact" className={SHEET_SUB}>
+                        Contact
+                      </Link>
+                    </SheetClose>
+                  </li>
+                </ul>
+              </nav>
+            </SheetBody>
+
+            <SheetFooter className="pb-[calc(1rem+env(safe-area-inset-bottom))]">
+              <Button asChild variant="primary" size="lg" block>
+                <a href={dealerInfo.phoneHref}>Call {dealerInfo.phone}</a>
+              </Button>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
       </div>
-    </>
+    </header>
   );
 }

@@ -1,0 +1,123 @@
+- main [ref=f2e2]:
+  - generic [ref=f2e3]:
+    - heading "Ledger specimen" [level=1] [ref=f2e4]
+    - paragraph [ref=f2e5]: "Every primitive in the system, exercised. Tab through this page: focus must be visible on every control, in source order, and never trapped outside a dialog."
+  - separator [ref=f2e6]
+  - region [ref=f2e7]:
+    - heading "Buttons" [level=2] [ref=f2e9]
+    - generic [ref=f2e10]:
+      - button "Ask about this F-150" [ref=f2e11]
+      - button "Book a test drive" [ref=f2e12]
+      - button "Compare" [ref=f2e13]
+      - button "Remove" [ref=f2e14]
+      - button "Small" [ref=f2e15]
+      - button "Disabled" [disabled]
+    - button "On the navy ground" [ref=f2e17]
+  - separator [ref=f2e18]
+  - region [ref=f2e19]:
+    - heading "Chips" [level=2] [ref=f2e21]
+    - generic [ref=f2e22]:
+      - generic [ref=f2e23]: In stock
+      - generic [ref=f2e25]: Certified Pre-Owned
+      - generic [ref=f2e26]: 4WD
+      - generic [ref=f2e27]: Sold
+      - generic [ref=f2e28]: Small
+  - separator [ref=f2e29]
+  - region [ref=f2e30]:
+    - generic [ref=f2e31]:
+      - heading "Form controls" [level=2] [ref=f2e32]
+      - paragraph [ref=f2e33]: Every control takes its id, label association and error wiring from Field.
+    - generic [ref=f2e34]:
+      - generic [ref=f2e35]:
+        - generic [ref=f2e36]: Full name
+        - textbox "Full name" [ref=f2e37]:
+          - /placeholder: Jane Miller
+      - generic [ref=f2e38]:
+        - generic [ref=f2e39]: Phone number
+        - paragraph [ref=f2e40]: We only call about the vehicle you asked about.
+        - textbox "Phone number" [ref=f2e41]:
+          - /placeholder: (440) 555-0199
+      - generic [ref=f2e42]:
+        - generic [ref=f2e43]: Which vehicle
+        - combobox "Which vehicle" [ref=f2e44] [cursor=pointer]:
+          - option "2025 Ford F-150 Platinum" [selected]
+          - option "2025 Ford Mustang GT Premium"
+          - option "2025 Ford Explorer ST"
+          - option "2025 Ford F-150 Lightning Lariat"
+          - option "2025 Ford Bronco Outer Banks"
+          - option "2024 Ford Escape Titanium Hybrid"
+      - generic [ref=f2e45]:
+        - generic [ref=f2e46]: Anything we should know(optional)
+        - paragraph [ref=f2e47]: The only optional field here, so it is the only one marked.
+        - textbox "Anything we should know(optional)" [ref=f2e48]:
+          - /placeholder: Trading something in, need it by a date...
+      - generic [ref=f2e50]:
+        - checkbox "I agree to be contacted about this vehicle by phone, text or email. Consent is not a condition of purchase. Reply STOP to opt out." [ref=f2e51] [cursor=pointer]
+        - generic [ref=f2e52] [cursor=pointer]: I agree to be contacted about this vehicle by phone, text or email. Consent is not a condition of purchase. Reply STOP to opt out.
+      - generic [ref=f2e53]:
+        - button "Trigger error" [ref=f2e54]
+        - button "Clear" [ref=f2e55]
+  - separator [ref=f2e56]
+  - region [ref=f2e57]:
+    - generic [ref=f2e58]:
+      - heading "Overlays" [level=2] [ref=f2e59]
+      - paragraph [ref=f2e60]: Focus moves in on open and returns to the trigger on close. Escape dismisses. The page behind does not scroll.
+    - generic [ref=f2e61]:
+      - button "Open dialog" [ref=f2e62]
+      - button "Open sheet" [ref=f2e63]
+  - separator [ref=f2e64]
+  - region [ref=f2e65]:
+    - heading "Specification" [level=2] [ref=f2e67]
+    - generic [ref=f2e68]:
+      - generic [ref=f2e69]:
+        - generic [ref=f2e70]:
+          - term [ref=f2e71]: Odometer
+          - definition [ref=f2e72]: 12 mi
+        - generic [ref=f2e73]:
+          - term [ref=f2e74]: Drivetrain
+          - definition [ref=f2e75]: 4WD
+        - generic [ref=f2e76]:
+          - term [ref=f2e77]: Transmission
+          - definition [ref=f2e78]: Automatic
+        - generic [ref=f2e79]:
+          - term [ref=f2e80]: Economy
+          - definition [ref=f2e81]: 20 / 26 mpg
+        - generic [ref=f2e82]:
+          - term [ref=f2e83]: Output
+          - definition [ref=f2e84]: 400 hp
+        - generic [ref=f2e85]:
+          - term [ref=f2e86]: Exterior
+          - definition [ref=f2e87]: Oxford White
+      - table [ref=f2e89]:
+        - rowgroup [ref=f2e90]:
+          - row [ref=f2e91]:
+            - columnheader "Specification" [ref=f2e92]
+            - columnheader "Explorer" [ref=f2e94]
+            - columnheader "Bronco" [ref=f2e95]
+        - rowgroup [ref=f2e96]:
+          - row [ref=f2e97]:
+            - rowheader "Price" [ref=f2e98]
+            - cell "$56,750" [ref=f2e99]
+            - cell "$47,995" [ref=f2e100]
+          - row [ref=f2e101]:
+            - rowheader "Drivetrain" [ref=f2e102]
+            - cell "AWD" [ref=f2e103]
+            - cell "4WD" [ref=f2e104]
+          - row [ref=f2e105]:
+            - rowheader "Fuel" [ref=f2e106]
+            - cell "Gas" [ref=f2e107]
+            - cell "Gas" [ref=f2e108]
+          - row [ref=f2e109]:
+            - rowheader "Output" [ref=f2e110]
+            - cell "400 hp" [ref=f2e111]
+            - cell "330 hp" [ref=f2e112]
+  - separator [ref=f2e113]
+  - region [ref=f2e114]:
+    - heading "Prose" [level=2] [ref=f2e116]
+    - generic [ref=f2e117]:
+      - paragraph [ref=f2e118]: Running text is capped at 68 characters. On the content routes this replaces lines that ran the full container width, which on a wide screen put well over 120 characters on a line.
+      - heading "A sub-heading" [level=3] [ref=f2e119]
+      - paragraph [ref=f2e120]:
+        - text: Body copy sits at 17px with a 1.6 line height.
+        - strong [ref=f2e121]: Emphasis
+        - text: is carried by weight and ink, never by colour alone.

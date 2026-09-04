@@ -1,13 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  BadgeCheck,
-  CreditCard,
-  DollarSign,
-  MapPin,
-  Truck,
-  Wrench,
-} from "lucide-react";
+import { IconArrowRight, IconPin } from "@/components/ledger";
 import { DELIVERY_CLAIM, SERVED_MARKETS, dealerInfo, type Vehicle } from "@/lib/vehicles";
 import { cn } from "@/lib/utils";
 
@@ -70,7 +62,6 @@ type NextStep = {
   label: string;
   to: "/financing" | "/trade-in" | "/service" | "/nationwide-vehicle-delivery";
   copy: string;
-  Icon: typeof CreditCard;
 };
 
 const NEXT_STEPS: NextStep[] = [
@@ -78,25 +69,21 @@ const NEXT_STEPS: NextStep[] = [
     label: "Apply for Vehicle Financing",
     to: "/financing",
     copy: "Send a secure credit application and let our finance team structure your options before you visit.",
-    Icon: CreditCard,
   },
   {
     label: "Value Your Trade",
     to: "/trade-in",
     copy: "Find out what your current vehicle is worth and apply that value to the one you are shopping for.",
-    Icon: DollarSign,
   },
   {
     label: "Schedule Ford Service",
     to: "/service",
-    copy: `Book maintenance, diagnostics, and repairs with Ford-trained technicians at our ${dealerInfo.locality} shop.`,
-    Icon: Wrench,
+    copy: `Book maintenance, diagnostics, and repairs at our ${dealerInfo.locality} service department.`,
   },
   {
     label: "Learn About Free Home Delivery",
     to: "/nationwide-vehicle-delivery",
     copy: DELIVERY_CLAIM,
-    Icon: Truck,
   },
 ];
 
@@ -107,16 +94,13 @@ const NEARBY_TOWNS_TEXT = `${NEARBY_TOWNS.slice(0, -1).join(", ")}, and ${
 }`;
 
 const PILL_BASE =
-  "inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition sm:text-sm";
-const PILL_LINK =
-  "border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-[#002c5f]/30 hover:text-[#002c5f]";
-const PILL_ACTIVE = "bg-[#002c5f] text-white shadow-sm";
+  "inline-flex items-center gap-1.5 rounded-sm px-4 py-2 text-xs font-bold transition sm:text-sm";
+const PILL_LINK = "border border-rule bg-white text-ink-2 hover:border-brand/30 hover:text-brand";
+const PILL_ACTIVE = "bg-brand text-white";
 
 function BlockHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="text-base font-extrabold tracking-tight text-slate-900 sm:text-lg">
-      {children}
-    </h3>
+    <h3 className="text-base font-extrabold tracking-tight text-ink sm:text-lg">{children}</h3>
   );
 }
 
@@ -130,18 +114,18 @@ export function InventoryInterlinks({
   const allInventoryActive = activeType === undefined && activeFuel === undefined;
 
   return (
-    <section className="border-t border-slate-200 bg-white py-14 sm:py-16">
+    <section className="border-t border-rule bg-background py-14 sm:py-16">
       <div className="mx-auto max-w-7xl px-6">
-        <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-brand">
           Keep Shopping
         </p>
-        <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+        <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
           Where would you like to go next?
         </h2>
 
         <div className="mt-8 grid gap-5 lg:grid-cols-2">
           {/* 1. Body style */}
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-sm border border-rule bg-white p-6">
             <BlockHeading>Browse by body style</BlockHeading>
             <div className="mt-4 flex flex-wrap gap-2">
               {BODY_STYLES.map((style) => {
@@ -173,9 +157,9 @@ export function InventoryInterlinks({
           </div>
 
           {/* 2. Popular searches */}
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-sm border border-rule bg-white p-6">
             <BlockHeading>Popular searches</BlockHeading>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+            <p className="mt-2 text-sm leading-relaxed text-ink-2">
               Shortcuts that most shoppers reach for, already filtered and ready to browse.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -210,35 +194,35 @@ export function InventoryInterlinks({
         {/* 3. Next step */}
         <div className="mt-10">
           <BlockHeading>Your next step</BlockHeading>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {NEXT_STEPS.map(({ label, to, copy, Icon }) => (
+          {/* Four ruled rows, not four bordered tiles with brand-tinted icon squares.
+              None of the four icons carried information its own label did not already
+              state, and icon-plus-heading-plus-paragraph repeated four times is the
+              feature-grid pattern the client asked us to avoid. */}
+          <div className="mt-4 border-t border-rule">
+            {NEXT_STEPS.map(({ label, to, copy }) => (
               <Link
                 key={label}
                 to={to}
-                className="group flex h-full flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-[#002c5f]/30 hover:shadow-md"
+                className="group flex flex-col gap-1 border-b border-rule py-4 transition-colors duration-150 hover:bg-surface sm:flex-row sm:items-baseline sm:gap-6 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#002c5f]/10 text-[#002c5f]">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <span className="mt-4 flex items-center gap-1.5 text-sm font-extrabold text-[#002c5f]">
+                <span className="inline-flex shrink-0 items-center gap-1.5 font-sans text-ui font-semibold text-brand sm:w-[16rem]">
                   {label}
-                  <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1" />
+                  <IconArrowRight className="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5" />
                 </span>
-                <span className="mt-2 text-sm leading-relaxed text-slate-600">{copy}</span>
+                <span className="max-w-[62ch] font-sans text-meta leading-relaxed text-ink-2">
+                  {copy}
+                </span>
               </Link>
             ))}
           </div>
         </div>
 
         {/* 4. Outside the immediate market */}
-        <div className="mt-10 rounded-3xl border border-slate-200 bg-slate-50/70 p-6 sm:p-8">
-          <div className="flex items-start gap-3">
-            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#002c5f]/10 text-[#002c5f]">
-              <MapPin className="h-5 w-5" />
-            </span>
+        <div className="mt-10 rounded-sm border border-rule bg-surface/70 p-6 sm:p-8">
+          <div>
             <div>
               <BlockHeading>Shopping from outside Ashtabula County?</BlockHeading>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
+              <p className="mt-3 text-sm leading-relaxed text-ink-2 sm:text-base">
                 Buyers drive to our {dealerInfo.locality} store from {NEARBY_TOWNS_TEXT}, along with
                 the rest of Northeast Ohio and Northwestern Pennsylvania. If the distance is the
                 only thing standing between you and the right vehicle, it does not have to be.{" "}
@@ -247,17 +231,16 @@ export function InventoryInterlinks({
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   to="/nationwide-vehicle-delivery"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#002c5f] px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#001f44]"
+                  className="inline-flex items-center gap-2 rounded-sm bg-brand px-5 py-3 text-sm font-bold text-white transition hover:bg-brand-deep"
                 >
-                  <BadgeCheck className="h-4 w-4" />
                   Learn About Free Home Delivery
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 rounded-full border border-[#002c5f]/20 bg-white px-5 py-3 text-sm font-bold text-[#002c5f] shadow-sm transition hover:bg-slate-50"
+                  className="inline-flex items-center gap-2 rounded-sm border border-brand/20 bg-white px-5 py-3 text-sm font-bold text-brand transition hover:bg-surface"
                 >
                   Contact Our Sales Team
-                  <ArrowRight className="h-4 w-4" />
+                  <IconArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </div>

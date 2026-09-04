@@ -1,0 +1,154 @@
+- generic [ref=e2]:
+  - link "Skip to main content" [ref=e3] [cursor=pointer]:
+    - /url: "#content"
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "AM Ford" [ref=e7]
+      - navigation "Primary" [ref=e8]:
+        - link "Inventory" [ref=e9] [cursor=pointer]:
+          - /url: /inventory
+        - link "Financing" [ref=e10] [cursor=pointer]:
+          - /url: /financing
+        - link "Service" [ref=e11] [cursor=pointer]:
+          - /url: /service
+        - link "About" [ref=e12] [cursor=pointer]:
+          - /url: /about
+        - link "Contact" [ref=e13] [cursor=pointer]:
+          - /url: /contact
+      - link "(440) 998-2151" [ref=e15] [cursor=pointer]:
+        - /url: tel:+14409982151
+  - main [ref=e18]:
+    - region "Hero" [ref=e19]:
+      - img "New Ford F-150 at AM Ford in Jefferson, Ohio" [ref=e23]
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - paragraph [ref=e28]: Family-owned · Jefferson, Ohio
+          - heading "Your Ford dealership in Jefferson, Ohio" [level=1] [ref=e29]:
+            - text: Your Ford dealership in
+            - generic [ref=e30]: Jefferson, Ohio
+          - paragraph [ref=e31]: Browse real-time inventory at AM Ford in Jefferson, OH, serving Ashtabula County and Northeast Ohio. New Ford trucks and SUVs, certified pre-owned stock, transparent pricing, and real trade-in valuations.
+          - generic [ref=e32]:
+            - link "Browse inventory" [ref=e33] [cursor=pointer]:
+              - /url: /inventory
+            - link "Get financed" [ref=e37] [cursor=pointer]:
+              - /url: /financing
+          - list [ref=e42]:
+            - listitem [ref=e43]: Factory warranty included
+            - listitem [ref=e47]: Real trade-in appraisals
+            - listitem [ref=e51]: Home delivery available
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - heading "Find your right car" [level=2] [ref=e55]
+            - generic [ref=e56]: AM Ford
+          - group "Vehicle condition" [ref=e57]:
+            - button "New" [pressed] [ref=e58]
+            - button "Certified" [ref=e59]
+          - generic [ref=e60]:
+            - generic [ref=e61]:
+              - generic [ref=e62]: Budget
+              - combobox "Budget" [ref=e63]:
+                - option "Any price" [selected]
+                - option "$35,000 to $45,000"
+                - option "$45,000 to $55,000"
+                - option "$55,000 to $65,000"
+                - option "$65,000 to $75,000"
+            - generic [ref=e64]:
+              - generic [ref=e65]: Body style
+              - combobox "Body style" [ref=e66]:
+                - option "All body styles" [selected]
+                - option "Trucks"
+                - option "SUVs"
+                - option "Cars"
+                - option "Electric"
+            - button "Search inventory" [ref=e67]
+            - generic [ref=e72]:
+              - generic [ref=e73]: 6 vehicles available
+              - link "Advanced search" [ref=e74] [cursor=pointer]:
+                - /url: /inventory
+    - region "Shop by category" [ref=e78]:
+      - generic [ref=e79]:
+        - paragraph [ref=e81]: Shop by need
+        - heading "New Fords and certified pre-owned" [level=2] [ref=e83]
+        - paragraph [ref=e85]: Most people arrive knowing the job the vehicle has to do. Pick the closest fit and we will take it from there.
+      - generic [ref=e86]:
+        - link [ref=e88] [cursor=pointer]:
+          - /url: /inventory?type=Truck
+          - heading "Ford Trucks" [level=3] [ref=e95]
+          - paragraph [ref=e96]: F-150 in gas and all-electric Lightning form. Compare trims and drivetrains before you visit.
+          - generic [ref=e97]: Browse Trucks
+        - link [ref=e102] [cursor=pointer]:
+          - /url: /inventory?type=SUV
+          - heading "Ford SUVs" [level=3] [ref=e107]
+          - paragraph [ref=e108]: Explorer, Bronco, and Escape. Two rows or three, all-wheel drive for Ohio winters, room for car seats and gear.
+          - generic [ref=e109]: Browse SUVs
+        - link [ref=e114] [cursor=pointer]:
+          - /url: /inventory?type=Car
+          - heading "Mustang" [level=3] [ref=e120]
+          - paragraph [ref=e121]: The V8 GT Premium, with Brembo brakes and MagneRide. Rear-wheel drive, so plan for a winter tire set.
+          - generic [ref=e122]: Browse Cars
+        - link [ref=e127] [cursor=pointer]:
+          - /url: /trade-in
+          - heading "Value Your Trade" [level=3] [ref=e132]
+          - paragraph [ref=e133]: Find out what your current vehicle is worth and put it straight toward the next one.
+          - generic [ref=e134]: Value Your Trade
+      - generic [ref=e139]:
+        - paragraph [ref=e140]: We are at 1059 State Route 46 North in Jefferson, OH, serving Ashtabula County, Northeast Ohio, Northwestern Pennsylvania, and buyers nationwide. Free home delivery within 300 miles and vehicle shipping available to all 50 states.
+        - link "See How Vehicle Delivery Works" [ref=e141] [cursor=pointer]:
+          - /url: /nationwide-vehicle-delivery
+  - contentinfo [ref=e145]:
+    - generic [ref=e146]:
+      - generic [ref=e147]:
+        - generic [ref=e148]:
+          - link [ref=e149] [cursor=pointer]:
+            - /url: /
+            - img "AM Ford" [ref=e150]
+          - paragraph [ref=e151]: A family-owned Ford dealership in Jefferson, serving Ashtabula County, Northeast Ohio, and Northwestern Pennsylvania.
+        - generic [ref=e152]:
+          - paragraph [ref=e153]: Explore
+          - list [ref=e154]:
+            - listitem [ref=e155]:
+              - link "Inventory" [ref=e156] [cursor=pointer]:
+                - /url: /inventory
+            - listitem [ref=e157]:
+              - link "Ford Models" [ref=e158] [cursor=pointer]:
+                - /url: /ford-models
+            - listitem [ref=e159]:
+              - link "Compare Models" [ref=e160] [cursor=pointer]:
+                - /url: /compare
+            - listitem [ref=e161]:
+              - link "Buying Guides" [ref=e162] [cursor=pointer]:
+                - /url: /guides
+            - listitem [ref=e163]:
+              - link "Financing" [ref=e164] [cursor=pointer]:
+                - /url: /financing
+            - listitem [ref=e165]:
+              - link "Value Your Trade" [ref=e166] [cursor=pointer]:
+                - /url: /trade-in
+            - listitem [ref=e167]:
+              - link "Commercial" [ref=e168] [cursor=pointer]:
+                - /url: /commercial
+            - listitem [ref=e169]:
+              - link "Service" [ref=e170] [cursor=pointer]:
+                - /url: /service
+            - listitem [ref=e171]:
+              - link "Areas We Serve" [ref=e172] [cursor=pointer]:
+                - /url: /areas-we-serve
+            - listitem [ref=e173]:
+              - link "Vehicle Delivery" [ref=e174] [cursor=pointer]:
+                - /url: /nationwide-vehicle-delivery
+            - listitem [ref=e175]:
+              - link "About" [ref=e176] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e177]:
+              - link "Contact" [ref=e178] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e179]:
+          - paragraph [ref=e180]: Visit Us
+          - list [ref=e181]:
+            - listitem [ref=e182]: 1059 State Route 46 North, Jefferson, OH 44047
+            - listitem [ref=e186]:
+              - link "(440) 998-2151" [ref=e187] [cursor=pointer]:
+                - /url: tel:+14409982151
+      - generic [ref=e190]: © 2026 AM Ford. All rights reserved.

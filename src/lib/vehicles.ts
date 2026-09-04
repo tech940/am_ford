@@ -301,6 +301,25 @@ export const PRICE_BANDS: PriceBand[] = (() => {
 })();
 
 /**
+ * The four vehicles the homepage shows: one per body style actually present, lowest odometer
+ * first, fully deterministic.
+ *
+ * The point is CONSTANT HEIGHT. At today's six placeholder records this returns four; against
+ * a real four-hundred-vehicle feed it also returns four, so the section and the total page
+ * length do not move as inventory changes. The homepage previously rendered the same six
+ * records in four different layouts across four consecutive sections.
+ */
+const HOMEPAGE_ORDER: Vehicle["type"][] = ["Truck", "SUV", "EV", "Car"];
+
+export const homepageSelection = (all: Vehicle[] = vehicles): Vehicle[] =>
+  HOMEPAGE_ORDER.map(
+    (t) =>
+      all
+        .filter((v) => v.type === t)
+        .sort((a, b) => a.miles - b.miles || a.price - b.price || a.id.localeCompare(b.id))[0],
+  ).filter((v): v is Vehicle => Boolean(v));
+
+/**
  * Single source of truth for dealership identity.
  * Address and positioning follow the AM Ford Website and SEO Master Content Brief:
  * the dealership is located in Jefferson, Ohio and SERVES Ashtabula County and beyond.
@@ -318,12 +337,21 @@ export const dealerInfo = {
   phone: "(440) 998-2151",
   phoneHref: "tel:+14409982151",
   hours: [
-    { day: "Mon – Thu", time: "9:00 AM – 8:00 PM" },
-    { day: "Friday", time: "9:00 AM – 6:00 PM" },
-    { day: "Saturday", time: "9:00 AM – 5:00 PM" },
+    { day: "Mon - Thu", time: "9:00 AM - 8:00 PM" },
+    { day: "Friday", time: "9:00 AM - 6:00 PM" },
+    { day: "Saturday", time: "9:00 AM - 5:00 PM" },
     { day: "Sunday", time: "Closed" },
   ],
 };
+
+/**
+ * The one directions URL on the site. Two surfaces read it: TheStore's facts rule, which is
+ * the page's only labelled directions control, and the footer address, which is the only
+ * linked address. VisitUs used `maps/search/?api=1`, which is a search, not directions.
+ */
+export const MAPS_DIRECTIONS_HREF = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+  `${dealerInfo.name}, ${dealerInfo.address}`,
+)}`;
 
 /**
  * Delivery is the dealership's strongest differentiator per the brief, which fixes the
@@ -333,6 +361,13 @@ export const DELIVERY_CLAIM =
   "Free home delivery within 300 miles and vehicle shipping available to all 50 states.";
 export const DELIVERY_SHORT = "Free home delivery within 300 miles";
 export const DELIVERY_SHIPPING = "Vehicle shipping available to all 50 states";
+
+/**
+ * Legally load-bearing. Word for word, never paraphrased at a call site. Transcribed from the
+ * deleted DeliveryHighlight, which is the wording the dealership approved.
+ */
+export const DELIVERY_DISCLAIMER =
+  "Shipping charges may apply outside the complimentary 300-mile delivery area. Timing depends on your location, vehicle availability, documentation, and financing approval. Please confirm delivery terms with us before purchase.";
 
 /** Markets served (Tier 1 immediate market first) — for copy and Areas We Serve. */
 export const SERVED_MARKETS = {
@@ -366,3 +401,61 @@ export const SERVED_MARKETS = {
   ],
   tier3: ["Cleveland", "Erie, PA", "Northwestern Pennsylvania", "Akron", "Canton"],
 };
+
+/**
+ * Real Ford paint names to a swatch colour.
+ *
+ * Every record already carries an `exterior` like "Iconic Silver" or "Atlas Blue", and the site
+ * has been rendering those as grey text on a page selling cars, where paint is one of the first
+ * things a buyer filters on. A swatch is the most useful colour a listing can carry, it varies
+ * per vehicle so a grid stops reading as one flat block, and it cannot be lifted onto another
+ * business, because only a car dealer has Rapid Red and Agate Black.
+ *
+ * UNKNOWN NAMES RETURN undefined AND THE SWATCH DOES NOT RENDER. A feed that returns a paint we
+ * have not mapped must show nothing: a wrong colour chip on a white truck is worse than no chip.
+ */
+const PAINT: Record<string, string> = {
+  "agate black": "#14161a",
+  "oxford white": "#f2f1ee",
+  "iconic silver": "#9a9ea3",
+  "atlas blue": "#1f4f8f",
+  "rapid red": "#8e1f26",
+  "carbonized grey": "#54585c",
+  "antimatter blue": "#2c3a4a",
+  "star white": "#eeecE6",
+  "azure grey": "#6b7178",
+  "stone blue": "#4a6274",
+  "shadow black": "#17181a",
+  magnetic: "#5b6064",
+};
+
+export function paintSwatch(exterior: string): string | undefined {
+  return PAINT[exterior.trim().toLowerCase()];
+}
+
+/**
+ * Vehicle-family accent colours, per the client's re-art-direction brief: "The accent should
+ * come from the VEHICLE and its photography, not from random UI decoration."
+ *
+ * Applied in exactly two places — the accent strip on a vehicle card's photograph and the
+ * VDP masthead rule — so the accent reads as the vehicle's own paint room, not as UI confetti.
+ * Values are kept deep and automotive: these sit next to real photography and must not fight it.
+ *
+ * Unknown models return undefined and both call sites render the neutral rule instead.
+ */
+const MODEL_ACCENT: Record<string, string> = {
+  mustang: "#1e63d0", // performance blue
+  "mustang mach-e": "#2f9bff", // electric
+  "f-150": "#c05f1d", // rugged orange
+  "f-150 lightning": "#2f9bff", // electric
+  bronco: "#4f6144", // earth green
+  "bronco sport": "#4f6144",
+  explorer: "#252c34", // dark premium
+  escape: "#3d7ac0",
+  ranger: "#c05f1d",
+  maverick: "#c05f1d",
+};
+
+export function modelAccent(model: string): string | undefined {
+  return MODEL_ACCENT[model.trim().toLowerCase()];
+}

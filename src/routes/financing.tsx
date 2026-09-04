@@ -12,7 +12,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
+import { SectionTag } from "@/components/site/SectionTag";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { CONSENT_TEXT, RESPONSE_PROMISE, submitQuickLead } from "@/lib/leads";
@@ -351,7 +351,7 @@ function FinancingPage() {
                               type="checkbox"
                               checked={consent}
                               onChange={(e) => setConsent(e.target.checked)}
-                              className="mt-0.5 h-6 w-6 shrink-0 accent-[#002c5f]"
+                              className="mt-0.5 h-6 w-6 shrink-0 accent-brand"
                             />
                             <span className="text-xs leading-relaxed text-muted-foreground">
                               {CONSENT_TEXT}

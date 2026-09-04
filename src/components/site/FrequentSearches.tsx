@@ -448,37 +448,34 @@ export function FrequentSearches({
   const endId = `frequent-searches-end-${variant}`;
 
   return (
-    <section className={cn("border-t border-slate-200 bg-slate-50 py-10 sm:py-12", className)}>
+    <section className={cn("border-t border-rule bg-background py-10 sm:py-12", className)}>
       <div className="mx-auto max-w-7xl px-5 sm:px-6">
         <nav aria-label="Frequent searches leading to this page">
           {/* A block this long needs a way past it. Hidden until it takes focus, then visible. */}
           <a
             href={`#${endId}`}
-            className="sr-only focus:not-sr-only focus:mb-3 focus:inline-flex focus:min-h-6 focus:items-center focus:rounded-lg focus:bg-[#002c5f] focus:px-3 focus:py-1.5 focus:text-xs focus:font-bold focus:text-white"
+            className="sr-only focus:not-sr-only focus:mb-3 focus:inline-flex focus:min-h-6 focus:items-center focus:rounded-sm focus:bg-brand focus:px-3 focus:py-1.5 focus:text-xs focus:font-bold focus:text-white"
           >
             Skip past the frequent searches
           </a>
 
-          <h2 className="text-lg font-extrabold tracking-tight text-slate-900 sm:text-xl">
+          <h2 className="text-lg font-extrabold tracking-tight text-ink sm:text-xl">
             Frequent Searches Leading to This Page
           </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ink-2">
             Every link opens a page on this site, and each filtered search runs against the Ford
             stock standing in Jefferson today.
           </p>
 
           <div className="mt-6 space-y-4">
             {built.map((group) => (
-              <div
-                key={group.id}
-                className="border-t border-slate-200 pt-4 first:border-t-0 first:pt-0"
-              >
+              <div key={group.id} className="border-t border-rule pt-4 first:border-t-0 first:pt-0">
                 <FrequentSearchRow
                   group={group}
                   idPrefix={`fs-${variant}`}
-                  headingClassName="text-[11px] font-bold tracking-[0.18em] text-[#002c5f] uppercase"
-                  linkClassName="px-0.5 text-[13px] font-medium text-slate-700 hover:text-[#002c5f]"
-                  separatorClassName="text-slate-300"
+                  headingClassName="text-[11px] font-bold tracking-[0.18em] text-brand uppercase"
+                  linkClassName="inline-flex min-h-8 items-center px-1 font-sans text-meta font-medium text-ink-2 hover:text-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                  separatorClassName="text-ink-2"
                 />
               </div>
             ))}

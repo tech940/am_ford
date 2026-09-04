@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, Phone, ShieldCheck, Wrench } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
+import { SectionTag } from "@/components/site/SectionTag";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { guideCtaPrimary, guideCtaSecondary } from "@/components/site/GuideLayout";
 import { breadcrumbSchema, crumbs, SITE_ORIGIN } from "@/lib/breadcrumbs";
@@ -150,7 +150,7 @@ function GuidesHub() {
                 <Link
                   key={g.slug}
                   to={guidePath(g)}
-                  className="group flex flex-col rounded-3xl bg-card p-7 ring-1 ring-border transition hover:ring-[#002c5f]/40"
+                  className="group flex flex-col rounded-3xl bg-card p-7 ring-1 ring-border transition hover:ring-brand/40"
                 >
                   <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary">
                     {copy?.topic ?? "Guide"}
@@ -159,7 +159,7 @@ function GuidesHub() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
                     {g.blurb}
                   </p>
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-[#002c5f] group-hover:underline">
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand group-hover:underline">
                     {copy?.anchor ?? `Read the guide: ${g.title}`}
                     <ArrowRight className="h-4 w-4" aria-hidden />
                   </span>

@@ -1,0 +1,142 @@
+- generic:
+  - main:
+    - generic:
+      - heading [level=1]: Ledger specimen
+      - paragraph: "Every primitive in the system, exercised. Tab through this page: focus must be visible on every control, in source order, and never trapped outside a dialog."
+    - separator
+    - region:
+      - generic:
+        - heading [level=2]: Buttons
+      - generic:
+        - button: Ask about this F-150
+        - button: Book a test drive
+        - button: Compare
+        - button: Remove
+        - button: Small
+        - button [disabled]: Disabled
+      - generic:
+        - button: On the navy ground
+    - separator
+    - region:
+      - generic:
+        - heading [level=2]: Chips
+      - generic:
+        - generic: In stock
+        - generic: Certified Pre-Owned
+        - generic: 4WD
+        - generic: Sold
+        - generic: Small
+    - separator
+    - region:
+      - generic:
+        - heading [level=2]: Form controls
+        - paragraph: Every control takes its id, label association and error wiring from Field.
+      - generic:
+        - generic:
+          - generic: Full name
+          - textbox:
+            - /placeholder: Jane Miller
+        - generic:
+          - generic: Phone number
+          - paragraph: We only call about the vehicle you asked about.
+          - textbox:
+            - /placeholder: (440) 555-0199
+        - generic:
+          - generic: Which vehicle
+          - combobox
+        - generic:
+          - generic: Anything we should know(optional)
+          - paragraph: The only optional field here, so it is the only one marked.
+          - textbox:
+            - /placeholder: Trading something in, need it by a date...
+        - generic:
+          - generic:
+            - checkbox
+            - generic: I agree to be contacted about this vehicle by phone, text or email. Consent is not a condition of purchase. Reply STOP to opt out.
+        - generic:
+          - button: Trigger error
+          - button: Clear
+    - separator
+    - region:
+      - generic:
+        - heading [level=2]: Overlays
+        - paragraph: Focus moves in on open and returns to the trigger on close. Escape dismisses. The page behind does not scroll.
+      - generic:
+        - button [expanded]: Open dialog
+        - button: Open sheet
+    - separator
+    - region:
+      - generic:
+        - heading [level=2]: Specification
+      - generic:
+        - generic:
+          - generic:
+            - term: Odometer
+            - definition: 12 mi
+          - generic:
+            - term: Drivetrain
+            - definition: 4WD
+          - generic:
+            - term: Transmission
+            - definition: Automatic
+          - generic:
+            - term: Economy
+            - definition: 20 / 26 mpg
+          - generic:
+            - term: Output
+            - definition: 400 hp
+          - generic:
+            - term: Exterior
+            - definition: Oxford White
+        - generic:
+          - table:
+            - rowgroup:
+              - row:
+                - columnheader:
+                  - generic: Specification
+                - columnheader: Explorer
+                - columnheader: Bronco
+            - rowgroup:
+              - row:
+                - rowheader: Price
+                - cell: $56,750
+                - cell: $47,995
+              - row:
+                - rowheader: Drivetrain
+                - cell: AWD
+                - cell: 4WD
+              - row:
+                - rowheader: Fuel
+                - cell: Gas
+                - cell: Gas
+              - row:
+                - rowheader: Output
+                - cell: 400 hp
+                - cell: 330 hp
+    - separator
+    - region:
+      - generic:
+        - heading [level=2]: Prose
+      - generic:
+        - paragraph: Running text is capped at 68 characters. On the content routes this replaces lines that ran the full container width, which on a wide screen put well over 120 characters on a line.
+        - heading [level=3]: A sub-heading
+        - paragraph:
+          - text: Body copy sits at 17px with a 1.6 line height.
+          - strong: Emphasis
+          - text: is carried by weight and ink, never by colour alone.
+  - dialog [ref=f1e123]:
+    - generic [ref=f1e124]:
+      - heading "Ask about the F-150" [level=2] [ref=f1e125]
+      - paragraph [ref=f1e126]: 2025 Ford F-150 Platinum · $64,995
+    - generic [ref=f1e128]:
+      - generic [ref=f1e129]:
+        - generic [ref=f1e130]: Full name
+        - textbox "Full name" [active] [ref=f1e131]
+      - generic [ref=f1e132]:
+        - generic [ref=f1e133]: Phone number
+        - paragraph [ref=f1e134]: We reply the same day.
+        - textbox "Phone number" [ref=f1e135]
+    - generic [ref=f1e136]:
+      - button "Cancel" [ref=f1e137]
+      - button "Send enquiry" [ref=f1e138]
+    - button "Close" [ref=f1e139]

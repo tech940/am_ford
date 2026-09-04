@@ -11,7 +11,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
+import { SectionTag } from "@/components/site/SectionTag";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { dealerInfo, DELIVERY_CLAIM, DELIVERY_SHORT, DELIVERY_SHIPPING } from "@/lib/vehicles";
@@ -154,13 +154,13 @@ function DeliveryPage() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to="/inventory"
-              className="inline-flex items-center gap-2 rounded-full bg-[#002c5f] px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-[#001f44]"
+              className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-brand-deep"
             >
               Browse Inventory <ArrowRight className="h-4 w-4" />
             </Link>
             <a
               href={dealerInfo.phoneHref}
-              className="inline-flex items-center gap-2 rounded-full border border-[#002c5f]/25 bg-white px-6 py-3.5 text-sm font-bold text-[#002c5f] transition hover:bg-slate-50"
+              className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-white px-6 py-3.5 text-sm font-bold text-brand transition hover:bg-slate-50"
             >
               <Phone className="h-4 w-4" /> Contact Our Delivery Team
             </a>

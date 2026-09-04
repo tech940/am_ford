@@ -14,7 +14,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
+import { SectionTag } from "@/components/site/SectionTag";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs, SITE_ORIGIN } from "@/lib/breadcrumbs";
 import { CONSENT_TEXT, RESPONSE_PROMISE, submitQuickLead } from "@/lib/leads";
@@ -250,19 +250,19 @@ function CommercialPage() {
           <div className="mt-8 flex flex-wrap gap-3">
             <a
               href="#commercial-inquiry"
-              className="inline-flex items-center gap-2 rounded-full bg-[#002c5f] px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-[#001f44]"
+              className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-brand-deep"
             >
               Tell Us What You Need <ArrowRight className="h-4 w-4" />
             </a>
             <a
               href={dealerInfo.phoneHref}
-              className="inline-flex items-center gap-2 rounded-full border border-[#002c5f]/25 bg-white px-6 py-3.5 text-sm font-bold text-[#002c5f] transition hover:bg-slate-50"
+              className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-white px-6 py-3.5 text-sm font-bold text-brand transition hover:bg-slate-50"
             >
               <Phone className="h-4 w-4" /> Call {dealerInfo.phone}
             </a>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 rounded-full border border-[#002c5f]/25 bg-white px-6 py-3.5 text-sm font-bold text-[#002c5f] transition hover:bg-slate-50"
+              className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-white px-6 py-3.5 text-sm font-bold text-brand transition hover:bg-slate-50"
             >
               Contact the AM Ford Team
             </Link>
@@ -548,7 +548,7 @@ function CommercialPage() {
                   <input
                     type="checkbox"
                     required
-                    className="mt-0.5 h-6 w-6 shrink-0 accent-[#002c5f]"
+                    className="mt-0.5 h-6 w-6 shrink-0 accent-brand"
                   />
                   <span className="text-xs leading-relaxed text-muted-foreground">
                     {CONSENT_TEXT}

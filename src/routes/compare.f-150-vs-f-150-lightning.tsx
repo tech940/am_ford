@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, HelpCircle, Phone, Plug, Truck } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
+import { SectionTag } from "@/components/site/SectionTag";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { CompareFeatureLists, CompareSpecTable } from "@/components/site/CompareSpecTable";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
@@ -150,13 +150,13 @@ function F150VsLightningPage() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to="/inventory"
-              className="inline-flex items-center gap-2 rounded-full bg-[#002c5f] px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-[#001f44]"
+              className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-brand-deep"
             >
               See both trucks in our inventory <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
             <a
               href={dealerInfo.phoneHref}
-              className="inline-flex items-center gap-2 rounded-full border border-[#002c5f]/25 bg-white px-6 py-3.5 text-sm font-bold text-[#002c5f] transition hover:bg-slate-50"
+              className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-white px-6 py-3.5 text-sm font-bold text-brand transition hover:bg-slate-50"
             >
               <Phone className="h-4 w-4" aria-hidden /> Call {dealerInfo.phone}
             </a>
@@ -360,7 +360,7 @@ function F150VsLightningPage() {
               <Link
                 to="/ford/$model"
                 params={{ model: "f-150" }}
-                className="inline-flex items-center gap-2 rounded-full bg-[#002c5f] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#001f44]"
+                className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-bold text-white transition hover:bg-brand-deep"
               >
                 Read the Ford F-150 buying guide <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>

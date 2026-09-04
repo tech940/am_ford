@@ -1,0 +1,1293 @@
+[
+ {
+  "route": "/guides",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/guides.index.tsx",
+  "lines": 228,
+  "purpose": "Hub that lists the four editorial buying guides, explains the sourcing standard behind them, and fans readers out to inventory, model pages, comparisons, financing and contact.",
+  "primaryUser": "Undifferentiated top-of-funnel researcher, skewing local Ashtabula County buyer; the page makes no segment choice at all.",
+  "primaryAction": "Open one of the four guide cards (lines 146-169).",
+  "secondaryActions": [
+   "Call the dealership (lines 131-133, hero)",
+   "Browse inventory (lines 128-130 hero, 213-215 footer)",
+   "Go to /ford-models (line 207)",
+   "Go to /compare (line 210)",
+   "Start a financing application (line 216)",
+   "Ask the AM Ford team a question via /contact (line 219)"
+  ],
+  "keyInformation": [
+   "Four guide titles, blurbs and subject pills, sourced from GUIDES in src/lib/contentPages.ts",
+   "The editorial standard: what the guides will not claim, inspection-over-opinion framing, local winter conditions (lines 59-75)",
+   "Dealership address (line 124) and phone (line 132)",
+   "DELIVERY_CLAIM verbatim (line 204)",
+   "Onward routes to models, comparisons, inventory, financing, contact"
+  ],
+  "problems": [
+   "Meta layer harvests used-Ford intent the lot cannot fulfil. Line 41 DESCRIPTION sells 'used F-150 reliability ... used-car inspection checks'; lines 84-92 keywords include 'used Ford buying advice' and 'what to check before buying a used Ford'. Inventory is 5 New + 1 CPO, zero used. Violates PRODUCT.md principle 1.",
+   "Two sources of truth for one list. CARD_COPY (lines 19-36) is a hand-maintained map keyed by slug, parallel to GUIDES in src/lib/contentPages.ts. A guide added to GUIDES silently degrades to the generic 'Guide' pill (line 156) and the fallback anchor (line 163) with no build error.",
+   "Line 151 passes a runtime-computed string to the typed router prop (to={guidePath(g)}). A slug in GUIDES with no matching route file produces a 404 link that tsc --noEmit does not catch (it currently passes clean). scripts/check-links.ts line 62 rebuilds the same path string rather than validating against the route tree.",
+   "Whole-card link, lines 150-166. One <Link> wraps the pill, H3, blurb and a fake anchor span, so the link's accessible name is the concatenation of all card text. The span at lines 162-165 reads visually as a second, separate link but is not focusable and is not a link.",
+   "Six CTAs in one flat row at lines 206-222 (ford-models, compare, inventory, financing, contact), five of them identical secondary weight, competing with the two hero CTAs at lines 127-134. The page ends with seven ways out and no single next step.",
+   "Three consecutive framing blocks before anything actionable: hero paragraph (lines 121-126), 'Start with a question' preamble (lines 141-145), then 'How These Are Written' (lines 173-191). The guide grid is the only content that matters and it is sandwiched between self-description.",
+   "The section at lines 173-191 is about the publisher, not the buyer. It is the second-largest block on the page and answers a question no visitor asked.",
+   "Freshness signal dropped twice. GUIDES carries `published` (contentPages.ts lines 25, 32, 39, 46) but the cards render no date, and the ItemList schema at lines 43-56 omits datePublished on every item.",
+   "'Browse every Ford in stock' (lines 128-130) sets an expectation of a browsable catalogue. The page never states inventory reality (Ford only, 6 vehicles), so the hero CTA overpromises before the reader reaches any guide."
+  ],
+  "unverifiedClaims": [
+   "Lines 121-123: \"These are the answers our sales and service teams give in person, written down.\" Unverifiable provenance claim presented as the basis for the whole hub.",
+   "Lines 143-145: \"If the question you have is not covered here, call us and we will answer it, then add it.\" An editorial commitment the site cannot demonstrate.",
+   "No APR, monthly payment, inspection-point count, warranty specific, award, statistic, review count or testimonial appears on this page. Line 63 correctly disclaims that class of claim rather than making one."
+  ],
+  "tier": "SECONDARY",
+  "dependencies": [
+   "@tanstack/react-router (createFileRoute, Link)",
+   "lucide-react (ArrowRight, BookOpen, Phone, ShieldCheck, Wrench)",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/components/site/GuideLayout (guideCtaPrimary, guideCtaSecondary only \u2014 does not use the article primitives)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs, SITE_ORIGIN)",
+   "@/lib/contentPages (GUIDES, guidePath)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM)",
+   "Consumed downstream by scripts/generate-sitemap.ts (line 70), scripts/check-links.ts (line 62), SiteNav.tsx (line 73), SiteFooter.tsx (line 27), FrequentSearches.tsx guideItems() (lines 283-291)"
+  ]
+ },
+ {
+  "route": "/guides/best-ford-suv-for-families",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/guides.best-ford-suv-for-families.tsx",
+  "lines": 337,
+  "purpose": "Answer 'which Ford SUV is best for families' by weighing Explorer, Escape and Bronco on third-row use, car seats, cargo, winter traction and parking, then move the family into a showroom visit.",
+  "primaryUser": "Families (three-row seating, car seats, winter safety) \u2014 the only page in the set that squarely serves this named audience.",
+  "primaryAction": "Come in and test-fit your own car seats in all three SUVs in a single visit (the ask stated at line 311).",
+  "secondaryActions": [
+   "See Ford SUVs in stock (lines 322-324)",
+   "Read the Ford Explorer model guide (lines 325-327)",
+   "Start a financing application (lines 328-330)",
+   "Call the dealership (lines 331-333)",
+   "Read the EcoBoost reliability guide (lines 150-152)",
+   "Read the used-Ford checklist (lines 300-302)",
+   "Open /compare/explorer-vs-escape (lines 191-193) and /compare/bronco-vs-explorer (lines 222-224)",
+   "Open the Explorer, Escape and Bronco model pages (lines 159, 186, 217)"
+  ],
+  "keyInformation": [
+   "The decision rule: how many times a month do you need a fifth and sixth seat (lines 115-120)",
+   "Explorer / Escape / Bronco trade-offs, each with a route to its model page",
+   "Car-seat test checklist to run in person (lines 235-259)",
+   "AWD versus tires in a lake-effect winter (lines 262-270)",
+   "The five-item one-visit decision list (lines 285-291)",
+   "Dealership address (line 315) and DELIVERY_CLAIM verbatim (line 317)"
+  ],
+  "problems": [
+   "Opens with an invented verdict. Lines 106-109: 'For most families, the Ford Explorer is the right answer'. PRODUCT.md voice is binding: 'Write about what a buyer should check and why, not invented verdicts.' The rest of the article is check-based; the hero contradicts it.",
+   "Stated ask has no matching control. GuideCta heading is 'Come and try all three in one visit' (line 311) and the body asks the reader to tell the dealer what they carry and tow (lines 314-318), but the four controls at lines 322-333 are inventory, a model page, financing and a phone link. No test-drive booking, no appointment link, no /contact link anywhere on the page. Cuts against PRODUCT.md principle 4.",
+   "Recommends a configuration that may not exist on the lot. Lines 199-227 build the Bronco case around 'Choose the four-door if it is a family vehicle' (line 209). The only Bronco in stock is a 2025 Outer Banks whose record in src/lib/vehicles.ts carries no door count, so the page's central Bronco recommendation cannot be matched to stock.",
+   "Routes a family buyer at used inventory that does not exist. Lines 299-303: 'if buying used is on the table, our checklist for buying a used Ford covers what to verify before you commit.' The lot holds zero used vehicles.",
+   "Hardcoded prose asserts live inventory state. Lines 194-196 ('puts the two units on our lot next to each other') and lines 224-226 ('using the two vehicles in stock') are true today but become false silently the moment either unit sells. Inventory assertions in prose should be data-driven off src/lib/vehicles.ts.",
+   "Dead end mid-article. Lines 271-275 close the winter section by pointing at 'our service team' with no link and no CTA, while every other section links out. /service is never linked from this page.",
+   "Price is invisible. The three SUVs compared span $36,450 (CPO Escape) to $56,750 (Explorer ST) in stock, and the page recommends the most expensive of the three at line 106 with no signal of that gap.",
+   "Same argument stated twice on one page. The AWD-versus-tires point in FAQ 4 (lines 46-48) and the body section at lines 262-269 are near-identical in content and phrasing.",
+   "Cargo and third-row detail at lines 135-165 and 167-197 duplicates what the article itself says the model pages cover (lines 161-164, 187-190), so the guide competes with the pages it is trying to feed."
+  ],
+  "unverifiedClaims": [
+   "Line 43: \"The four-door version can, and plenty of families here use one.\" Unsourced customer-behaviour claim.",
+   "Line 177: \"The hybrid version is the one families ask us about most.\" A statistic about customer behaviour with no source.",
+   "Line 35: \"It is a real third row rather than a token one, and an adult can ride back there for a reasonable trip\" \u2014 vehicle-behaviour verdict absent from the vehicle records.",
+   "Lines 145-149: \"All-wheel drive is available across most of the range ... Factory tow equipment is offered on many versions\" \u2014 model-range specifications absent from the vehicle records. (The adjacent 'the ST version ... built around a turbocharged EcoBoost V6' IS backed: the Explorer ST record lists '3.0L EcoBoost V6' in features.)",
+   "Lines 178-180: \"Ford has also sold a plug-in hybrid Escape, which does plug in\" \u2014 specification absent from the vehicle records.",
+   "Line 39: \"For most two-child households the Escape is enough vehicle\" \u2014 invented verdict in FAQ form.",
+   "No APR, monthly payment, inspection-point count, warranty specific, award, review count or named testimonial appears."
+  ],
+  "tier": "SECONDARY",
+  "dependencies": [
+   "@tanstack/react-router (createFileRoute, Link)",
+   "lucide-react (ArrowRight, Phone)",
+   "@/components/site/SiteShell",
+   "@/components/site/Breadcrumbs",
+   "@/components/site/GuideLayout (GuideBody, GuideCallout, GuideCta, GuideFaqs, GuideHero, GuideList, GuideSection, guideCtaPrimary, guideCtaSecondary, guideInlineLink)",
+   "@/lib/articleSchema (articleSchema, faqSchema)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs, SITE_ORIGIN)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM)",
+   "Routes depended on: /ford/$model (explorer, escape, bronco), /compare/explorer-vs-escape, /compare/bronco-vs-explorer, /guides/is-ford-ecoboost-reliable, /guides/what-to-check-before-buying-a-used-ford, /inventory, /financing"
+  ]
+ },
+ {
+  "route": "/guides/is-a-used-ford-f-150-reliable",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/guides.is-a-used-ford-f-150-reliable.tsx",
+  "lines": 354,
+  "purpose": "Redirect the used-F-150 reliability question away from model-year verdicts and toward the individual truck's service records, recall status and underbody condition.",
+  "primaryUser": "Work and commercial buyer (contractors, farms, trades) shopping a used truck, overlapping the local Ashtabula County buyer via the road-salt argument. Commercially ambiguous, because the dealer sells no used trucks.",
+  "primaryAction": "Send AM Ford the listing and VIN for a pre-purchase second opinion on that specific truck (the ask at lines 330-335).",
+  "secondaryActions": [
+   "Browse Ford trucks in stock (lines 339-341)",
+   "Read the F-150 model guide (lines 342-344)",
+   "Start a financing application (lines 345-347)",
+   "Call the dealership (lines 348-350)",
+   "Read the EcoBoost guide (lines 159-161, 268-270)",
+   "Read the used-Ford checklist (lines 297-299)",
+   "Read the F-150 Lightning model page (lines 280-286) and the /compare/f-150-vs-f-150-lightning page (lines 289-291)",
+   "Contact the service department (lines 315-317)"
+  ],
+  "keyInformation": [
+   "Why the individual truck beats the model year (lines 117-137)",
+   "Where to research: NHTSA complaint/recall database and Ford's VIN lookup (lines 141-147)",
+   "The six owner-reported areas worth checking (lines 150-178)",
+   "The three-stage inspection: before you drive it, on a lift, on the test drive (lines 207-250)",
+   "EcoBoost versus V8 on a used truck (lines 253-276)",
+   "The Northeast Ohio road-salt argument for a lift inspection (lines 304-312)"
+  ],
+  "problems": [
+   "Highest-severity inventory mismatch in the set. The article is a used-truck buying guide and the lot holds zero used vehicles. Every CTA (lines 339-350) routes to new-Ford surfaces. The page ranks for 'used Ford F-150' intent and lands the buyer on 5 new Fords plus 1 CPO Escape. Direct breach of PRODUCT.md principle 1.",
+   "Misleading hedge at lines 332-334: 'Our own stock leans toward new Fords rather than used trucks' implies some used stock exists. src/lib/vehicles.ts holds none. The truthful statement is that there are no used vehicles at all.",
+   "Primary CTA punishes the arriving reader. 'Browse Ford trucks in stock' (lines 339-341) resolves to a new F-150 Platinum at $64,995 and an F-150 Lightning at $71,990 \u2014 the two most expensive vehicles on the lot, handed to someone who arrived shopping a used truck, with no expectation setting.",
+   "Heavy duplication with /guides/what-to-check-before-buying-a-used-ford. The 'Before you drive it' callout (lines 207-224: service records, recall status via NHTSA and VIN, title and VIN match) restates that guide's lines 118-143 and 146-160 point for point; 'Underneath, on a lift' (lines 225-242) restates its lines 229-235; the cold-start test drive (lines 243-250) restates its lines 238-253. Two pages on one site competing for the same query set, both emitting FAQPage schema.",
+   "Duplication with /guides/is-ford-ecoboost-reliable. The EcoBoost-versus-V8 argument at lines 253-266 is the same case in the same order as that guide's lines 304-313 (low-end torque, fewer boost components, the sound, buy the better-maintained one). Neither page acknowledges the other.",
+   "FAQ 3 (lines 45-46, 'Do I still need an inspection if the vehicle history report is clean?') and the sibling guide's FAQ 3 (lines 42-43 there, 'Do I still need an inspection on a certified pre-owned vehicle?') give near-identical answers, both marked up as FAQPage.",
+   "The stated ask has no control. Lines 330-335 ask the reader to send a listing, a VIN and towing plans; the only routes offered are a phone link (line 348) and /service (line 315). /contact is never linked and there is no VIN field or form on the page.",
+   "The one Certified Pre-Owned unit on the lot (2024 Escape Titanium Hybrid) is never mentioned, and CPO is never explained here as an alternative to a private used truck. The only available bridge from used intent to real stock is left unbuilt.",
+   "Model-history specifics stated as fact with no citation (lines 186-194), which sets a precedent the rest of the article's evidence discipline does not follow."
+  ],
+  "unverifiedClaims": [
+   "Line 190: \"The F-150 moved to an aluminum body for the 2015 model year, which changed how body repairs are performed, and the current generation arrived for 2021 with a hybrid powertrain option alongside the existing engines.\" Vehicle specifications absent from the vehicle records.",
+   "Lines 216-218: \"Recall work is performed at no charge by a Ford dealer, ours included, so an open recall is a scheduling problem rather than a price negotiation.\" A service/warranty commitment naming the dealership; PRODUCT.md puts warranty specifics behind management approval.",
+   "Lines 145-147: \"the F-150 sells in very large numbers, and owners post problems far more often than they post that nothing happened, so volume of discussion is not a failure rate.\" Statistic-shaped assertion with no source.",
+   "Line 118: \"The F-150 has been built in more configurations than almost anything else on the road.\" Unsourced superlative-adjacent claim.",
+   "Lines 332-333: \"Our own stock leans toward new Fords rather than used trucks\" \u2014 contradicted by src/lib/vehicles.ts, which holds zero used vehicles.",
+   "No APR, monthly payment, inspection-point count, award, review count or named testimonial appears. Lines 182-186 explicitly decline to publish a 'years to avoid' list, which is compliant behaviour worth preserving."
+  ],
+  "tier": "SECONDARY",
+  "dependencies": [
+   "@tanstack/react-router (createFileRoute, Link)",
+   "lucide-react (ArrowRight, Phone)",
+   "@/components/site/SiteShell",
+   "@/components/site/Breadcrumbs",
+   "@/components/site/GuideLayout (GuideBody, GuideCallout, GuideCta, GuideFaqs, GuideHero, GuideList, GuideSection, guideCtaPrimary, guideCtaSecondary, guideInlineLink)",
+   "@/lib/articleSchema (articleSchema, faqSchema)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs, SITE_ORIGIN)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM)",
+   "Routes depended on: /ford/$model (f-150, f-150-lightning), /compare/f-150-vs-f-150-lightning, /guides/is-ford-ecoboost-reliable, /guides/what-to-check-before-buying-a-used-ford, /inventory, /financing, /service"
+  ]
+ },
+ {
+  "route": "/guides/is-ford-ecoboost-reliable",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/guides.is-ford-ecoboost-reliable.tsx",
+  "lines": 370,
+  "purpose": "Explain what a turbocharged, direct-injected EcoBoost asks of an owner, which concerns are worth inspecting, which Fords use one, and the maintenance routine that keeps one healthy.",
+  "primaryUser": "Work and commercial buyer weighing EcoBoost against a V8 for towing, plus the local buyer researching an engine before committing. Serves an engine question, not a segment.",
+  "primaryAction": "Give AM Ford the model, engine and mileage of a specific vehicle and get a service-team opinion on it (the ask at lines 346-351).",
+  "secondaryActions": [
+   "See Ford models in stock (lines 355-357)",
+   "Read the Ford Explorer model guide (lines 358-360)",
+   "Start a financing application (lines 361-363)",
+   "Call the dealership (lines 364-366)",
+   "Read the used-Ford checklist (lines 214-216) and the used F-150 guide (lines 316-318)",
+   "Open the five model pages (lines 229, 237, 245, 253, 261)",
+   "Open /compare/explorer-vs-escape (line 271), /compare/bronco-vs-explorer (line 275), /compare/f-150-vs-f-150-lightning (line 321)",
+   "Read the family SUV guide (lines 280-282)"
+  ],
+  "keyInformation": [
+   "EcoBoost is an engine family, not one engine (lines 113-128)",
+   "The five ownership differences versus a naturally aspirated engine (lines 136-163)",
+   "Carbon build-up on intake valves and what to ask a technician (lines 164-171)",
+   "The five-item inspection callout for a used EcoBoost (lines 182-210)",
+   "Which stocked Fords use one (lines 221-267)",
+   "The maintenance routine (lines 287-301) and the EcoBoost-or-V8 towing decision (lines 304-325)"
+  ],
+  "problems": [
+   "The section heading at line 221 says 'Which Fords we sell use EcoBoost engines' but the body (lines 226-267) describes Ford model ranges, not the lot. Only ONE of the six vehicles in src/lib/vehicles.ts is a verifiable EcoBoost: the Explorer ST, whose features list '3.0L EcoBoost V6'. The heading is a direct inventory misrepresentation.",
+   "Lines 349-350: 'our sales team can show you what is on the lot with an EcoBoost under the hood today' resolves to exactly one vehicle. The plural framing sets up a lot walk that does not exist.",
+   "Lines 252-258 recommend the variant the dealer does not stock: 'The Ford Mustang has long offered a turbocharged four-cylinder EcoBoost as the alternative to the V8 GT.' The only Mustang on the lot IS the V8 GT Premium (features: '5.0L V8'), and the sentence links straight to the Mustang model page.",
+   "Lines 244-250 excludes the actual unit by its own caveat. The Escape bullet places EcoBoost 'in its gasoline versions. The hybrid version is a different powertrain' \u2014 the only Escape in stock is the CPO Titanium Hybrid.",
+   "Lines 260-266 assert 'The Ford Bronco also uses turbocharged EcoBoost engines' while the stocked Bronco Outer Banks record lists no engine at all in its features array.",
+   "Only guide of the four that omits DELIVERY_CLAIM. Line 19 imports dealerInfo alone, and the CTA (lines 342-353) makes a Jefferson-local offer with no route for the remote or out-of-state buyer, breaking the pattern the other three follow and dropping the dealership's stated differentiator.",
+   "Duplication with /guides/is-a-used-ford-f-150-reliable: the EcoBoost-versus-V8 towing case at lines 304-313 restates its lines 253-266; the 'read NHTSA complaints as an inspection list, not a verdict' framing at lines 176-180 restates its lines 141-148; cold-start noise appears at lines 190-193 here and lines 152-155 there.",
+   "Lines 328-336 substitute proprietary, uncheckable evidence for the sourced figure the page correctly declines to give: a verdict 'based on what comes through our service drive rather than on a ranking we cannot source'.",
+   "Longest article of the four (370 lines, eight H2 sections) inside a single max-w-3xl column (GuideLayout line 67) with no table of contents and no jump links. A reader who arrived on one narrow query must scroll the whole piece.",
+   "The FAQ block renders after the entire article (line 340) even though FAQs 1 and 2 (lines 34-39: premium fuel, turbo life) are the highest-volume queries the page targets. The answers most visitors came for are last."
+  ],
+  "unverifiedClaims": [
+   "Lines 262-265: \"The Ford Bronco also uses turbocharged EcoBoost engines, which is part of how a body-on-frame SUV delivers usable low-end torque off pavement.\" Specification absent from the Bronco vehicle record.",
+   "Lines 255-257: \"The Ford Mustang has long offered a turbocharged four-cylinder EcoBoost as the alternative to the V8 GT.\" Specification absent from the records; the stocked Mustang is the V8.",
+   "Line 47: \"Modern EcoBoost turbochargers are water-cooled and the systems are designed for ordinary shutdowns.\" Engineering claim with no source.",
+   "Line 35: \"Several EcoBoost engines are designed to run on regular unleaded, with premium recommended rather than required when you want maximum output, such as when towing in hot weather.\"",
+   "Lines 166-168: \"Some Ford engines combine port and direct injection, which reduces that tendency.\"",
+   "Lines 330-331: \"Our answer, based on what comes through our service drive rather than on a ranking we cannot source\" \u2014 an appeal to unverifiable in-house evidence.",
+   "Lines 348-350: \"Our service team in Jefferson works on these engines every week\" \u2014 a frequency statistic with no source.",
+   "Line 241: \"the ST version we stock is built around a 3.0L EcoBoost V6\" \u2014 this one IS backed by the vehicle record (Explorer ST features include '3.0L EcoBoost V6'). Listed for completeness as the single verified spec claim in the section.",
+   "No APR, monthly payment, inspection-point count, warranty specific, award, review count or named testimonial appears."
+  ],
+  "tier": "SECONDARY",
+  "dependencies": [
+   "@tanstack/react-router (createFileRoute, Link)",
+   "lucide-react (ArrowRight, Phone)",
+   "@/components/site/SiteShell",
+   "@/components/site/Breadcrumbs",
+   "@/components/site/GuideLayout (GuideBody, GuideCallout, GuideCta, GuideFaqs, GuideHero, GuideList, GuideSection, guideCtaPrimary, guideCtaSecondary, guideInlineLink)",
+   "@/lib/articleSchema (articleSchema, faqSchema)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs, SITE_ORIGIN)",
+   "@/lib/vehicles (dealerInfo ONLY \u2014 DELIVERY_CLAIM deliberately or accidentally omitted, line 19)",
+   "Routes depended on: /ford/$model (f-150, explorer, escape, mustang, bronco), /compare/explorer-vs-escape, /compare/bronco-vs-explorer, /compare/f-150-vs-f-150-lightning, /guides/what-to-check-before-buying-a-used-ford, /guides/best-ford-suv-for-families, /guides/is-a-used-ford-f-150-reliable, /inventory, /financing"
+  ]
+ },
+ {
+  "route": "/guides/what-to-check-before-buying-a-used-ford",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/guides.what-to-check-before-buying-a-used-ford.tsx",
+  "lines": 363,
+  "purpose": "Give an ordered pre-purchase checklist for a used Ford \u2014 documents first, then VIN recall lookup, service records, walkaround, lift, test drive, and what certified pre-owned actually changes.",
+  "primaryUser": "First-time and credit-rebuilding buyers (the audience most likely shopping used and least likely to know the process), with a secondary run at remote and out-of-state buyers in the distance section (lines 276-290).",
+  "primaryAction": "Hand AM Ford a listing and a VIN so they can say what to check and confirm recall status (the ask at lines 339-345).",
+  "secondaryActions": [
+   "Browse current Ford inventory (lines 348-350)",
+   "See how financing works (lines 351-353)",
+   "Ask the service team about an inspection (lines 354-356)",
+   "Call the dealership (lines 357-359)",
+   "Read the EcoBoost guide (lines 186-188)",
+   "Read the nationwide delivery page (lines 286-288)",
+   "Open the F-150, Explorer and Escape model pages (lines 297, 305, 309)",
+   "Open /compare/explorer-vs-escape (line 313) and /compare/f-150-vs-f-150-lightning (line 325)",
+   "Read the used F-150 guide (lines 301-303) and the family SUV guide (lines 318-320)"
+  ],
+  "keyInformation": [
+   "Paperwork before paint: title status, name on title, VIN match, odometer disclosure, remaining factory coverage (lines 118-143)",
+   "Recalls are checked by VIN, not by model (lines 146-160)",
+   "How to read a service record set (lines 168-183)",
+   "The walkaround, the under-hood and lift inspection, and a real test drive (lines 193-253)",
+   "What certified pre-owned is and the two documents to demand (lines 255-273)",
+   "Buying at a distance, plus DELIVERY_CLAIM verbatim (lines 276-290)"
+  ],
+  "problems": [
+   "Root defect shared with the F-150 guide: the entire subject is buying a used Ford and AM Ford holds zero used vehicles. The primary CTA 'Browse current Ford inventory' (lines 348-350) delivers 5 new Fords and 1 CPO, none of which need this checklist.",
+   "The single commercial bridge on the page is left unbuilt. The CPO section (lines 255-273) is the one part that maps to real stock (the 2024 Escape Titanium Hybrid), and it sits seventh of eight sections with no link to that vehicle, no link to a CPO-filtered inventory view, and no mention that AM Ford has a certified unit at all.",
+   "Lines 293-329 is a link dump, not prose: a 30-line, two-paragraph section carrying nine inline links (F-150 model page, used F-150 guide, Explorer, Escape, explorer-vs-escape, family SUV guide, f-150-vs-lightning). No single next step survives it.",
+   "The CTA asks for something none of its controls do. Lines 339-345: 'Bring us a listing and a VIN and we will tell you what we would check and what the recall status is.' There is no VIN field, no contact form, and /contact is never linked from this page. Phone (line 357) and /service (line 354) are the only routes.",
+   "Two unrelated asks in one CTA paragraph. Lines 343-344 append 'Financing terms depend on credit, term length, and the lender, so start that conversation early' to a paragraph about VIN checks.",
+   "Duplication with /guides/is-a-used-ford-f-150-reliable across four sections: lines 118-143 versus its 207-224; lines 146-160 versus its 213-218; lines 229-235 versus its 225-242; lines 238-253 versus its 243-250. FAQ overlap too: FAQ 3 here (lines 42-43) and FAQ 3 there (lines 45-46) give near-identical answers, both emitting FAQPage schema on the same site.",
+   "The dealership's strongest differentiator is buried as an aside. DELIVERY_CLAIM lands at line 284 inside a section about vetting a third-party seller at a distance, and the paragraph pivots mid-flow from 'how to buy from someone else remotely' to AM Ford's own delivery offer.",
+   "Lines 265-267 correctly refuse to publish an inspection point count or coverage length, but nothing on the page then tells the reader where to get those figures for AM Ford's own certified unit, so the compliant refusal leaves a dead end.",
+   "Heading inconsistency at line 238: 'The test drive is a test, not a lap around the block' is written as a slogan while every other H2 on the page is a scannable question or noun phrase (lines 113, 146, 162, 193, 222, 255, 276, 293)."
+  ],
+  "unverifiedClaims": [
+   "Line 39 (FAQ 2): \"Safety recall repairs are performed at no charge by a franchised Ford dealer, ours included, once parts are available, so an open recall is a scheduling item rather than a reason to walk away.\" And line 156: \"Safety recall repairs are performed at no charge by a franchised Ford dealer\". A service/warranty commitment naming the dealership.",
+   "Line 207: \"Note that a magnet is a poor test on newer F-150s, which use aluminum body panels from the 2015 model year on.\" Vehicle specification absent from the records.",
+   "Line 43 (FAQ 3): \"A certified vehicle has already been through a manufacturer-specified inspection and reconditioning process, which is most of the value of the program.\"",
+   "Lines 256-260: \"a vehicle has to fall within program limits on age and mileage, pass a manufacturer-specified inspection, and be reconditioned to that standard, after which it carries limited warranty coverage defined by the program.\" Deliberately non-specific warranty description; borderline against the PRODUCT.md gate on warranty specifics.",
+   "Line 116: \"The documents decide whether the sale can proceed cleanly, and they take ten minutes.\" Soft figure.",
+   "Line 245: \"Drive it for at least twenty minutes over a mix of surfaces and speeds.\" A recommendation rather than a product claim, but a specific figure.",
+   "Explicitly compliant: lines 265-267 refuse to publish an inspection point count or coverage length, and line 284 uses DELIVERY_CLAIM verbatim from src/lib/vehicles.ts. No APR, monthly payment, award, statistic, review count or named testimonial appears."
+  ],
+  "tier": "SECONDARY",
+  "dependencies": [
+   "@tanstack/react-router (createFileRoute, Link)",
+   "lucide-react (ArrowRight, Phone)",
+   "@/components/site/SiteShell",
+   "@/components/site/Breadcrumbs",
+   "@/components/site/GuideLayout (GuideBody, GuideCallout, GuideCta, GuideFaqs, GuideHero, GuideList, GuideSection, guideCtaPrimary, guideCtaSecondary, guideInlineLink)",
+   "@/lib/articleSchema (articleSchema, faqSchema)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs, SITE_ORIGIN)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM)",
+   "Routes depended on: /ford/$model (f-150, explorer, escape), /compare/explorer-vs-escape, /compare/f-150-vs-f-150-lightning, /guides/is-ford-ecoboost-reliable, /guides/is-a-used-ford-f-150-reliable, /guides/best-ford-suv-for-families, /nationwide-vehicle-delivery, /inventory, /financing, /service"
+  ]
+ },
+ {
+  "route": "/compare",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/compare.index.tsx",
+  "lines": 284,
+  "purpose": "A hub that routes a mid-funnel shopper who has already narrowed to two Fords into the correct head-to-head page, and explains why only three pairs exist.",
+  "primaryUser": "Local Ashtabula County buyer (mid-funnel, comparing two Fords before a visit); families are the secondary frame.",
+  "primaryAction": "Open one of the three comparison pages.",
+  "secondaryActions": [
+   "Call the dealership from the hero phone link",
+   "Browse /inventory",
+   "Go to /ford-models",
+   "Read /guides",
+   "Apply at /financing",
+   "Read /nationwide-vehicle-delivery",
+   "Contact the sales team via /contact"
+  ],
+  "keyInformation": [
+   "The three available pairs, each with a distinguishing one-line frame",
+   "Why only three comparisons exist (both models must have a model page and a real vehicle record)",
+   "That the spec tables are built from specific in-stock units, not model ranges",
+   "The four ordering questions (seats, refuel/charge, trim, back-to-back drive)",
+   "Dealer city, address, phone",
+   "DELIVERY_CLAIM verbatim"
+  ],
+  "problems": [
+   "Duplicate source of truth for the comparison registry: this page defines its own COMPARISONS array (lines 24-49) while src/lib/contentPages.ts:51-70 declares itself 'the single source the sitemap generator and the internal-link checker read from' (contentPages.ts:1-7). The blurbs have already drifted \u2014 line 29-30 here vs contentPages.ts:55 \u2014 and the ItemList JSON-LD (lines 51-62) is built from the copy the sitemap never reads.",
+   "The invariant asserted in the comment at lines 19-23 ('Only pairs where BOTH models have ... a vehicle record ... belong here') is enforced by nothing. Unlike the three leaf pages, this hub never calls getVehicle, so if a unit leaves vehicles.ts the card still renders and links to a leaf page whose spec table has silently vanished.",
+   "Primary CTA works against the page's own purpose: 'Browse every vehicle in stock' -> /inventory (lines 154-159) is the heaviest control on the page and sits above the three comparison cards (lines 173-192), which are the only reason the page exists.",
+   "Whole-card link (lines 176-189): the tag, heading, blurb and the fake-link span are all inside one <Link>, so each link's accessible name is the entire card text. The 'group-hover:underline' span at lines 185-188 looks like a separate link but is not focusable and is not a link.",
+   "The comparison cards carry no data at all \u2014 no price, no body type, no fuel, no drivetrain \u2014 so a comparison hub gives the visitor nothing to compare before clicking. Every differentiator is one click away.",
+   "Closing CTA card (lines 234-279) is a flat row of six equal-weight buttons with no primary, and includes navigational near-duplicates: /ford-models (line 248) and /inventory (line 254) when /inventory was already the hero CTA at line 154.",
+   "No lead exists on the page. There is no form; the only contactable route is the hero phone link (lines 160-165). The closing card that says 'Tell us the two you are weighing up' (lines 236-240) offers neither a phone link nor a form, only navigation \u2014 thin against PRODUCT.md principle 4.",
+   "Heading weight contradicts heading level: the <h2> at line 235 is rendered text-xl, smaller than the h2s above it at text-2xl/3xl (lines 172, 201, 221).",
+   "<ol> at line 173 encodes a ranked order that the hero copy explicitly denies ('No winner is declared', line 149).",
+   "Section heading 'Comparisons' (line 172) is a content-free label above cards that already announce what they are.",
+   "Imports SectionTag from '@/components/site/Home' (line 4), coupling an SEO route to the 700-line homepage module (SectionTag is defined at Home.tsx:733)."
+  ],
+  "unverifiedClaims": [
+   "\"These pages take the pairs we get asked about most in {dealerInfo.city}\" (lines 147-148) \u2014 unsourced popularity statistic.",
+   "\"These are the four our sales team works through, roughly in this sequence, and they narrow a shortlist faster than reading another spec sheet does.\" (lines 203-205) \u2014 unsupported effectiveness claim about the sales process.",
+   "\"those are the vehicles we can put you in on the same afternoon and speak about with real knowledge\" (line 75) \u2014 same-day availability promise against a 6-unit lot.",
+   "Clean on the PRODUCT.md high-risk list: no APR, no monthly payment, no inspection-point count, no warranty specific, no award, no testimonial, no review count."
+  ],
+  "tier": "SECONDARY",
+  "dependencies": [
+   "@tanstack/react-router (createFileRoute, Link)",
+   "lucide-react (ArrowRight, HelpCircle, ListChecks, Phone)",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs, SITE_ORIGIN)",
+   "@/lib/articleSchema (faqSchema)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM)",
+   "Outbound routes: /inventory, /ford-models, /guides, /financing, /nationwide-vehicle-delivery, /contact, and the three /compare/* leaves"
+  ]
+ },
+ {
+  "route": "/compare/bronco-vs-explorer",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/compare.bronco-vs-explorer.tsx",
+  "lines": 420,
+  "purpose": "Resolve the Bronco-or-Explorer decision by putting the two actual in-stock SUVs side by side and naming who each one suits, without declaring a winner.",
+  "primaryUser": "Local Ashtabula County buyer (trail, township roads, lake-effect winter); families are the second audience via the third-row half.",
+  "primaryAction": "Contact AM Ford to drive the two units back to back (or arrange delivery).",
+  "secondaryActions": [
+   "Call the dealership from the hero",
+   "Read the /ford/bronco and /ford/explorer model pages",
+   "Browse /inventory",
+   "Apply at /financing",
+   "Read /guides/best-ford-suv-for-families",
+   "Cross-read /compare/explorer-vs-escape"
+  ],
+  "keyInformation": [
+   "The real structural difference (two rows and trail hardware vs three rows and highway comfort)",
+   "The live price gap between the two units, derived from the records",
+   "The spec table and equipment lists for the two specific in-stock vehicles",
+   "4WD vs AWD, and that tires \u2014 not drivetrain \u2014 decide braking",
+   "Who should pick each, stated as trade-offs not verdicts",
+   "Phone, address, and DELIVERY_CLAIM verbatim"
+  ],
+  "problems": [
+   "CANONICAL hardcodes 'https://amford.com' (line 12) instead of importing SITE_ORIGIN from @/lib/breadcrumbs, which the hub does (compare.index.tsx:6,11). PRODUCT.md flags the canonical domain as [OPEN] and blocking; changing SITE_ORIGIN would move the Article JSON-LD and BreadcrumbList URLs but leave this page's <link rel=canonical> and og:url on the old host. Identical defect at explorer-vs-escape.tsx:12 and f-150-vs-f-150-lightning.tsx:12.",
+   "The comparison silently collapses if either unit sells: {bronco && explorer && (...)} at lines 203-230 gates the spec table, the 'Equipment on the two vehicles in stock' h2, and the feature lists \u2014 but the enclosing 'Side by Side / Specifications compared' heading and its lead-in 'the table compares the two vehicles we have' (lines 196-201) render unconditionally. The same gate silently drops the price sentence at line 159. The failure mode is an orphaned section header pointing at nothing, not an unpublished page.",
+   "Near-verbatim duplication with /compare/explorer-vs-escape on the shared Explorer half: the tow-equipment card (lines 116-118) vs explorer-vs-escape.tsx:96-98; the I-90 highway card (lines 111-114) vs explorer-vs-escape.tsx:100-103; the ST-trim 'we will watch for a lower trim' paragraph (lines 119-122) vs explorer-vs-escape.tsx:231-235. Two indexable URLs carrying the same paragraphs.",
+   "The AWD-vs-4WD-and-tires argument is made three times on this one page: FAQ (lines 31-33), the dedicated section (lines 301-313), and again inside the Explorer trade-off paragraph (lines 279-283).",
+   "The verdict \u2014 the highest-intent block on the page \u2014 ends in three outbound informational links (lines 336-353) instead of a contact route, pushing a decided visitor back into research.",
+   "The closing CTA card (lines 375-415) contains five buttons and not one of them is a lead: two model pages, inventory, financing, and back to /compare. It asks 'Tell us how many seats you need' (lines 377-379) while offering no phone link, no form, and no test-drive route. The page's only contactable action is the hero phone link at lines 171-176.",
+   "A second <h2> ('Equipment on the two vehicles in stock', lines 221-223) is nested inside the 'Side by Side' section and inside the conditional, so one SectionTag (line 196) governs two h2s and an entire h2 can disappear at runtime.",
+   "The closing <h2> 'Take the next step' (line 376) is styled text-xl, smaller than every h2 above it \u2014 semantic level contradicts visual weight. Same pattern on all four pages.",
+   "The FAQ list and CTA card markup (lines 357-417) are copy-pasted across all three leaves (explorer-vs-escape.tsx:331-391, f-150-vs-f-150-lightning.tsx:337-395) with no shared component, even though CompareSpecTable was correctly extracted.",
+   "PUBLISHED = '2026-08-07' (line 13) is a third copy of a date already held in contentPages.ts:68 and rendered into the sitemap.",
+   "'trails across the county's southern townships' (line 98) uses a definite 'the county' with no antecedent \u2014 Ashtabula is never named on this page."
+  ],
+  "unverifiedClaims": [
+   "\"Open-air season here is short, so most owners run it open from late May into September and buttoned up the rest of the year.\" (lines 90-91) \u2014 fabricated ownership statistic.",
+   "\"These two get shopped against each other constantly\" (line 158) \u2014 unsourced shopping-behaviour claim.",
+   "\"The buyers who regret their choice bought the Bronco for a life they aspire to rather than one they live, or bought the Explorer and spent three winters wishing they had the capability.\" (lines 329-331) \u2014 invented customer narrative; PRODUCT.md forbids fabricated customer stories.",
+   "\"State park ground at Pymatuning and Geneva, trails across the county's southern townships, and access roads that turn to mud every spring are why that capability gets used here.\" (line 98) \u2014 asserts off-road access on state park land.",
+   "\"Where the state routes are cleared before the township roads\" (lines 310-311) \u2014 unverified plowing-priority claim, repeated on the Escape page.",
+   "\"A large accessory ecosystem means a Bronco can be adapted years after you buy it.\" (line 102) \u2014 unsourced.",
+   "Vehicle specifications absent from the records, which CompareSpecTable.tsx:3-13 says must not appear: \"The Bronco is a body-on-frame off-road SUV\" and \"The Explorer is a mid-size three-row family SUV on a rear-drive-based platform\" (line 24), and \"The Bronco has two rows\" (line 109). Body-on-frame, platform type, and seat-row count are not fields on the Vehicle type (vehicles.ts:8-47).",
+   "Clean on the high-risk list: no APR, no monthly payment, no inspection-point count, no warranty specific, no award, no review count. The derived priceGapSentence (lines 127-140) is the correct pattern and its comment states why."
+  ],
+  "tier": "PRIMARY",
+  "dependencies": [
+   "@tanstack/react-router",
+   "lucide-react (ArrowRight, HelpCircle, Mountain, Phone, Users)",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/components/site/CompareSpecTable (CompareSpecTable, CompareFeatureLists)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs) \u2014 note SITE_ORIGIN is NOT imported",
+   "@/lib/articleSchema (articleSchema, faqSchema)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM, getVehicle, Vehicle) \u2014 records 'bronco-outer-banks-2025' and 'explorer-st-2025'",
+   "Outbound routes: /ford/$model (bronco, explorer), /inventory, /financing, /compare, /compare/explorer-vs-escape, /guides/best-ford-suv-for-families"
+  ]
+ },
+ {
+  "route": "/compare/explorer-vs-escape",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/compare.explorer-vs-escape.tsx",
+  "lines": 394,
+  "purpose": "Help a household choose between the three-row Explorer ST and the certified pre-owned Escape Titanium Hybrid on two honest axes: how often they seat more than four, and what the vehicle costs to run each week.",
+  "primaryUser": "Families; the local Ashtabula County commuter is the second frame (Jefferson-to-Ashtabula/Geneva run, winter traction).",
+  "primaryAction": "Contact AM Ford to sit in both with car seats in hand and drive them back to back.",
+  "secondaryActions": [
+   "Call the dealership from the hero",
+   "Read the /ford/explorer and /ford/escape model pages",
+   "Browse /inventory",
+   "Apply at /financing",
+   "Read /guides/best-ford-suv-for-families",
+   "Read /guides/what-to-check-before-buying-a-used-ford"
+  ],
+  "keyInformation": [
+   "Seat count and third-row usability as the deciding question",
+   "Running cost, with the hybrid's city economy advantage",
+   "The spec table and equipment lists for the two in-stock units",
+   "That both units are AWD, and that tires rather than drivetrain decide braking",
+   "That the Escape is certified pre-owned with recorded mileage, not delivery miles",
+   "Phone, locality, and DELIVERY_CLAIM verbatim"
+  ],
+  "problems": [
+   "CANONICAL hardcodes 'https://amford.com' (line 12) rather than importing SITE_ORIGIN \u2014 same drift risk as the other two leaves, against a canonical domain PRODUCT.md marks [OPEN] and blocking.",
+   "Silent collapse of the whole comparison: {explorer && escape && (...)} at lines 187-213 gates the spec table, the second h2, and the feature lists while the 'Side by Side / Specifications compared' header and its lead-in (lines 179-185) render regardless.",
+   "Asymmetric visual treatment of the two halves: 'Choose the Ford Explorer if' gets an icon badge (lines 219-221) but 'Choose the Ford Escape if' (line 250) has none. The sibling Bronco page gives both halves an icon (bronco-vs-explorer.tsx:236-238 and 267-269). On a page whose whole argument is that there is no winner, the Explorer is given more visual weight.",
+   "Hand-written inventory claim that will go stale silently: 'it is the least expensive vehicle in our current inventory' (line 121) is hardcoded rather than derived from `vehicles`. The sibling page solved exactly this with a derived priceGapSentence whose comment warns a hand-written price line 'would go stale again the next time a listing changed' (bronco-vs-explorer.tsx:127-140); this page did not adopt it.",
+   "Used-vehicle framing on a lot with zero used stock: the verdict closes with 'If the vehicle you are considering is used, our checklist for buying a used Ford covers the documents and the inspection' (lines 319-326). The lot is 5 New + 1 CPO; PRODUCT.md forbids surfaces that imply used stock, and this sends a late-funnel visitor toward a purchase the dealership cannot fulfil.",
+   "The verdict ends in two outbound guide links (lines 310-327) rather than a contact route, at the point of highest intent.",
+   "Closing CTA card (lines 349-389) is five navigation buttons with no phone link, no form, and no test-drive route, despite the copy asking 'Tell us how many people you carry and how far you drive each week' (lines 351-353).",
+   "Near-verbatim duplication with /compare/bronco-vs-explorer on the shared Explorer half (lines 96-98, 100-103, 231-235 vs bronco-vs-explorer.tsx:116-118, 111-114, 119-122).",
+   "The AWD-and-tires argument runs twice on this page \u2014 FAQ (lines 39-41) and the winter section (lines 282-288) \u2014 and a third time site-wide on the Bronco page.",
+   "Second <h2> nested inside the conditional (lines 204-206); closing <h2> at line 350 rendered text-xl, smaller than the h2s above it.",
+   "PUBLISHED (line 13) duplicates the date already held in contentPages.ts:56.",
+   "FAQ and CTA markup copy-pasted from the sibling leaves with no shared component (lines 331-391)."
+  ],
+  "unverifiedClaims": [
+   "\"it is the least expensive vehicle in our current inventory\" (line 121) \u2014 an inventory statistic hardcoded into a route file instead of derived from the vehicle records.",
+   "\"The Explorer's third row is a real one, and it folds flat when you do not need it.\" (line 90) \u2014 seat-row usability and fold behaviour are not fields on the Vehicle record; the only support is the '3-Row' badge at vehicles.ts:130.",
+   "\"Ford has also sold a plug-in hybrid Escape, which does plug in, and the two look similar.\" (line 28) \u2014 a model-line claim about a vehicle not stocked and not in the records.",
+   "\"A hybrid also gives back some fuel economy in a cold Ohio winter, because the engine runs more often to produce cabin heat.\" (lines 260-262) \u2014 unsourced technical claim.",
+   "\"Two adults and two children fit comfortably, and the cargo area behind the rear seats is more useful than the vehicle's footprint suggests.\" (lines 108-109) \u2014 cargo and occupancy claims absent from the records.",
+   "Correctly sourced, for contrast: \"Its listed city figure is far higher than the Explorer's\" (line 32) is supported by vehicles.ts:215 (42/36) and vehicles.ts:126 (18/24).",
+   "Clean on the high-risk list: no APR, no monthly payment, no inspection-point count, no warranty specific, no award, no testimonial, no review count."
+  ],
+  "tier": "PRIMARY",
+  "dependencies": [
+   "@tanstack/react-router",
+   "lucide-react (ArrowRight, HelpCircle, Phone, Snowflake, Users)",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/components/site/CompareSpecTable (CompareSpecTable, CompareFeatureLists)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs) \u2014 SITE_ORIGIN not imported",
+   "@/lib/articleSchema (articleSchema, faqSchema)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM, getVehicle) \u2014 records 'explorer-st-2025' and 'escape-titanium-2024'",
+   "Outbound routes: /ford/$model (explorer, escape), /inventory, /financing, /compare, /guides/best-ford-suv-for-families, /guides/what-to-check-before-buying-a-used-ford"
+  ]
+ },
+ {
+  "route": "/compare/f-150-vs-f-150-lightning",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/compare.f-150-vs-f-150-lightning.tsx",
+  "lines": 398,
+  "purpose": "Decide gas F-150 vs electric F-150 Lightning by reframing the choice around where the buyer parks overnight and how often they tow, rather than around the spec sheet.",
+  "primaryUser": "Work and commercial buyer (contractors, farms, trades, small fleets); the local Ashtabula County buyer is the second frame.",
+  "primaryAction": "Contact AM Ford to talk through home charging and towing and drive both trucks back to back.",
+  "secondaryActions": [
+   "Call the dealership from the hero",
+   "Read the /ford/f-150 and /ford/f-150-lightning model pages",
+   "Browse /inventory",
+   "Apply at /financing",
+   "Read /guides/is-a-used-ford-f-150-reliable and /guides/is-ford-ecoboost-reliable"
+  ],
+  "keyInformation": [
+   "That the two trucks share cab, bed, and 4WD, so the decision is refuelling not capability",
+   "The home-charging requirement (240V circuit, Level 2, panel capacity)",
+   "Winter range loss and towing range loss on the EV",
+   "The spec table and equipment lists for the two in-stock trucks, including the range rating vs MPG distinction",
+   "Pro Power Onboard as a rural outage argument",
+   "Phone, address, and DELIVERY_CLAIM verbatim"
+  ],
+  "problems": [
+   "CANONICAL hardcodes 'https://amford.com' (line 12) instead of importing SITE_ORIGIN \u2014 the same canonical-drift defect as the other two leaves.",
+   "Silent collapse: {gas && ev && (...)} at lines 189-217 gates the spec table, the second h2, and the feature lists while the enclosing 'Side by Side / Specifications compared' header and lead-in (lines 182-187) render unconditionally.",
+   "Used-vehicle framing inside the verdict on a lot with zero used stock: 'If a used truck is the alternative to either of these, our guide to used F-150 reliability...' (lines 317-333). The lot is 5 New + 1 CPO and PRODUCT.md forbids implying used inventory.",
+   "The page repeatedly asks the visitor to bring specific information \u2014 'bring us your loaded trailer weight and we will check it' (line 39) and 'keep a week of honest notes... Bring that to us' (lines 311-315) \u2014 and then provides no channel to send it. The closing CTA card (lines 353-393) is five navigation buttons with no phone link, no form, and no /contact or /trade-in route. The only contactable action is the hero phone link (lines 157-162).",
+   "No link to /commercial anywhere on the page, although src/routes/commercial.tsx exists and the work/fleet buyer is this page's actual audience. The closing card routes them to /financing and /inventory instead.",
+   "Heavy internal repetition: 'Public fast charging is thinner here than around Cleveland' appears at line 97 and again at lines 286-288; the storm-outage onboard-power point at line 120 and again at lines 293-296; the three qualifying questions in 'The short version' (lines 170-176) are restated as the reason cards (lines 90-126) and a third time in the verdict (lines 305-309).",
+   "The verdict ends in two outbound guide links (lines 317-333) rather than a contact route, at the point of highest intent.",
+   "Second <h2> ('Equipment on the two trucks in stock', lines 207-209) is nested inside the 'Side by Side' section and inside the conditional, so it can vanish at runtime; the closing <h2> at line 354 is styled text-xl, smaller than every h2 above it.",
+   "FAQ and CTA card markup (lines 337-395) copy-pasted from the sibling leaves with no shared component.",
+   "PUBLISHED (line 13) duplicates the date already held in contentPages.ts:62."
+  ],
+  "unverifiedClaims": [
+   "\"Most driveways in Ashtabula County have room for a Level 2 charger, and most households park overnight.\" (lines 112-113) \u2014 two fabricated local statistics in a single sentence.",
+   "\"Public fast charging is thinner here than around Cleveland.\" (line 97, repeated at lines 287-288) \u2014 unverified local infrastructure claim.",
+   "\"rural townships here lose power in storms often enough for it to matter\" (line 120) and \"townships here lose power in storms\" (lines 294-295) \u2014 unverified outage-frequency claim.",
+   "\"Home charging at overnight rates is usually cheaper per mile than gasoline, and the Lightning has fewer routine maintenance items: no oil changes, no exhaust, and less brake wear.\" (line 43) \u2014 cost-of-ownership claim with no source; it carries no figure, which keeps it inside the letter of the rule but not its spirit.",
+   "\"A regular run between Jefferson, Ashtabula, Geneva, and Conneaut sits well inside a full charge\" (line 116) \u2014 implied range arithmetic presented as fact.",
+   "\"It is the same full-size pickup shape with the same bed, built around a battery pack and electric motors instead of an engine.\" (line 27) \u2014 bed and platform equivalence is not in the vehicle records.",
+   "Correctly sourced, for contrast: \"The Lightning in stock lists Pro Power Onboard at 9.6kW.\" (line 120) matches vehicles.ts:163.",
+   "Clean on the high-risk list: no APR figure, no monthly payment, no inspection-point count, no warranty specific, no award, no testimonial. The fine print correctly defers financing terms (lines 196-205), but links to /financing, which PRODUCT.md lists as carrying unapproved APRs."
+  ],
+  "tier": "PRIMARY",
+  "dependencies": [
+   "@tanstack/react-router",
+   "lucide-react (ArrowRight, HelpCircle, Phone, Plug, Truck)",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/components/site/CompareSpecTable (CompareSpecTable, CompareFeatureLists)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs) \u2014 SITE_ORIGIN not imported",
+   "@/lib/articleSchema (articleSchema, faqSchema)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM, getVehicle) \u2014 records 'f150-platinum-2025' and 'f150-lightning-2025'",
+   "Outbound routes: /ford/$model (f-150, f-150-lightning), /inventory, /financing, /compare, /guides/is-a-used-ford-f-150-reliable, /guides/is-ford-ecoboost-reliable"
+  ]
+ },
+ {
+  "route": "/ford-dealer/$city (8 pages: ashtabula-oh, geneva-oh, conneaut-oh, austinburg-oh, madison-oh, chardon-oh, erie-pa, cleveland-oh)",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/ford-dealer.$city.tsx",
+  "lines": 739,
+  "purpose": "Capture local \"Ford dealer near {town}\" search intent with a per-community landing page that proves AM Ford's single Jefferson showroom is reachable (or that delivery removes the drive) and funnels the visitor into inventory or a phone call.",
+  "primaryUser": "Local Ashtabula County buyer for the five in-county/near pages (ashtabula, geneva, conneaut, austinburg, madison); the erie-pa and cleveland-oh pages are written for the remote buyer, and chardon-oh for the family/winter-traction buyer",
+  "primaryAction": "Open /inventory from the hero button \"Browse Ford Trucks, SUVs, and Cars\" (lines 575-580) \u2014 either unfiltered or through one of the three pre-filtered popularWith chips (lines 631-647)",
+  "secondaryActions": [
+   "Call the dealership via dealerInfo.phoneHref (lines 581-586) and the mobile sticky CTA in SiteShell",
+   "Follow the per-city up-link to the parent county page (lines 557-569)",
+   "Open a Ford model page /ford/$model from the four lineup cards (lines 671-677)",
+   "Reach /financing, /trade-in, /service, /nationwide-vehicle-delivery, /contact from the six Next-steps tiles (lines 343-390)",
+   "Return to the /areas-we-serve hub (lines 726-728)"
+  ],
+  "keyInformation": [
+   "The dealership's single address, stated explicitly so no page can read as a branch office (lines 549-551, plus the explicit \"AM Ford is not located in {city}\" sentence in every serviceAreas.ts intro)",
+   "Drive time and the actual route from that town (area.driveTime, area.directions, lines 548-554)",
+   "A section that exists on no other city page (area.uniqueSection, lines 593-601)",
+   "What that community buys and why (area.localNeeds, area.whyUs, modelIntro, lines 603-623, 651-689)",
+   "DELIVERY_CLAIM verbatim on extended-proximity pages only (line 708) plus in og:description (line 467)",
+   "Phone number and a route to inventory above the fold"
+  ],
+  "problems": [
+   "The route writes the exact templated prose it claims to have eliminated: \"Finding us from {city}\" (547), the \"{city} Specific\" tag (595), \"Why {area.city} drivers choose AM Ford\" (605), \"What {area.city} drivers usually come in for\" (609), \"Popular searches with {area.city} shoppers\" (628), \"Popular Ford models with {area.city} drivers\" (654) and \"Next steps for {area.city} buyers\" (721) are one template stamped eight times with a swapped proper noun \u2014 the sibling county file moved headings into data for exactly this reason (counties.ts:14-17)",
+   "NEXT_STEP_ORDER (338-341) claims two orderings stop the tile grid \"from being a single unbroken run of text repeated verbatim across all eight pages\", but the six tile labels (345-387) are byte-identical on all eight pages; reordering identical strings does not make them unique",
+   "~160 lines of editorial copy live in the component: MODEL_PICKS (81-226), FALLBACK_PICKS (229-242), COUNTY_LINK_COPY (266-291). The county route keeps the same content in counties.ts, so the two sibling routes follow opposite architectures",
+   "toInventorySearch and its NUMERIC_SEARCH_KEYS/STRING_SEARCH_KEYS lists (48-67) are copy-pasted verbatim into ford-dealer.county.$county.tsx:49-68",
+   "STRING_SEARCH_KEYS (49) omits \"condition\", so a CPO deep link cannot be expressed; the data works around it with badges=certified-pre-owned (serviceAreas.ts:156, 384), which lands on a noindex,follow URL (inventory.tsx:568-573) instead of the indexable ?condition=Certified+Pre-Owned facet the site already built (inventory.tsx:538-551). All of chardon-oh's three chips (serviceAreas.ts:332-345) point at noindex URLs",
+   "Local const SITE_ORIGIN (28) shadows the exported SITE_ORIGIN in src/lib/breadcrumbs.ts:1, and the dealer @id is a fourth hardcoded copy of the origin (415) \u2014 PRODUCT.md flags the canonical domain as unresolved and blocking, so four literals is four edits",
+   "head() falls back to the hub's own title \"Areas We Serve | AM Ford\" (400) when loaderData is missing, and notFoundComponent (483-507) emits no title, canonical or noindex, so any bogus /ford-dealer/{slug} is a crawlable page carrying another page's title",
+   "Chip labels are plural but resolve to one vehicle against the 6-unit lot: \"Four-wheel drive trucks for harbor and trade work\" (serviceAreas.ts:105-107) returns only the F-150 Platinum, \"Trucks for towing boats and campers\" (153) returns one truck, \"Certified pre-owned vehicles\" (155-157) and \"Certified pre-owned vehicles available for delivery to Erie\" (383-385) each return the single Escape",
+   "The page sells vehicles but shows none: the model cards (662-681) carry a body-style pill, a name and a paragraph \u2014 no image, no price, no stock indication \u2014 so the visitor must leave for /ford/{model} or /inventory before seeing anything purchasable",
+   "Conversion controls exist only in the hero (574-587). The page ends on a six-tile navigation grid and the dead-end sentence \"Showroom hours and directions are on the contact page.\" (733-734), which names a destination without linking it. No lead form appears anywhere on the page",
+   "Six equal-weight Next-steps tiles (722) give no primary path; combined with three chips, four model links, the hero CTA and the county up-link, a city page offers roughly 16 outbound choices and no single next step",
+   "The breadcrumb's final crumb is \"Ford Dealer Near {city}, {state}\" (41-45) which never matches the visible H1 (534) on any of the eight pages, so the trail and the page disagree \u2014 and that trail string is also emitted as BreadcrumbList JSON-LD (477)",
+   "Hardcoded hex #002c5f / #001f44 (577, 583) alongside token classes (bg-primary, text-primary) elsewhere in the same file",
+   "Keywords request \"certified pre-owned {city} {state}\" (457) on all eight pages against exactly one CPO unit in the lot"
+  ],
+  "unverifiedClaims": [
+   "\"The full-size pickup this county buys more than any other, with four-wheel drive offered across most of the lineup.\" (ford-dealer.$city.tsx:232)",
+   "\"A three-row SUV with all-wheel drive available, which is the combination Northeast Ohio families ask us for most.\" (ford-dealer.$city.tsx:236)",
+   "\"A rear-wheel-drive coupe that works as a second car from spring through late fall, which is how nearly every owner in this region runs one.\" (ford-dealer.$city.tsx:219)",
+   "\"Makes sense for households with home or workplace charging, and we will measure the truck against your garage door before you commit.\" (ford-dealer.$city.tsx:216)",
+   "\"Four-wheel drive and F-150 searches account for most of what Ashtabula shoppers filter for\" (serviceAreas.ts:96)",
+   "\"Trailer questions come up more often here than in any other community we serve\" (serviceAreas.ts:93)",
+   "\"Nearly everyone who walks in from Austinburg is buying a vehicle that will live on the highway\" (serviceAreas.ts:225)",
+   "\"Conneaut buyers almost always price Ohio and Pennsylvania dealers against each other\" (serviceAreas.ts:175)",
+   "\"Seasonal owners tell us that timing matters more than anything else\" (serviceAreas.ts:128) \u2014 an unattributed customer statement, which PRODUCT.md lists under never-fabricate",
+   "\"Ashtabula is the largest city in Ashtabula County\" (serviceAreas.ts:79)",
+   "\"Erie is the largest city on the Pennsylvania lakeshore\" (serviceAreas.ts:358)",
+   "\"which is why Chardon regularly sees far more snow than communities sitting closer to the water\" (serviceAreas.ts:308)",
+   "\"A front-wheel drive car on proper winter tires will out-brake a four-wheel drive truck on worn all-seasons every time.\" (serviceAreas.ts:322 \u2014 repeated near-verbatim on the Geauga county page, counties.ts:349)",
+   "Every driveTime string is a specific quantitative claim: \"About 15 minutes from Ashtabula, straight south on State Route 46\" (serviceAreas.ts:74), \"About 30 to 35 minutes from Conneaut\" (166), \"About an hour east of Chardon\" (303)"
+  ],
+  "tier": "PRIMARY",
+  "dependencies": [
+   "@/components/site/SiteShell (SiteNav, SiteFooter, MobileStickyCTA, ChatWidget, ExitIntentOffer)",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs \u2014 but NOT its exported SITE_ORIGIN)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM)",
+   "@/lib/serviceAreas (getServiceArea, ServiceArea, SERVICE_AREAS)",
+   "@/lib/counties (getCountyForCity)",
+   "@/lib/fordModels (getFordModel, FordModel)",
+   "@/routes/inventory (InventorySearch type)",
+   "@tanstack/react-router (createFileRoute, Link, notFound)",
+   "lucide-react icons"
+  ]
+ },
+ {
+  "route": "/ford-dealer/county/$county (4 pages: ashtabula-oh, lake-oh, geauga-oh, trumbull-oh)",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/ford-dealer.county.$county.tsx",
+  "lines": 475,
+  "purpose": "Own county-level \"Ford dealer {county}\" intent with a page written around what driving in that county asks of a vehicle, and act as the middle tier that routes visitors down to the town pages and across to inventory.",
+  "primaryUser": "Local Ashtabula County buyer on the home-county page; the other three are segmented \u2014 Lake County is the commuter/family buyer, Geauga is the family/winter-traction buyer, and Trumbull is written explicitly for the work and commercial buyer (counties.ts:444-455)",
+  "primaryAction": "Open /inventory via the county-authored CTA button (county.cta.inventoryLabel, lines 229-234 in the hero and repeated at 447-452)",
+  "secondaryActions": [
+   "Call the dealership (lines 235-240, repeated 453-458)",
+   "Drop down into a child city page from the MapPin card grid (lines 375-396)",
+   "Open a Ford model page from the four lineup cards (lines 337-352)",
+   "Use one of three pre-filtered inventory chips (lines 309-323)",
+   "Reach /financing, /service, /trade-in, /nationwide-vehicle-delivery, /contact, /areas-we-serve from CHROME_LINKS (lines 84-91, 462-470)",
+   "On Trumbull only: /commercial, /ford/f-150, /inventory, /ford-dealer/ashtabula-oh via alternativeLinks (counties.ts:512-520)"
+  ],
+  "keyInformation": [
+   "\"Our one location\" block stating the single Jefferson address, so the page cannot read as a branch in Painesville, Chardon or Warren (lines 220-223)",
+   "The county's distinctive angle, written at length and different in every entry (lines 247-255)",
+   "How the roads run and how to get here from that county (lines 257-274)",
+   "Which towns in the county have their own page, and which are served but unlinked (lines 366-423)",
+   "Model lineup with a per-county rationale (lines 328-361)",
+   "Delivery claim verbatim, carried in county.closing/ogDescription where distance changes the decision"
+  ],
+  "problems": [
+   "The file's header rule says \"this component renders data and it writes no prose\" (lines 32-38), then writes prose: the h2 \"Our one location\" (220) and the \"Model Lineup\" tag (330) render identically on all four pages, the anchor \"Compare every Ford model AM Ford sells\" is hardcoded (356-358), and all six CHROME_LINKS labels (84-91) are verbatim on four pages",
+   "\"Compare every Ford model AM Ford sells\" (357) is byte-identical to the city route's anchor (ford-dealer.$city.tsx:685-687), so one anchor string repeats across 12 pages in the same internal-link cluster",
+   "alternativeLinks is typed as `{ to: string }` (counties.ts:98) and rendered with `<Link to={item.to}>` (406), which opts out of TanStack's typed routing \u2014 /commercial, /ford/f-150 and /ford-dealer/ashtabula-oh resolve today but a rename silently ships a 404",
+   "Eleven stacked full-width prose sections (201-472) with ten h2s, no summary, no in-page navigation, and no vehicle cards; the Trumbull and Geauga entries run well over 1,000 words before the visitor sees anything purchasable",
+   "The hero CTA pair (228-241) and the closing CTA pair (446-459) are the same two controls with the same labels, so the page's last screen restates its first rather than escalating",
+   "toInventorySearch and the two key lists (49-68) are a verbatim copy of ford-dealer.$city.tsx:48-67, and STRING_SEARCH_KEYS again omits \"condition\", forcing the CPO chip (counties.ts:163-166) onto a noindex badge URL rather than the indexable ?condition= facet",
+   "Local const SITE_ORIGIN (22) shadows the exported one in src/lib/breadcrumbs.ts:1, and the dealer @id hardcodes the origin again (116)",
+   "head() falls back to the hub's title \"Areas We Serve | AM Ford\" (101), and notFoundComponent (162-186) emits no meta, canonical or noindex",
+   "county.alsoServed.towns (counties.ts:198-206, 308, 410-418, 523) is a second source of truth for served towns that disagrees with SERVED_MARKETS in vehicles.ts:338-368 \u2014 Concord, Willoughby and Kirtland appear only on the Lake county page, Youngstown only in SERVED_MARKETS \u2014 so the hub and the county pages advertise different footprints",
+   "Child city cards (375-396) render area.driveTime as a standalone paragraph, but that field is a sentence written for a \"Drive time:\" label, producing \"About 15 minutes from Ashtabula, straight south on State Route 46\" under a heading that already says \"Ford Dealer 15 Minutes South of Ashtabula, Ohio\"",
+   "Plural chip labels resolve to one vehicle: \"New Ford pickups on the lot today\" (counties.ts:478) returns only the F-150 Platinum because the Lightning is typed EV, and \"Electric pickups with onboard power for tools\" (480-482) returns only the Lightning",
+   "The Ashtabula county page and the Ashtabula city page share a slug across two route trees and compete for the same \"Ford dealer Ashtabula\" intent with overlapping keyword sets (city 449-462 vs county 132-144)",
+   "Hardcoded hex #002c5f / #001f44 (231, 237, 449, 455) alongside token classes in the same file",
+   "Keywords target \"certified pre-owned Ford {county}\" (140) on four pages against a single CPO unit"
+  ],
+  "unverifiedClaims": [
+   "\"A large metro store will have more units standing on the ground on any given day than we do\" (counties.ts:133) \u2014 an unverified comparative claim about competitors",
+   "\"Mentor is the largest city anywhere in our area\" (counties.ts:232)",
+   "\"Around Middlefield there is a large Amish community\" (counties.ts:334)",
+   "\"A front-wheel drive car on proper winter tires will out-brake a four-wheel drive truck on worn all-seasons, every time.\" (counties.ts:349)",
+   "\"A good share of the trucks we sell into this county get specified over the phone and then collected or delivered rather than browsed on a Saturday.\" (counties.ts:528)",
+   "\"Plenty of Lake County households point a vehicle west in the morning and bring it back east at night, five days a week\" (counties.ts:232)",
+   "\"Most Lake County buyers still come out once to drive the vehicle they have narrowed it down to, and leave the rest of it to us.\" (counties.ts:313)",
+   "\"Roughly half an hour from the eastern end of the county, longer from Painesville and points west.\" (counties.ts:225-226) and \"About an hour from Chardon\" (327-328) \u2014 specific drive-time claims"
+  ],
+  "tier": "SECONDARY",
+  "dependencies": [
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs)",
+   "@/lib/vehicles (dealerInfo)",
+   "@/lib/counties (getCounty, validChildCitySlugs, County)",
+   "@/lib/serviceAreas (getServiceArea \u2014 for child-card anchor text and drive times)",
+   "@/lib/fordModels (getFordModel, FordModel)",
+   "@/routes/inventory (InventorySearch type)",
+   "@tanstack/react-router, lucide-react"
+  ]
+ },
+ {
+  "route": "/areas-we-serve",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/areas-we-serve.tsx",
+  "lines": 331,
+  "purpose": "Act as the hub of the local-SEO cluster: state the single-location service footprint once, then route a visitor to the county page, town page, or department that matches where they are driving from.",
+  "primaryUser": "Local Ashtabula County buyer orienting themselves, with a secondary role for the remote/out-of-state buyer who needs the delivery footprint stated before anything else",
+  "primaryAction": "Choose your county or community page from the two card grids (lines 183-209 for counties, 222-251 for the eight towns)",
+  "secondaryActions": [
+   "Browse /inventory from the hero (lines 154-159)",
+   "Call the showroom (lines 160-165, repeated 319-324)",
+   "Reach /financing, /service, /trade-in, /nationwide-vehicle-delivery from the four Where-to-go-next cards (lines 61-86, 290-304)",
+   "Open /contact from the closing \"Not sure which page applies to you?\" card (lines 306-326)"
+  ],
+  "keyInformation": [
+   "Single address and the explicit \"We have no other store.\" line (lines 145-149, 280-283)",
+   "DELIVERY_CLAIM verbatim for anyone the drive does not suit (line 151)",
+   "Every county and town with a page, with drive times (183-251)",
+   "The served towns that have no page, named as plain text rather than fabricated links (255-285)",
+   "Phone number and a route into inventory"
+  ],
+  "problems": [
+   "Jefferson \u2014 the town the showroom is in \u2014 renders inside \"Other communities we serve\" as a town that does \"not have a page of their own, so call us with questions about the drive\" (heading/copy at 258-263, group blurb at 41-47, data at vehicles.ts:340). The hub's own location is listed as an outlying market",
+   "\"Four counties have a page of their own\" is hardcoded (179-180) while the grid below it maps COUNTIES (184); adding a fifth county silently makes the sentence false",
+   "Two adjacent card grids use two different interaction models: county cards link only from the h3 (196-203) while city cards wrap the entire card in a Link (224-249) with an aria-hidden pseudo-button \"View the {city} page\" (243-248), so the city card's accessible name swallows the whole drive-time sentence",
+   "The hero's loudest control is \"Browse Ford Trucks, SUVs, and Cars\" \u2192 /inventory (154-159), which skips the one job this page exists to do; the routing grids start below the fold",
+   "Four consecutive sections use the identical rounded-3xl / bg-card / ring-1 ring-border treatment (187, 228, 269, 292), so counties, towns, unlinked town lists and department links all read at the same visual weight \u2014 no hierarchy separates \"pick your area\" from \"other links\"",
+   "\"Drive time: {area.driveTime}\" (240-242) prefixes a label onto a sentence that already names the town, producing \"Ford dealer near Ashtabula, OH \u2026 Drive time: About 15 minutes from Ashtabula, straight south on State Route 46\"",
+   "The hub emits only BreadcrumbList JSON-LD (122-127); both child routes emit an AutoDealer node with areaServed (city 410-437, county 113-123), so the parent of the local cluster carries the weakest local signal on the site",
+   "withoutLinkedPages (29-34) strips only towns that have city pages, so towns already listed on a county page's alsoServed block (Painesville, Mentor, Burton, Middlefield, Warren, Cortland) appear twice across the cluster as unlinked text",
+   "SERVED_MARKETS.tier3 puts the region \"Northwestern Pennsylvania\" inside a comma-joined list of town names (vehicles.ts:367, rendered at 274)",
+   "The tier2 heading names \"Mahoning\" (48) but no Mahoning county page exists, so the only Mahoning entry (Youngstown) is a dead name under a heading promising county coverage",
+   "CANONICAL is a string literal (21) rather than the exported SITE_ORIGIN in src/lib/breadcrumbs.ts:1 \u2014 a third copy of the unresolved canonical domain",
+   "The four Next-steps cards carry descriptive bodies here (66-86) while the identical four links appear stripped of all copy on the city pages (ford-dealer.$city.tsx:319-329); the two routes justify opposite treatments of the same block",
+   "Hardcoded hex #002c5f / #001f44 (156, 162) next to token classes elsewhere in the file",
+   "The phone CTA reads \"Call the Jefferson Showroom\" without the number (164) while the closing one shows it (323) \u2014 the same action labelled two ways on one page"
+  ],
+  "unverifiedClaims": [
+   "\"Our home county. Every town here is a short drive from the showroom, and most of our walk-in traffic comes from these communities.\" (areas-we-serve.tsx:44-45) \u2014 an unverifiable traffic statistic",
+   "\"Book maintenance, diagnostics, and repairs with factory-trained technicians at our Jefferson shop.\" (areas-we-serve.tsx:78) \u2014 a staff credential claim absent from the evidence list in PRODUCT.md",
+   "\"Farther out, where buyers usually settle the paperwork by phone and email, then have the vehicle brought to them.\" (areas-we-serve.tsx:56-57) \u2014 an unverified behavioural claim",
+   "\"Start the credit application from home and our finance team works through the options with you.\" (areas-we-serve.tsx:72) \u2014 process claim, no rate or payment stated, so lower risk but still unsourced",
+   "Every rendered drive time via area.driveTime (240-242), e.g. \"Roughly an hour southwest of Erie on Interstate 90, then south into Jefferson\" (serviceAreas.ts:353)"
+  ],
+  "tier": "UTILITY",
+  "dependencies": [
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM, SERVED_MARKETS)",
+   "@/lib/serviceAreas (SERVICE_AREAS)",
+   "@/lib/counties (COUNTIES)",
+   "@tanstack/react-router (createFileRoute, Link)",
+   "lucide-react icons"
+  ]
+ },
+ {
+  "route": "/financing",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/financing.tsx",
+  "lines": 485,
+  "purpose": "Capture a financing pre-approval lead by pairing a payment calculator with a four-step credit application that posts to Supabase.",
+  "primaryUser": "First-time or credit-rebuilding buyer (the hero explicitly says \"First-time buyers welcome\", line 142), with a secondary local Ashtabula County buyer framing in the meta only.",
+  "primaryAction": "Complete and submit the four-step pre-approval application (Submit application, lines 383-394).",
+  "secondaryActions": [
+   "Model a payment with the price / down payment / term calculator (lines 173-217)",
+   "Read the three trust badges (lines 402-406)"
+  ],
+  "keyInformation": [
+   "What actually happens after submit, and that no credit decision is rendered on this page",
+   "Who receives the income and employment data, and on what basis (this is the only page collecting employer, annual income, years employed, and monthly housing)",
+   "A visible phone number as an escape hatch from a four-step form",
+   "A route to /inventory so the Vehicle step maps to real stock, and to /trade-in and /finance/bad-credit which the hero copy promises",
+   "A disclosure that any payment shown is an illustration, with the rate source named or the figure removed"
+  ],
+  "problems": [
+   "Line 67: `const apr = 5.9;` is hardcoded and has no UI control. The user can change price, down payment, and term but never the rate, so every figure on the page is anchored to a rate management has not approved and the visitor cannot correct.",
+   "Lines 79-85 vs 360-362: `submitApplication` sets `appError` then calls `setStep(1)`, but the error paragraph renders only inside the `step === 3` branch. A user with a short phone number is thrown back two steps with no message explaining why.",
+   "No `<form>` element exists on the page. `Field` (lines 414-441) sets no `autoComplete`, `name`, `required`, or `inputMode`, so browser and password-manager autofill are dead and Enter neither advances nor submits.",
+   "Lines 375-381: `Continue` always advances with no per-step validation. A visitor can reach step 4 with every field blank; only phone is checked, and only at the end.",
+   "Lines 186-194 with 114-118: `down` has `max={Math.round(price * 0.5)}` but is never clamped when `price` drops. Set price 120000 / down 60000, then drag price to 15000: the label at line 465 keeps printing $60,000 while `Math.max(0, price - down)` collapses principal to 0 and the hero reads \"$0/mo\".",
+   "Lines 272-275: the Vehicle step is four free-text fields placeholdered \"Ford\" / \"F-150\" / \"2025\" / \"Lariat\". The lot holds 6 vehicles; a free-text Make field implies the dealership finances whatever brand you type, and the answers cannot be joined to a real vehicle record.",
+   "Zero outbound links in the page body. `Link` is never imported (line 1). The hero promises \"Trade-in valuation included\" (line 143) and \"First-time buyers welcome\" (line 142), but /trade-in and /finance/bad-credit are unreachable from here even though both of those pages link in to /financing.",
+   "No phone CTA anywhere. `dealerInfo` is imported (line 19) but used only in `head` meta (lines 28, 31, 40); `dealerInfo.phoneHref` never renders, so an abandoning visitor has no fallback contact route on the site's highest-intent commercial page.",
+   "Lines 47 and 49 hardcode `https://amford.com/financing` for `og:url` and canonical instead of using `SITE_ORIGIN`, which both sibling finance pages import and use. PRODUCT.md flags the canonical domain as unresolved and blocking, so this copy will be missed when it changes.",
+   "Lines 50-55: only BreadcrumbList JSON-LD. The two thinner sibling pages each carry a Service node; the money page has the weakest structured data on the finance cluster.",
+   "Lines 296-315 with lib/leads.ts:52-64: employer, annual income, years employed, and monthly housing are shipped client-side to Supabase under the anon key, with no statement on the page about retention or recipient. The \"Bank-grade encryption\" badges (lines 141, 403) assert a security property the implementation does not establish.",
+   "Lines 402-406 restate the same three claims already listed at lines 139-148 (soft pull, encryption, 60 seconds) inside the same viewport, so a third of the visible reassurance copy is duplication.",
+   "Lines 320-343: the review step summarizes four fields but there is no jump-to-step affordance; `Back` (lines 368-374) moves one step at a time, so correcting the Vehicle step from Review costs three clicks.",
+   "Line 104 persists `apr: 5.9` and `estimatedMonthly` into the lead payload, so an unapproved rate is written into the CRM record for every applicant, not just displayed.",
+   "The page contradicts its own siblings one click away: /finance/bad-credit line 210 states \"We do not publish rates or payments\" and /trade-in line 326 states \"Anyone quoting you a rate on a web page is guessing\", while both link here as their primary CTA."
+  ],
+  "unverifiedClaims": [
+   "\"const apr = 5.9;\" rendered as \"{term} mo \u00b7 {apr}% APR \u00b7 ${down.toLocaleString()} down\" (lines 67, 162)",
+   "\"${Math.round(monthly).toLocaleString()}\" with \"/mo\" as the hero headline figure (lines 157-159), repeated at lines 340-341",
+   "\"Pre-approved in 60 seconds.\" (lines 131-133)",
+   "\"Get pre-approved in 60 seconds without affecting your credit score.\" (line 44)",
+   "\"Soft credit check with no impact to your score.\" (line 31)",
+   "\"Soft credit pull only: no impact to your score. Get a real number you can shop with, from real lenders.\" (lines 135-136)",
+   "\"Won't affect your credit score\" (line 140)",
+   "\"Bank-grade encryption\" (lines 141, 403)",
+   "\"Soft pull only\" (line 404)",
+   "\"60-second form\" (line 405)",
+   "\"Soft credit pull only. This will not affect your score.\" (line 345)",
+   "\"A finance specialist is reviewing it now.\" (line 229)",
+   "\"Expect a call or text within 15 minutes during business hours (Mon to Sat).\" via RESPONSE_PROMISE (lines 229, 346; src/lib/leads.ts:10-11)"
+  ],
+  "dependencies": [
+   "@tanstack/react-router (createFileRoute)",
+   "react (useState, useMemo)",
+   "framer-motion (motion; correctly avoids the banned AnimatePresence mode=\"wait\")",
+   "lucide-react",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag, imported from the homepage module)",
+   "@/components/site/Breadcrumbs",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs; notably does NOT use SITE_ORIGIN)",
+   "@/lib/leads (CONSENT_TEXT, RESPONSE_PROMISE, submitQuickLead)",
+   "@/lib/vehicles (dealerInfo)",
+   "@/lib/utils (cn)",
+   "transitively @/lib/supabase via submitQuickLead"
+  ],
+  "tier": "PRIMARY"
+ },
+ {
+  "route": "/finance/bad-credit",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/finance.bad-credit.tsx",
+  "lines": 442,
+  "purpose": "Reassure first-time, thin-file, and credit-rebuilding buyers that applying is worth doing, explain how lenders actually decide, and hand them to /financing to apply.",
+  "primaryUser": "First-time or credit-rebuilding buyer. This is the only page on the site written entirely for that audience and it honours the non-judgmental tone commitment in PRODUCT.md.",
+  "primaryAction": "Click through to /financing and start the application (lines 195-200, repeated 418-423).",
+  "secondaryActions": [
+   "Call the finance department (lines 201-206)",
+   "Value a trade first, as the lever the buyer controls (lines 307-312, 424-429)",
+   "Read the seven FAQs (lines 145-174, 398-408)",
+   "Browse inventory or a model buying guide (lines 348-390)"
+  ],
+  "keyInformation": [
+   "What lenders read beyond the score, and which of those inputs the buyer can change before applying (present, lines 112-133)",
+   "The documents that strengthen a file (present, lines 135-143)",
+   "An explicit refusal to quote a rate or approval odds, with the reason (present, lines 208-211 and 145-174)",
+   "How down payment and trade equity move an application (present, lines 284-322)",
+   "A way to act without leaving the page: this is missing entirely",
+   "A visible phone number rather than a bare tel link labelled only \"Talk to a Finance Specialist\""
+  ],
+  "problems": [
+   "No lead capture on the page at all. Every conversion requires a second page load to /financing (lines 195-200, 418-423), while both sibling finance pages capture inline. The most anxious audience on the site is given the longest path.",
+   "The page's core promise breaks on its own primary CTA. Line 210 states \"We do not publish rates or payments, because they depend on your credit\" and line 152 states \"We will not put a number on this page\", yet the CTA at line 196 lands on /financing whose hero opens with a monthly payment and \"5.9% APR\" (financing.tsx lines 157-162).",
+   "Lines 21 and 69: the URL slug is `/finance/bad-credit` and the keywords meta reads \"bad credit car loan Ohio\", \"second chance financing Ford\", \"buy here pay here alternative Northeast Ohio\". The URL is customer-visible in the address bar and in every shared link, so the exact shaming framing the body copy carefully avoids is reintroduced by the route name.",
+   "Lines 21 and 29-32: `/finance` is a URL prefix with no page behind it. Truncating the URL 404s, and the file comment concedes the breadcrumb had to be repointed at /financing to work around it. The breadcrumb trail therefore does not match the URL hierarchy.",
+   "Roughly 440 lines with only two CTA clusters, at line 194 and line 417. Between them sit six full-width prose sections with no accordion, no in-page jump nav, and no sticky action, so a mobile visitor scrolls the entire argument before being offered anything to do.",
+   "Lines 340-384 duplicate trade-in.tsx lines 359-402 almost structurally verbatim: three cards, same card class, same three destinations (/ford/escape, /ford/f-150, /ford/explorer), same trailing arrow link pattern. Two template blocks with swapped paragraphs.",
+   "Lines 224-231 and 248-255 are the same card markup inlined twice in one file for AUDIENCES and LENDER_FACTORS, and the two sections are visually identical (icon tile, bold heading, muted paragraph, 2-up grid), so the reader cannot tell from the layout that the second section answers a different question.",
+   "Lines 398-408: seven Q&A pairs with no FAQPage JSON-LD, while the same file goes to the trouble of hand-writing a Service node (lines 40-55). The highest-value structured-data opportunity on the page is left on the table.",
+   "Line 49: `provider: { \"@id\": \"https://amford.com/#dealer\" }` is hardcoded even though the file imports `SITE_ORIGIN` at line 18 and uses it for CANONICAL at line 22. PRODUCT.md marks the canonical domain unresolved and blocking, so the Service node will silently detach from the LocalBusiness node when it changes.",
+   "Lines 201-206: the phone CTA renders only the label \"Talk to a Finance Specialist\" and never prints `dealerInfo.phone`, so a desktop visitor who cannot tap a tel link has no number to dial.",
+   "The page never states the delivery position and never mentions that the application can be completed without a showroom visit, which is the exact objection a remote or transport-limited credit-rebuilding buyer has."
+  ],
+  "unverifiedClaims": [
+   "\"Situations we work with every week\" (line 217), an unsourced frequency claim used as an H2",
+   "\"Our finance team in {dealerInfo.locality} reads every application personally before it goes anywhere, and you will hear back either way.\" (lines 413-416)",
+   "\"We are not tied to a single bank. Your application goes to a range of lenders, including ones that specialize in limited and rebuilding credit\" (lines 316-320)",
+   "\"AM Ford in Jefferson, Ohio submits one application to multiple lenders on behalf of first-time buyers, drivers with limited credit history, and people rebuilding credit.\" (line 47, asserted in Service JSON-LD)",
+   "\"One application with us goes out to multiple lenders, so you are not filing separately with each one.\" (line 156)",
+   "\"Auto loan shopping is generally treated differently from opening several unrelated accounts, and scoring models tend to group inquiries made in a short window.\" (line 156), a credit-scoring assertion with no source",
+   "\"A compact hybrid crossover is often the sensible first vehicle for exactly that reason.\" (lines 344-347), an unsourced verdict of the kind PRODUCT.md's voice rule bars"
+  ],
+  "dependencies": [
+   "@tanstack/react-router (createFileRoute, Link)",
+   "lucide-react",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs, SITE_ORIGIN)",
+   "@/lib/vehicles (dealerInfo)",
+   "route dependencies: /financing, /trade-in, /contact, /inventory, /ford/$model for escape, f-150, explorer",
+   "no lead, supabase, or form dependency at all, which is the structural gap"
+  ],
+  "tier": "SECONDARY"
+ },
+ {
+  "route": "/trade-in",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/trade-in.tsx",
+  "lines": 456,
+  "purpose": "Explain how a trade appraisal works at the store and remotely by photo, and capture a trade-appraisal lead through the estimator modal.",
+  "primaryUser": "Local Ashtabula County buyer with a vehicle to trade, with a genuine and well-served secondary audience of remote out-of-state buyers (the photo-appraisal section, lines 251-287).",
+  "primaryAction": "Open the trade estimator and complete it, which submits the lead (Start My Trade-In Estimate, lines 179-185).",
+  "secondaryActions": [
+   "Call the dealership (lines 192-197)",
+   "Browse Ford inventory (lines 186-191, 442-447)",
+   "Book an appraisal appointment via /contact (lines 436-441)",
+   "Apply for financing or read the limited-credit page (lines 331-344)",
+   "Read how delivery and shipping work (lines 281-286)"
+  ],
+  "keyInformation": [
+   "What the appraisal covers and that it carries no obligation (present, lines 85-111, 131-134)",
+   "What to bring, including payoff details for a financed vehicle (present, lines 113-120, 244-248)",
+   "How negative equity is handled (present, lines 309-320)",
+   "That an appraisal is not a credit check (present, lines 141-143)",
+   "The photo list for remote appraisal, plus the approved delivery wording (present, lines 122-129, 279)",
+   "Where the estimator's number comes from and what it is not: the disclaimer exists in the modal (TradeValuatorModal.tsx lines 323-327) but only after the phone gate, so it appears too late to inform the decision to hand over a phone number"
+  ],
+  "problems": [
+   "TradeValuatorModal.tsx line 321 renders \"+ $500 AM Ford trade bonus on top when you trade toward any vehicle in stock\" on this page's only conversion surface. It is a specific unapproved monetary offer, and it is the one claim on the flow that a customer will hold the dealership to.",
+   "TradeValuatorModal.tsx line 191 calls `submitQuickLead({ phone, name, message })` with no `leadType`, so lib/leads.ts line 54 defaults every trade appraisal to `\"quote_request\"`. PRODUCT.md names trade appraisal as a distinct lead type; trade leads currently arrive untyped and cannot be routed or reported separately.",
+   "Lines 178-198: three co-equal pill buttons in the hero. Only the fill colour separates the estimator from \"Browse Ford Inventory\" and \"Call\", and all three are the same size and weight, so the page's single conversion competes with two distractions above the fold.",
+   "The estimate is fully computed client-side (TradeValuatorModal.tsx lines 65-72, 104-107) but is withheld until the visitor supplies a phone number and ticks consent at step 6. Five steps of effort are spent before the visitor learns, at line 323-327, that the number does not read make or model and is not a valuation.",
+   "TradeValuatorModal.tsx lines 12-25 with 187: `MAKES` offers 11 brands plus \"Other\", and choosing \"Other\" writes the literal string \"Other\" into the lead message with no follow-up field. Any owner outside those 11 brands has their make silently discarded from the lead the sales team receives.",
+   "Line 99: \"Our used vehicle manager sets the number\" describes a used-vehicle operation. The lot carries zero used stock and one CPO unit, so this either advertises a department that does not exist or invites the reader to expect used inventory.",
+   "Lines 354-358: \"These are the models people around Ashtabula County trade into most often\" is an unsourced popularity statistic used to justify the section, and the section itself (lines 359-402) duplicates finance.bad-credit.tsx lines 340-384 in structure and destinations.",
+   "Line 440: \"Book an Appraisal Appointment\" links to /contact, a generic contact page with no appointment flow. The label promises scheduling the destination does not provide.",
+   "Lines 131-156 and 410-420: six Q&A pairs with no FAQPage JSON-LD, despite the file hand-writing a Service node at lines 36-51.",
+   "Lines 321-329 tell the visitor \"Anyone quoting you a rate on a web page is guessing\", and the CTA immediately below at line 333 links to /financing, which quotes 5.9% APR and a monthly payment in its hero. The page discredits its own next step.",
+   "Line 45: `provider: { \"@id\": \"https://amford.com/#dealer\" }` is hardcoded while `SITE_ORIGIN` is imported at line 19 and used for CANONICAL at line 23. Same latent breakage as the sibling page when the unresolved canonical domain is settled.",
+   "Two full-width sections (lines 202-224 and 348-404) sit between the hero CTA and the closing CTA with no persistent action, and the estimator button appears only twice (lines 179, 429) across a 456-line page.",
+   "Line 206: \"Most appraisals are finished while you wait\" sets a duration expectation directly above a five-step process description that includes a road test and a lift inspection, which reads as inconsistent with the same section's own content."
+  ],
+  "unverifiedClaims": [
+   "\"+ $500 AM Ford trade bonus on top when you trade toward any vehicle in stock\" (src/components/convert/TradeValuatorModal.tsx line 321, rendered from this route)",
+   "The estimator's headline range \"${estimate.lo.toLocaleString()} \u2013 ${estimate.hi.toLocaleString()}\" presented as a dollar figure (TradeValuatorModal.tsx lines 314-316), generated by a hardcoded depreciation curve (lines 43-48, 65-72)",
+   "\"Most appraisals are finished while you wait\" (lines 206-207)",
+   "\"These are the models people around Ashtabula County trade into most often.\" (lines 354-358)",
+   "\"Full-size pickups stay in demand in a county where a lot of people need a bed and a hitch every week\" (lines 362-364)",
+   "\"ask your lender for a payoff good for ten days\" (line 245), a specific term presented as standard practice",
+   "\"In many states the taxable amount on a purchase is calculated after the trade allowance is applied\" (line 154), a tax assertion with no source",
+   "\"Expect a call or text within 15 minutes during business hours (Mon to Sat).\" via RESPONSE_PROMISE (TradeValuatorModal.tsx line 336; src/lib/leads.ts:10-11)",
+   "\"Plenty of buyers who assumed they had nothing to put in discover they had it parked outside the whole time.\" (finance.bad-credit.tsx lines 301-306, reached from this page), an unsourced customer-behaviour claim"
+  ],
+  "dependencies": [
+   "@tanstack/react-router (createFileRoute, Link)",
+   "react (useState)",
+   "lucide-react",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/components/convert/TradeValuatorModal (the entire conversion path)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs, SITE_ORIGIN)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM used verbatim at line 279, correctly)",
+   "transitively via the modal: framer-motion, @/lib/leads (CONSENT_TEXT, RESPONSE_PROMISE, submitQuickLead), @/lib/supabase, @/lib/utils",
+   "route dependencies: /inventory, /financing, /finance/bad-credit, /contact, /nationwide-vehicle-delivery, /ford/$model for f-150, explorer, escape"
+  ],
+  "tier": "PRIMARY"
+ },
+ {
+  "route": "/service",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/service.tsx",
+  "lines": 402,
+  "purpose": "Convert Ford owners in the service area into a booked service or repair appointment lead, and rank for local Ford service intent.",
+  "primaryUser": "local Ashtabula County buyer (existing Ford owner within driving distance of Jefferson)",
+  "primaryAction": "Submit the appointment booking form (\"Confirm appointment\", lines 314-325)",
+  "secondaryActions": [
+   "Call the dealership (lines 173-178)",
+   "Select one or more service types as chips (lines 237-256)",
+   "Scan the six-item service and pricing grid (lines 341-361)"
+  ],
+  "keyInformation": [
+   "What work the shop does and how pricing works",
+   "Ford-certified technicians and OEM Motorcraft parts as the credibility basis",
+   "Turnaround expectation and what happens after submitting",
+   "Where the shop is and when the service department is open (currently absent)",
+   "Consent text and response promise on the form"
+  ],
+  "problems": [
+   "BROKEN PRIMARY ACTION: the Day chips (lines 266-278) and Time chips (lines 287-299) omit `type=\"button\"` inside the `<form>` opened at line 190, so their default type is `submit`. Every day/time click fires submission. Native validation on the required Name/Phone fields (221-228) intercepts it and yanks focus to Name; once those are filled, picking a time submits the booking. The service chips at line 241 DO set `type=\"button\"` \u2014 the two later groups were copied without it.",
+   "Day options are hardcoded strings `[\"Today\", \"Tomorrow\", \"Thu\", \"Fri\", \"Sat\"]` (line 265) with no date math. On a Thursday the list reads Today / Tomorrow / Thu / Fri / Sat with two chips meaning the same day; on Saturday \"Tomorrow\" is Sunday, which dealerInfo.hours (vehicles.ts 320-325) lists as Closed.",
+   "Time options (line 286) include \"8:00 AM\", which is before the 9:00 AM opening on every posted day, and \"4:00 PM\", which is inside Saturday's 9-5 but past no day the page states. The picker is not derived from dealerInfo.hours at all.",
+   "Both pickers are pre-selected by default (`useState(\"Tomorrow\")` / `useState(\"10:00 AM\")`, lines 126-127), so a visitor who never touches them silently books a slot they did not choose, and it is interpolated into the lead message at line 211.",
+   "Copy overclaims the transaction: the submit button says \"Confirm appointment\" (line 324) but the success screen says \"We've got your request.\" (line 184). Nothing is confirmed \u2014 it is a lead. Line 171 promises \"we'll confirm by text within minutes\" while RESPONSE_PROMISE rendered on the same success screen (line 186) says 15 minutes during business hours. Two different promises, one flow.",
+   "Service bookings are filed as `leadType: \"general_contact\"` (line 202). The lead_type union in src/lib/supabase.ts (15-20) has no service value, so bookings land in the same CRM bucket as the contact form and are separable only by the \"Service booking:\" string prefix built at line 205.",
+   "Parts is promised and never delivered: breadcrumb label \"Service & Parts\" (line 24), schema name \"Ford-Certified Service and Parts\" (line 105), and the offer catalog derived from SERVICES (118-121) contains six service items and zero parts items. The page has no parts counter, parts ordering, or accessories content.",
+   "The pricing disclaimer \"Pricing shown is starting from.\" is `hidden ... sm:inline` (lines 337-339), so it disappears on mobile while all six prices stay visible. It is also wrong for the grid it qualifies: \"$59.95\" (66), \"$129\" (84) and \"Free\" (87) are exact figures, not starting-from.",
+   "No address, hours, map, or directions anywhere on the page. The visitor is asked to commit to a physical appointment without being told where to go or when the shop is open \u2014 contact.tsx (87-102) has all of it and is never linked from here.",
+   "Accessibility inconsistency in the same form: service chips carry `aria-pressed` (line 243), the Day and Time chips (266-278, 287-299) render the identical toggle pattern with none. Their group labels are plain `<p>` elements (233-235, 261-263, 282-284) with no `role=\"group\"`/`aria-labelledby`, so all three chip groups announce without context.",
+   "The global MobileStickyCTA (SiteShell.tsx 20-23, MobileStickyCTA.tsx 18-24) pins a \"Book\" button to every mobile viewport that links to /contact. On the one page that actually contains a booking form, the persistent CTA navigates away from it to a generic contact form.",
+   "`<Field>` is defined locally at lines 368-395 and is byte-identical to the copies in contact.tsx (214-241) and commercial.tsx (599-626) \u2014 three maintained copies of one component."
+  ],
+  "unverifiedClaims": [
+   "\"$59.95\" for \"The Works\u00ae Oil Change\" (lines 65-66)",
+   "\"From $199\" for Brake Service (line 71)",
+   "\"Price-matched\" and \"Major brands. We'll match any local tire price for 30 days.\" (lines 76-77)",
+   "\"From $149\" for Battery & Alternator, plus \"Free battery test.\" (lines 81-82)",
+   "\"$129\" for Diagnostics (line 84)",
+   "\"Free\" for Recall Service and \"Active recall work covered under Ford manufacturer programs.\" (lines 87-88)",
+   "\"Factory-trained technicians, OEM Motorcraft\u00ae parts, and a no-surprise quote. Every time. Same-day appointments often available.\" (lines 148-150)",
+   "Badge \"Same-day\" (line 153)",
+   "\"Tell us what you need; we'll confirm by text within minutes.\" (line 171)",
+   "RESPONSE_PROMISE: \"Expect a call or text within 15 minutes during business hours (Mon to Sat).\" (rendered line 186; defined leads.ts 10-11)",
+   "PRODUCT.md line 121 already names this page's \"Six specific service prices, 30-day tire price match\" as pending dealership sign-off \u2014 every one of them is still live."
+  ],
+  "tier": "PRIMARY",
+  "dependencies": [
+   "@/lib/leads (CONSENT_TEXT, RESPONSE_PROMISE, submitQuickLead)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs)",
+   "@/lib/vehicles (dealerInfo)",
+   "@/lib/utils (cn)",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/assets/service.jpg",
+   "framer-motion (motion, whileInView)",
+   "lucide-react",
+   "@tanstack/react-router (createFileRoute)"
+  ]
+ },
+ {
+  "route": "/commercial",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/commercial.tsx",
+  "lines": 626,
+  "purpose": "Turn work and fleet buyers into a specification conversation (special_order lead) for commercial Fords the dealership does not stock, by selling the ordering and upfit process instead of inventory.",
+  "primaryUser": "work-commercial buyer (contractors, trades, farms, landscapers, small fleets)",
+  "primaryAction": "Submit the commercial inquiry form at #commercial-inquiry (\"Send Commercial Inquiry\", lines 560-571)",
+  "secondaryActions": [
+   "Call the dealership (lines 257-262 and 420-425)",
+   "Select platform interest chips that pre-fill the lead (lines 513-531)",
+   "Jump to /service to book fleet servicing (lines 414-419)",
+   "Jump to /financing for commercial finance (lines 380-385)"
+  ],
+  "keyInformation": [
+   "That no commercial units are held and vehicles are ordered or sourced to spec \u2014 stated in the hero (244-249) and FAQ (199-201)",
+   "Which Ford commercial platforms can be ordered (98-124)",
+   "Upfit coordination scope (126-135)",
+   "The ordering steps and an honest lead-time position (148-169, 202-205)",
+   "The approved DELIVERY_CLAIM verbatim (line 376)",
+   "NAP block beside the form (441-450)"
+  ],
+  "problems": [
+   "Line 396 renders a CTA labelled \"Every Ford Vehicle In Stock Now\" linking to /inventory. Inventory holds six retail Fords and zero commercial units \u2014 the page's own FAQ says so at line 200. The most concrete-sounding CTA on the page routes a contractor to a guaranteed dead end, which is exactly what PRODUCT.md principle 1 forbids.",
+   "Self-contradiction inside one FAQ answer: line 200 asserts \"none of them is a work vehicle\" while the LOT_SUMMARY interpolated into that same sentence (computed 187-195) prints \"F-150\" and \"F-150 Lightning\". A work buyer reading that a lot with two F-150s has no work vehicle loses trust in the honesty the page is built on.",
+   "The hero fires three near-identical-weight CTAs (lines 251-268): \"Tell Us What You Need\" (on-page anchor), \"Call\", and \"Contact the AM Ford Team\". The third duplicates the first with a worse destination \u2014 /contact files `general_contact` (contact.tsx 158), discarding both the `special_order` lead typing set at line 476 and the platform chips.",
+   "Duplicate service CTAs 25 lines apart: \"Ford Service and Parts Department\" (386-391) and \"Book Ford Service\" (414-419). \"Call the Service Department\" (420-425) dials `dealerInfo.phoneHref`, the same single general number as the hero (261), implying a direct service line that does not exist.",
+   "Conversion ordering is inverted: the inquiry form (430-576) sits above the FAQ (578-594), so the objection that gates the whole page \u2014 \"Do you have commercial vehicles in stock right now?\" (199) \u2014 is answered after the form it should unblock.",
+   "Raw hex and palette classes break the token system the same file uses elsewhere: `bg-[#002c5f]` / `hover:bg-[#001f44]` (253), `border-[#002c5f]/25 bg-white ... hover:bg-slate-50` (259, 265), `accent-[#002c5f]` (551), `border-slate-200` (236) \u2014 while lines 366, 382 and 416 use `bg-card`, `border-border` and `bg-primary` correctly.",
+   "Platform chips set `aria-pressed` (519) but the group has no accessible name: the label is a bare `<p>` (509-511) with no `role=\"group\"`/`aria-labelledby`, so the chips announce with no context. The service.tsx form repeats this pattern.",
+   "The 5-field grid at `sm:grid-cols-2` (494-506) leaves an orphan cell, and it interleaves optional fields (Business name 503, Email 504) between required Phone (496-502) and free-text \"Units needed\" (505). Units is an unvalidated text input whose value is interpolated straight into the lead message (483-485), so fleet size arrives as prose.",
+   "626 lines and seven body sections with not a single image. For a page selling van configurations, chassis cab bodies, shelving, racking, and liftgates, the buyer cannot see one example of any of it.",
+   "`LOT_SUMMARY` is computed at module scope from the static `vehicles` array (187-195), not from `fetchVehicles` (supabase.ts 34+). If Supabase becomes the live inventory source, the FAQ narrates stale stock counts with total confidence.",
+   "`<Field>` duplicated again at lines 599-626 \u2014 third identical copy across the four routes."
+  ],
+  "unverifiedClaims": [
+   "\"No obligation, and you will talk to someone who knows the product rather than a call center.\" (lines 438-439) \u2014 an unverifiable service-quality assertion",
+   "\"We coordinate it. You tell us what equipment the vehicle needs, we work with the upfitter, and the vehicle is delivered finished.\" (line 208) \u2014 a capability claim with no named upfit partner behind it",
+   "\"Our service department works on Ford trucks and vans\" combined with \"we will try to schedule around it rather than against it\" (line 216) \u2014 operational promise",
+   "RESPONSE_PROMISE: \"Expect a call or text within 15 minutes during business hours (Mon to Sat).\" (rendered lines 440 and 459)",
+   "NOTE: this is the cleanest of the four on PRODUCT.md grounds. Zero APR, payment, inspection-count, warranty, award, statistic, review-count or testimonial claims. DELIVERY_CLAIM at line 376 is used verbatim and unshortened as required, and the schema at 36-64 is correctly typed `Service` rather than inventory-shaped."
+  ],
+  "tier": "PRIMARY",
+  "dependencies": [
+   "@/lib/leads (CONSENT_TEXT, RESPONSE_PROMISE, submitQuickLead)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs, SITE_ORIGIN)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM, vehicles, Vehicle type)",
+   "@/lib/utils (cn)",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "lucide-react",
+   "@tanstack/react-router (createFileRoute, Link)"
+  ]
+ },
+ {
+  "route": "/contact",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/contact.tsx",
+  "lines": 252,
+  "purpose": "Give every audience one reliable route to a human \u2014 phone, message, address, hours, map \u2014 and capture the resulting general lead.",
+  "primaryUser": "local Ashtabula County buyer needing address, hours and phone; remote out-of-state buyers are the second-largest and are unserved here",
+  "primaryAction": "Submit the contact message form (\"Send message\", lines 198-209) \u2014 the page's only tracked lead capture",
+  "secondaryActions": [
+   "Call via the gradient phone card (lines 79-86)",
+   "Read hours (lines 89-102)",
+   "Locate the store on the embedded map (lines 107-117)",
+   "Email sales@amfordashtabula.com (line 88, currently not clickable)"
+  ],
+  "keyInformation": [
+   "Full NAP: address, phone, email",
+   "Hours including Sunday closed",
+   "Directions or a map",
+   "What happens after sending (RESPONSE_PROMISE) and the SMS consent text",
+   "Department routing for sales vs service vs parts (currently missing)",
+   "Delivery and remote-purchase path for out-of-state callers (currently missing)"
+  ],
+  "problems": [
+   "\"Message received!\" (line 131) uses an exclamation mark. PRODUCT.md lists exclamation marks as prohibited in customer-facing copy (line 98).",
+   "The email is a hardcoded literal `\"sales@amfordashtabula.com\"` (line 88) instead of a `dealerInfo` field, so the contact address is the one NAP element outside the single source of truth that governs address (87), phone (84) and hours (95). Its domain also differs from `SITE_ORIGIN` \"https://amford.com\" (breadcrumbs.ts line 1), which PRODUCT.md flags as an unresolved blocker (86-90).",
+   "`Info` renders its body as plain text (line 249), so on the page whose entire job is contact, the email is not a `mailto:` link and the address is not a directions link. Both must be transcribed by hand on mobile. There is no \"Get directions\" control anywhere despite a Maps embed already sitting 20 lines below.",
+   "The map is the last element on the page (lines 107-117), behind a 5-field form and a 4-row hours table. On mobile the local visitor's primary question \u2014 where are you \u2014 is several screens down.",
+   "Semantic heading failure in the whole right-hand rail: `Info` (242-251) and the Hours card (89-102) render their titles as `<p className=\"display text-lg\">` (lines 92, 247). They look like headings and are not. The page's heading tree is h1 (60) then one h2 inside the form (174); no heading exists for Visit us, Email, or Hours, so screen-reader heading navigation skips the entire NAP block.",
+   "Hours are stated three times in three voices: hero prose \"Our team is here six days a week, Monday through Saturday.\" (64-66), the authoritative table (94-101), and og:description \"We're open 6 days a week.\" (30). The two prose copies will drift from `dealerInfo.hours` the first time hours change.",
+   "The phone card is labelled \"Sales \u00b7 Service \u00b7 Parts\" (line 85) but there is one number, no extensions, and the form has no department or subject selector \u2014 everything files as `general_contact` (line 158) with the reason buried in free text (162). A service booking arriving here is indistinguishable from a sales enquiry, and the page never links to /service where the real booking form lives.",
+   "No delivery or remote-purchase content at all, though PRODUCT.md names remote and out-of-state buyers a target audience and this is their natural entry point. `DELIVERY_CLAIM` is exported from the very `vehicles` module the file already imports (line 8).",
+   "The Google Maps iframe (109-115) loads a third-party embed unconditionally on render with no consent gate and no `sandbox` attribute, and there is no static address fallback if the frame is blocked.",
+   "`Route.head` (36-41) emits BreadcrumbList only. This is the canonical NAP page, yet it publishes no `ContactPage` node and no reference to the `#dealer` `@id` defined in __root.tsx (line 33) \u2014 service.tsx (110) and commercial.tsx (46) both link back to that entity and this page does not.",
+   "The mobile sticky \"Book\" CTA (MobileStickyCTA.tsx 18-23) links to /contact, so on this page it is a permanently no-op button occupying the bottom of every mobile viewport.",
+   "Third identical copy of `<Field>` (lines 214-241)."
+  ],
+  "unverifiedClaims": [
+   "RESPONSE_PROMISE: \"Expect a call or text within 15 minutes during business hours (Mon to Sat).\" (rendered lines 132 and 175; defined leads.ts 10-11) \u2014 a speed-to-lead commitment with no staffing evidence behind it",
+   "\"We're open 6 days a week.\" (line 30, og:description)",
+   "\"Our team is here six days a week, Monday through Saturday.\" (lines 64-66)",
+   "The phone number `(440) 998-2151` rendered at lines 20, 30 and 84 is flagged [OPEN] in PRODUCT.md (58-59): the code carries a note to verify it with the dealership and it has never been confirmed. This page publishes it three times including in meta.",
+   "\"Sales \u00b7 Service \u00b7 Parts\" (line 85) implies department routing that does not exist",
+   "No pricing, APR, award, review-count or testimonial claims on this page."
+  ],
+  "tier": "PRIMARY",
+  "dependencies": [
+   "@/lib/leads (CONSENT_TEXT, RESPONSE_PROMISE, submitQuickLead)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs)",
+   "@/lib/vehicles (dealerInfo \u2014 address, phone, phoneHref, city, hours)",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "lucide-react",
+   "@tanstack/react-router (createFileRoute)",
+   "Google Maps embed (third-party iframe, line 47-49)"
+  ]
+ },
+ {
+  "route": "/about",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/about.tsx",
+  "lines": 151,
+  "purpose": "Build enough trust in a family-owned single-location Ford dealer that a hesitant buyer is willing to make contact.",
+  "primaryUser": "local Ashtabula County buyer, with first-time and credit-rebuilding buyers as the secondary audience deciding whether this is a place that will treat them decently",
+  "primaryAction": "Follow \"Come say hi\" to /contact (lines 140-145)",
+  "secondaryActions": [
+   "None. This is the only outbound action on the page."
+  ],
+  "keyInformation": [
+   "Who owns the store and for how long",
+   "The former name Nassief Ford, for people searching it",
+   "Where it is and which communities it serves",
+   "What the buying experience is actually like, especially for credit-rebuilding buyers",
+   "A contactable action: phone or form"
+  ],
+  "problems": [
+   "Eight of the page's ten content blocks are unverifiable assertions. Remove the unapproved claims and what remains is a headline, two stock photos, and one link. PRODUCT.md lines 119-120 already name this exact page for the 4.9-star / 20k-delivered / 30-team stats and the President's Award / Since 1962 / 60+ years claims, and every one of them is still shipping.",
+   "The page ends in an internal link to /contact (140-145) with no phone number, no form, no address. It is the only one of the four routes with no `tel:` link in its own body and the only one that never imports `@/lib/leads`, so it violates PRODUCT.md principle 4 (every page ends in a contactable action) outright.",
+   "`dealerInfo.formerName` \"Nassief Ford\" (vehicles.ts line 311) never appears, although the file imports `dealerInfo` (line 8) and __root.tsx already publishes it as `alternateName` (line 35). The one page where the rename belongs \u2014 and the page \"Nassief Ford\" searchers should land on \u2014 omits it entirely.",
+   "`Route.head` (16-37) omits `og:type`, which service.tsx (47), commercial.tsx (86) and contact.tsx (32) all set, and omits the `keywords` meta all three others carry. It also emits BreadcrumbList only (31-36): no `AboutPage` or `Organization` node and no `@id` reference to the `#dealer` entity in __root.tsx (33), so the trust page contributes nothing to the entity graph.",
+   "`<img src={dealership} alt=\"AM Ford dealership\" />` (lines 70-74) asserts in alt text that a bundled template asset is this dealership. If the photo is not the Jefferson store, that is a false statement to assistive technology and to image search. The interior shot (106) is `alt=\"\"` decorative, so the page has zero verified photography of the actual business.",
+   "The h1 \"A Ford store, built on a handshake.\" (51-53) carries no brand, location, or category qualifier, so the page's most heavily weighted element targets nothing and the `<title>` (18) carries the entire SEO load alone.",
+   "\"Since 1962\" ships as a `SectionTag` eyebrow (line 109) \u2014 styled as a decorative label rather than a claim. That is precisely how an unapproved 60-year-history assertion gets past review.",
+   "The stat grid (80-99) gives \"4.9\u2605\" and \"20k+\" the same `text-4xl` weight as \"60+\", so an unsourced review score reads with the same authority as a founding date, in the first screen after the hero.",
+   "No location, service area, delivery claim, staff, department, or community specifics. \"Sponsoring local schools and youth sports for decades.\" (line 129) is a swapped-proper-noun template line of exactly the kind PRODUCT.md principle 5 rejects, and it names no school, team, or year.",
+   "All motion is `whileInView` with `initial={{ opacity: 0 }}` (lines 63-68, 87-92) and the stats transition (line 92) sets neither a duration nor any `prefers-reduced-motion` handling. If the in-view trigger does not fire, the hero image and all four stats stay invisible, and reduced-motion users get the same opacity gate PRODUCT.md's accessibility section (145) says should be disabled."
+  ],
+  "unverifiedClaims": [
+   "\"60+\" / \"Years serving Ashtabula County\" (line 82)",
+   "\"20k+\" / \"Vehicles delivered\" (line 83)",
+   "\"4.9\u2605\" / \"Average review score\" (line 84)",
+   "\"30+\" / \"Team members\" (line 85)",
+   "\"Since 1962\" (line 109)",
+   "\"Ford President's Award\" with \"Top tier customer satisfaction recognition.\" (lines 122-125)",
+   "\"Three generations. One family. A simple promise: treat every customer like a neighbor\" (lines 54-57)",
+   "\"Three generations of the same Ford family.\" (line 131)",
+   "\"Today we're one of the top-rated Ford dealers in Northeast Ohio\" (lines 115-116) \u2014 an unverifiable comparative superlative of the same class PRODUCT.md bans at line 98",
+   "\"Sponsoring local schools and youth sports for decades.\" (line 129)",
+   "\"Real prices. Real people. Real follow-through.\" (lines 116-118) \u2014 unfalsifiable, no numeric claim",
+   "\"A Ford store, built on a handshake.\" (lines 51-53) \u2014 positioning rather than fact, lowest severity here"
+  ],
+  "tier": "SECONDARY",
+  "dependencies": [
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs)",
+   "@/lib/vehicles (dealerInfo \u2014 city and locality only; formerName imported but unused)",
+   "@/components/site/SiteShell",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs",
+   "@/assets/dealership.jpg",
+   "@/assets/interior.jpg",
+   "framer-motion (motion, whileInView)",
+   "lucide-react (Award, Heart, Users, ArrowRight)",
+   "@tanstack/react-router (createFileRoute, Link)",
+   "NOTE: does not import @/lib/leads \u2014 the only one of the four with no lead capture"
+  ]
+ },
+ {
+  "route": "/ford-models",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/ford-models.tsx",
+  "lines": 213,
+  "purpose": "An SEO hub that names the six Ford models AM Ford sells and routes an undecided shopper into the individual model landing page that fits them.",
+  "primaryUser": "Local Ashtabula County buyer who is shopping by body style before model, arriving from a generic 'Ford models near me' query.",
+  "primaryAction": "Open the model page for the vehicle they are considering (one of the six cards at lines 128-145).",
+  "secondaryActions": [
+   "Call the dealership (line 114-119, tel: link)",
+   "Browse the full inventory (line 108-113)",
+   "Read how home delivery and shipping work (line 188-194)",
+   "Apply for financing (line 195-200)",
+   "Contact the sales team (line 201-206)"
+  ],
+  "keyInformation": [
+   "The six models sold and their body style, with Truck/SUV/Car/EV framing (lines 128-145)",
+   "Body-style guidance that does not exist on the model pages (BODY_STYLE_GUIDE, lines 38-55)",
+   "Single location and full street address, 1059 State Route 46 North, Jefferson OH 44047 (lines 104, 182)",
+   "DELIVERY_CLAIM verbatim (line 183)",
+   "Phone number and a route to a human (lines 114-119, 201-206)",
+   "ItemList JSON-LD of the six model pages (lines 24-35)"
+  ],
+  "problems": [
+   "Lines 108-120: the hero CTA hierarchy fights the page's job. The filled primary button is 'Browse every vehicle in stock' pointing at /inventory, which routes the visitor off the hub before they ever reach the model grid that is the page's entire reason to exist. The actual primary action (the six cards) sits below the fold with no CTA styling at all.",
+   "Lines 128-145: model cards carry only a body-style pill and a one-line tagline. No image, no price-from, no stock indicator, despite every one of the six models having exactly one unit on the lot (fordModels.ts inStockVehicleIds). A buyer choosing between six cards has one sentence per card to go on, and the cards for the F-150 and the F-150 Lightning are visually indistinguishable except for the pill.",
+   "Line 141: the anchor promises 'Read the {m.name} buying guide', but the destination H1 is '{model.name} for Sale in Jefferson, OH' (ford.$model.tsx:161-163) and that page's largest section is live inventory listings with prices. The anchor sets a research expectation and delivers a sales landing page.",
+   "Lines 13 and 99: the <title> renders dealerInfo.city ('Jefferson, OH') while the H1 renders dealerInfo.locality plus a hardcoded ', Ohio'. Two spellings of the same place in one viewport, and the ', Ohio' literal at line 99 is the kind of hand-written location string PRODUCT flags as the reason the Ashtabula error crept in before.",
+   "Line 10: SITE_ORIGIN is redeclared locally even though @/lib/breadcrumbs already exports SITE_ORIGIN (breadcrumbs.ts:1), and ford.$model.tsx:22 declares a third copy. PRODUCT lists the canonical domain as an unresolved blocking [OPEN]; the eventual change now has to be made in at least three files that each believe they own it.",
+   "Lines 172-210: the closing card stacks one filled and two outline buttons with no ranking between them, and it is the same delivery + financing + contact triple that runs at the bottom of every model page (ford.$model.tsx:402-451). A visitor moving hub to model page is shown the identical three destinations twice in a row.",
+   "No lead form, no test-drive request, and no vehicle enquiry anywhere on the page. Per PRODUCT principle 4 the page does technically end in a contactable action, but the only ones offered are a tel: link (line 114) and a generic /contact link (line 201), which is the weakest possible conversion surface for a mid-funnel hub.",
+   "Lines 158-167: all four BODY_STYLE_GUIDE cards open with the identical Compass icon in the identical badge, so the icon carries zero differentiating information and instead creates four competing identical visual anchors in a section whose whole point is that the four paths are different.",
+   "Line 136 duplicates the 'EV' to 'Electric' display mapping inline, and ford.$model.tsx:160 duplicates it again. The label belongs on the FordModel record, not in two route files."
+  ],
+  "unverifiedClaims": [
+   "\"Buyers from Geneva, Conneaut, Mentor, Warren, and across the state line in Erie regularly handle the paperwork remotely and take delivery at home.\" (line 183-185) - an unsourced claim about customer behaviour and volume. PRODUCT bars fabricated statistics and customer stories; nothing in the repo evidences that these buyers exist or that this happens 'regularly'.",
+   "\"the questions our sales team gets asked most about it\" (lines 103-104) - presents the authored FAQ copy in fordModels.ts as real captured customer-question data. Fabricated provenance rather than a fabricated number, but the same rule applies.",
+   "\"Most households here land here.\" (line 45) - an unsourced local market statistic stated as fact.",
+   "No APR, monthly payment, inspection-point count, warranty specific, award, or review count appears on this page. On the numeric claims PRODUCT calls urgent, this page is clean."
+  ],
+  "tier": "SECONDARY",
+  "dependencies": [
+   "@/components/site/SiteShell (SiteShell)",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs (Breadcrumbs)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs)",
+   "@/lib/fordModels (FORD_MODELS)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM)",
+   "@tanstack/react-router (createFileRoute, Link)",
+   "lucide-react (ArrowRight, Compass, MapPin, Phone)"
+  ]
+ },
+ {
+  "route": "/ford/$model",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/ford.$model.tsx",
+  "lines": 455,
+  "purpose": "A per-model landing page that explains what one Ford model is built for, how it behaves on Ashtabula County roads, and shows the units of that model currently on the lot.",
+  "primaryUser": "Local Ashtabula County buyer who has settled on a model and is deciding whether to act, with the work/commercial buyer served by the F-150 and Lightning pages and the family buyer by the Explorer and Escape pages.",
+  "primaryAction": "Open the vehicle detail page for the in-stock unit of that model (the listing card at lines 262-293), which is the only route on the page to a specific purchasable vehicle.",
+  "secondaryActions": [
+   "Call the dealership about the model (lines 179-184)",
+   "Filter inventory to that model (lines 172-178 and 327-334, same destination)",
+   "Read the nearby city pages (lines 231-242) and /areas-we-serve (line 245)",
+   "Read the related comparison and guide pages (lines 365-400)",
+   "See how delivery and shipping work (lines 422-428)",
+   "Apply for financing, book service, or schedule a test drive (lines 431-450)"
+  ],
+  "keyInformation": [
+   "Model intro, strengths, and an honest note on who the model does not suit (lines 164-203)",
+   "The local angle for Jefferson and Ashtabula County roads and winters (lines 206-221)",
+   "Actual in-stock units with condition, trim, and real price from vehicles.ts (lines 260-295)",
+   "Honest empty state when no unit of that model is on the lot (lines 296-324)",
+   "Model-specific FAQs, mirrored into FAQPage JSON-LD from the same source (lines 99-109, 345-363)",
+   "DELIVERY_CLAIM verbatim (lines 306, 417)",
+   "Single location and address (lines 217-220, 417-419)"
+  ],
+  "problems": [
+   "Lines 402-452: the closing delivery band renders 'Delivery from AM Ford' as an <h2> styled text-[11px] uppercase (lines 413-415). A document-level heading is being used as a decorative eyebrow, and it lands in the outline after the FAQ h2 (line 348) and the Related Reading h2 (line 369). Heading rank does not track informational rank anywhere in the bottom third of this page.",
+   "Lines 193 and 211: two sibling <h2> elements in the same grid row at text-2xl/sm:text-3xl and text-xl/sm:text-2xl. Equal semantic rank, visibly unequal weight, so the local-angle card reads as subordinate to the strengths list while being marked up as its peer.",
+   "Lines 260-295: the in-stock grid is sm:grid-cols-2 lg:grid-cols-3, but every model in fordModels.ts has exactly one entry in inStockVehicleIds, so on all six pages this always renders a single card in a three-column grid with two thirds of the row empty, under the plural heading '{model.name} listings' (line 257) and an 'In Stock Now' tag. The layout is built for a stock level the lot cannot reach.",
+   "Lines 82-85 and 296-324: inStockVehicleIds is a hand-maintained second copy of a model-to-vehicle relation that already exists implicitly through vehicle.model in vehicles.ts, which PRODUCT names as the single source of truth. Nothing reconciles the two, so a sold unit left in the array keeps rendering a listing, and the carefully written empty state (sourcing offer plus DELIVERY_CLAIM plus two CTAs, lines 296-324) is currently unreachable on all six pages and therefore untested in production.",
+   "Lines 172-178 and 327-334: two differently worded buttons, 'Browse {model.name} listings' and 'Filter our inventory to {model.name} listings', point at the identical destination with the identical search={inventorySearch} object. One page, one destination, two labels, and the second one sits directly under the listing grid it duplicates.",
+   "Lines 177 and 183: the two hero icons are missing aria-hidden while every other decorative icon in the file has it (lines 197, 209, 238, 290, 314, 320, 355, 381, 383, 389, 411, 427). Screen readers announce exactly the two icons that sit in the highest-attention region. PRODUCT treats a11y gaps as defects, not enhancements.",
+   "Line 162: the H1 renders dealerInfo.city, producing 'Ford F-150 for Sale in Jefferson, OH' at sm:text-5xl lg:text-6xl. A postal abbreviation set in display type, and inconsistent with the hub page which writes 'Jefferson, Ohio' (ford-models.tsx:99).",
+   "Lines 431-450: the three closing tiles (Financing, Service, Contact) are plain text links styled as flat cards with no icon and no arrow affordance, unlike every other link on the page. That makes 'Schedule a {model.name} test drive' (line 448), the single highest-intent action a model page should drive, the least prominent interactive element on it.",
+   "Lines 71-76: cityPicksFor falls back to SERVICE_AREAS.slice(0, 3) when a model slug is absent from CITY_PICKS. A seventh model added later silently ships three geographically arbitrary city links rather than rendering nothing, which is exactly the doorway-page shape PRODUCT principle 5 warns about.",
+   "Roughly the bottom 40% of the page is identical across all six models: the delivery band (lines 402-429) and the three tiles (lines 431-450) are byte-identical apart from the interpolated model name, and the city-links block (lines 225-249) varies only by three slugs. The differentiated content (intro, strengths, localAngle, faqs) is genuinely per-model and good, but it is front-loaded and the tail is template.",
+   "Line 22: third local redeclaration of SITE_ORIGIN, duplicating @/lib/breadcrumbs (breadcrumbs.ts:1) and ford-models.tsx:10."
+  ],
+  "unverifiedClaims": [
+   "\"Full-size trucks tend to hold their value in a county where demand for them stays steady, which usually helps the conversation at trade-in time.\" (rendered at lines 195-202 from fordModels.ts:55) - an unsourced resale-value and local-demand claim with a trade-in implication.",
+   "\"Because the F-150 is everywhere in this region, service knowledge, parts, and accessories are easy to find close to home.\" (rendered at lines 195-202 from fordModels.ts:54) - unsourced market-share statement about the region.",
+   "\"Most Mustang owners in Ashtabula County run the car seasonally.\" (rendered at lines 214-216 from fordModels.ts:93) - a local ownership statistic with no source.",
+   "\"Buyers here are usually one of three people\" (rendered at line 168 from fordModels.ts:84) and \"Most households here land here.\" style segmentation claims - unsourced customer-behaviour data.",
+   "\"Questions buyers ask us about the {model.name}\" (lines 348-350) - the FAQ block is presented as captured customer questions; the copy is authored in fordModels.ts. Fabricated provenance rather than a fabricated figure.",
+   "Clean on the urgent categories: no APR, no monthly payment, no inspection-point count, no warranty specific, no award, no review count, no named testimonial. Prices shown at lines 285-287 come from real vehicle records. The engine specs that do appear (5.0L V8, 3.0L EcoBoost V6) are backed by the features arrays in vehicles.ts."
+  ],
+  "tier": "PRIMARY",
+  "dependencies": [
+   "@/components/site/SiteShell (SiteShell)",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs (Breadcrumbs)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs)",
+   "@/lib/fordModels (getFordModel, getRelatedReading, FordModel type)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM, getVehicle, Vehicle type)",
+   "@/lib/serviceAreas (getServiceArea, SERVICE_AREAS, ServiceArea type)",
+   "./inventory (InventorySearch type, for the validated deep-link search params)",
+   "@tanstack/react-router (createFileRoute, Link, notFound)",
+   "lucide-react (ArrowRight, BookOpen, CheckCircle2, HelpCircle, MapPin, Phone, Scale, Search, Truck)"
+  ]
+ },
+ {
+  "route": "/nationwide-vehicle-delivery",
+  "file": "C:/Users/sahil/Downloads/velocity-craft-canvas-main/src/routes/nationwide-vehicle-delivery.tsx",
+  "lines": 240,
+  "purpose": "Removes distance as a reason not to buy by explaining the free 300-mile home delivery offer, nationwide shipping, and the six-step remote purchase process end to end.",
+  "primaryUser": "Remote and out-of-state buyer who intends to purchase by phone and email and never visit the showroom. Secondarily the cross-border Erie PA buyer.",
+  "primaryAction": "Start a remote purchase conversation by telling AM Ford which vehicle and which delivery address, which the page currently cannot capture (see problems).",
+  "secondaryActions": [
+   "Browse inventory (lines 155-160 and 216-221)",
+   "Call the delivery team (lines 161-166)",
+   "Apply for financing (lines 222-227)",
+   "Contact the dealership (lines 228-233)",
+   "Read the eight delivery and shipping FAQs (lines 197-207)"
+  ],
+  "keyInformation": [
+   "DELIVERY_CLAIM verbatim in the hero (line 151)",
+   "The six-step remote purchase sequence, choose, finance, trade, paperwork, deliver, inspect (lines 105-136, 174-187)",
+   "That shipping beyond 300 miles is quoted in writing before commitment (lines 29, 37, 129)",
+   "Remote trade appraisal by photo (lines 44-46, 117-120)",
+   "Documents required to buy remotely and that they vary by state (lines 40-42)",
+   "Inspect-before-you-sign guidance at handover (lines 52-54, 131-135)",
+   "FAQPage JSON-LD built from the same FAQS array the page renders (lines 84-95)"
+  ],
+  "problems": [
+   "Line 220: the CTA reads 'View Used Vehicles'. The lot holds 5 New plus 1 Certified Pre-Owned and zero Used vehicles. This is a button advertising an inventory that does not exist, and it is the primary filled CTA of the page's closing conversion card. Direct violation of PRODUCT principle 1, 'a control that returns nothing is treated as a defect'.",
+   "Line 109: Step 1 body reads 'Browse our new Ford and used inventory online.' Same defect in prose, and it is the very first sentence of the process explanation a remote buyer reads. The site has no used inventory to browse.",
+   "Line 72: the keywords meta targets 'used cars delivered to your home', chasing used-car intent the lot cannot fulfil. Three separate used-stock implications on one page.",
+   "No lead form, no ZIP or address field, no quote request anywhere on the page. The copy promises a written shipping quote three times (lines 29, 37, 129) and the closing card says 'Tell us which vehicle you are looking at and where you live' (lines 211-214), then offers only a tel: link, a link to /inventory, and a generic /contact page. This is the one page whose entire audience physically cannot walk in, and it is the page with the weakest lead capture in the cluster.",
+   "Lines 161-166 and 228-233: two controls with the identical label 'Contact Our Delivery Team' on one page, one a tel: link to dealerInfo.phoneHref and one a router Link to /contact. Same words, two different destinations, no way for the visitor to know which is which.",
+   "Lines 209-235: the 'Ready to start?' conversion card is an <h3> nested inside the FAQ section beneath the h2 at lines 194-196, so the page's closing conversion block is marked up as a subsection of the FAQ rather than as its own section. In the accessibility tree the primary conversion moment is a child of 'Delivery and shipping, answered plainly'.",
+   "Line 17: DELIVERY_SHIPPING is imported and never used anywhere in the file. Dead import, and the linting signal that the 'all 50 states' half of the offer only ever surfaces inside DELIVERY_CLAIM.",
+   "Lines 59-81: no twitter:card meta, while ford-models.tsx:78 and ford.$model.tsx:132 both set summary_large_image. This is the most shareable page in the cluster (the differentiator page) and it is the one with the degraded social card.",
+   "Lines 80 and 82: the canonical origin is hardcoded as a bare string literal twice, not even hoisted to a local const, while @/lib/breadcrumbs exports SITE_ORIGIN. Given PRODUCT flags the canonical domain as blocking and unresolved, these are the two easiest instances to miss.",
+   "Line 67: the meta description hardcodes 'Jefferson, Ohio' instead of reading dealerInfo, even though dealerInfo is imported on line 17 and used elsewhere in the same file. This is precisely the drift pattern that produced the earlier Ashtabula location error.",
+   "Lines 159, 165, 178, 201: decorative icons with no aria-hidden, so screen readers announce them. Both sibling routes set aria-hidden consistently; this file sets it nowhere.",
+   "Lines 147-149: the H1 is 'Shop AM Ford from wherever you live.' It is the only H1 in the cluster ending in a period, and it names neither delivery nor shipping, which are the two things this page ranks and converts for. The <title> (line 60), the H1, the breadcrumb label 'Vehicle Delivery' (line 20), the nav label 'Ford home delivery and nationwide shipping' (SiteNav.tsx:67), and the footer label 'Vehicle Delivery & Shipping' (SiteFooter.tsx:34) give this one page five different names.",
+   "Lines 159, 220, 226, 232: CTA labels are Title Case generics, 'Browse Inventory', 'View Used Vehicles', 'Apply for Vehicle Financing', against the descriptive sentence-case anchors used across the rest of the cluster ('Browse every vehicle in stock', 'See how home delivery and shipping work'). The cluster reads as two different writers.",
+   "Lines 216-233: three CTAs in the closing card with no ranking, and the filled primary of the three is the broken 'View Used Vehicles' link."
+  ],
+  "unverifiedClaims": [
+   "\"Local deliveries within the 300-mile area are usually scheduled within a few days of finalizing the purchase.\" (line 49) - a service-level commitment on timing that is not part of the approved DELIVERY_CLAIM wording and has no stated source.",
+   "\"Most vehicles ship on open carriers, which is the standard method for cars and trucks.\" (line 33) - unsourced statement about the dealership's own shipping mix.",
+   "\"we arrange transport through established carriers to any of the 50 states\" (line 29) - 'established carriers' is an unbacked quality claim layered onto the approved shipping wording.",
+   "\"There is no delivery charge for addresses within 300 miles of our Jefferson, Ohio dealership.\" (line 25) - a restatement of the approved DELIVERY_CLAIM rather than a new claim, so this one is defensible, but it is a paraphrase of wording PRODUCT says must be used verbatim and never shortened.",
+   "\"our finance team works with multiple lenders to structure terms. We handle applicants across a range of credit situations, including buyers rebuilding credit.\" (line 114) - carries no APR figure and no payment quote, so it clears the approval gate, and the tone matches the credit-rebuilding inclusion commitment. Noted as compliant rather than as a defect.",
+   "Clean on the urgent categories: no APR, no monthly payment, no inspection-point count, no warranty specific, no award, no statistic, no review count, no testimonial."
+  ],
+  "tier": "PRIMARY",
+  "dependencies": [
+   "@/components/site/SiteShell (SiteShell)",
+   "@/components/site/Home (SectionTag)",
+   "@/components/site/Breadcrumbs (Breadcrumbs)",
+   "@/lib/breadcrumbs (breadcrumbSchema, crumbs)",
+   "@/lib/vehicles (dealerInfo, DELIVERY_CLAIM, DELIVERY_SHORT, and DELIVERY_SHIPPING which is imported but unused)",
+   "@tanstack/react-router (createFileRoute, Link)",
+   "lucide-react (Truck, MapPin, FileText, CreditCard, Car, ShieldCheck, Phone, ArrowRight, HelpCircle)"
+  ]
+ }
+]

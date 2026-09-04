@@ -10,8 +10,9 @@ import {
   Search,
   Truck,
 } from "lucide-react";
+import { PublishDeskSubject } from "@/components/site/DeskContext";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
+import { SectionTag } from "@/components/site/SectionTag";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { getFordModel, getRelatedReading, type FordModel } from "@/lib/fordModels";
@@ -152,6 +153,7 @@ function FordModelPage() {
 
   return (
     <SiteShell>
+      <PublishDeskSubject model={model.name} />
       <Breadcrumbs items={modelCrumbs(model)} />
 
       <section className="relative overflow-hidden border-b border-slate-200 py-14 sm:py-20">
@@ -172,13 +174,13 @@ function FordModelPage() {
             <Link
               to="/inventory"
               search={inventorySearch}
-              className="inline-flex items-center gap-2 rounded-full bg-[#002c5f] px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-[#001f44]"
+              className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-brand-deep"
             >
               Browse {model.name} listings <ArrowRight className="h-4 w-4" />
             </Link>
             <a
               href={dealerInfo.phoneHref}
-              className="inline-flex items-center gap-2 rounded-full border border-[#002c5f]/25 bg-white px-6 py-3.5 text-sm font-bold text-[#002c5f] transition hover:bg-slate-50"
+              className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-white px-6 py-3.5 text-sm font-bold text-brand transition hover:bg-slate-50"
             >
               <Phone className="h-4 w-4" /> Call AM Ford about the {model.name}
             </a>
@@ -194,7 +196,7 @@ function FordModelPage() {
               <ul className="mt-6 space-y-4">
                 {model.strengths.map((s) => (
                   <li key={s} className="flex items-start gap-3">
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#002c5f]" aria-hidden />
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand" aria-hidden />
                     <span className="text-sm leading-relaxed text-muted-foreground sm:text-base">
                       {s}
                     </span>
@@ -233,7 +235,7 @@ function FordModelPage() {
                   <Link
                     to="/ford-dealer/$city"
                     params={{ city: area.slug }}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-surface-2/60 px-4 py-2.5 text-sm font-semibold text-[#002c5f] ring-1 ring-border transition hover:ring-2 hover:ring-[#002c5f]/40"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-surface-2/60 px-4 py-2.5 text-sm font-semibold text-brand ring-1 ring-border transition hover:ring-2 hover:ring-brand/40"
                   >
                     <MapPin className="h-4 w-4 shrink-0" aria-hidden />
                     Ford dealer near {area.city}, {area.state}
@@ -264,7 +266,7 @@ function FordModelPage() {
                   key={v.id}
                   to="/vehicle/$id"
                   params={{ id: v.id }}
-                  className="group flex flex-col overflow-hidden rounded-3xl bg-card ring-1 ring-border transition hover:ring-[#002c5f]/40"
+                  className="group flex flex-col overflow-hidden rounded-3xl bg-card ring-1 ring-border transition hover:ring-brand/40"
                 >
                   <img
                     src={v.image}
@@ -282,10 +284,10 @@ function FordModelPage() {
                     <p className="mt-1 text-sm font-semibold text-muted-foreground">
                       {v.trim} trim
                     </p>
-                    <p className="mt-4 text-2xl font-black text-[#002c5f]">
+                    <p className="mt-4 text-2xl font-black text-brand">
                       ${v.price.toLocaleString()}
                     </p>
-                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-[#002c5f] group-hover:underline">
+                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand group-hover:underline">
                       View this {v.year} {v.model} {v.trim}
                       <ArrowRight className="h-4 w-4" aria-hidden />
                     </span>
@@ -308,7 +310,7 @@ function FordModelPage() {
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#002c5f] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#001f44]"
+                  className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-bold text-white transition hover:bg-brand-deep"
                 >
                   Ask AM Ford to source a {model.name}{" "}
                   <ArrowRight className="h-4 w-4" aria-hidden />
@@ -327,7 +329,7 @@ function FordModelPage() {
             <Link
               to="/inventory"
               search={inventorySearch}
-              className="inline-flex items-center gap-2 rounded-full border border-[#002c5f]/25 bg-white px-5 py-3 text-sm font-bold text-[#002c5f] transition hover:bg-slate-50"
+              className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-white px-5 py-3 text-sm font-bold text-brand transition hover:bg-slate-50"
             >
               <Search className="h-4 w-4" aria-hidden /> Filter our inventory to {model.name}{" "}
               listings
@@ -374,7 +376,7 @@ function FordModelPage() {
                 <li key={item.to}>
                   <Link
                     to={item.to}
-                    className="group flex h-full flex-col rounded-2xl bg-card p-6 ring-1 ring-border transition hover:ring-2 hover:ring-[#002c5f]/40"
+                    className="group flex h-full flex-col rounded-2xl bg-card p-6 ring-1 ring-border transition hover:ring-2 hover:ring-brand/40"
                   >
                     <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-primary">
                       {item.kind === "Comparison" ? (
@@ -384,7 +386,7 @@ function FordModelPage() {
                       )}
                       {item.kind}
                     </span>
-                    <span className="mt-3 inline-flex items-start gap-1.5 text-base font-bold text-[#002c5f] group-hover:underline">
+                    <span className="mt-3 inline-flex items-start gap-1.5 text-base font-bold text-brand group-hover:underline">
                       {item.label}
                       <ArrowRight className="mt-1 h-4 w-4 shrink-0" aria-hidden />
                     </span>
@@ -421,7 +423,7 @@ function FordModelPage() {
             </div>
             <Link
               to="/nationwide-vehicle-delivery"
-              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#002c5f]/25 bg-white px-5 py-2.5 text-sm font-bold text-[#002c5f] transition hover:bg-slate-50"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-brand/25 bg-white px-5 py-2.5 text-sm font-bold text-brand transition hover:bg-slate-50"
             >
               See how home delivery and shipping work
               <ArrowRight className="h-4 w-4" aria-hidden />
@@ -431,19 +433,19 @@ function FordModelPage() {
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             <Link
               to="/financing"
-              className="rounded-2xl bg-card p-5 text-sm font-bold text-ink ring-1 ring-border transition hover:ring-[#002c5f]/40"
+              className="rounded-2xl bg-card p-5 text-sm font-bold text-ink ring-1 ring-border transition hover:ring-brand/40"
             >
               Apply for {model.name} financing
             </Link>
             <Link
               to="/service"
-              className="rounded-2xl bg-card p-5 text-sm font-bold text-ink ring-1 ring-border transition hover:ring-[#002c5f]/40"
+              className="rounded-2xl bg-card p-5 text-sm font-bold text-ink ring-1 ring-border transition hover:ring-brand/40"
             >
               Book Ford service in {dealerInfo.locality}
             </Link>
             <Link
               to="/contact"
-              className="rounded-2xl bg-card p-5 text-sm font-bold text-ink ring-1 ring-border transition hover:ring-[#002c5f]/40"
+              className="rounded-2xl bg-card p-5 text-sm font-bold text-ink ring-1 ring-border transition hover:ring-brand/40"
             >
               Schedule a {model.name} test drive
             </Link>

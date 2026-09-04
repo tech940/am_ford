@@ -1,0 +1,19 @@
+- generic [ref=f10e4]:
+  - generic [ref=f10e5]:
+    - strong [ref=f10e6]: 2025 Ford F-150 Lightning Platinum
+    - paragraph [ref=f10e7]: $102,995
+  - generic [ref=f10e8]:
+    - heading "Get your price" [level=3]
+    - generic:
+      - generic [ref=f10e9]:
+        - text: First name
+        - textbox "John" [ref=f10e10]
+      - generic [ref=f10e11]:
+        - text: Last name
+        - textbox "Doe" [ref=f10e12]
+      - generic [ref=f10e13]:
+        - text: Phone number
+        - textbox "(440) 555-0199" [ref=f10e14]
+      - generic [ref=f10e15]:
+        - text: Email address
+        - textbox "you@email.com" [ref=f10e16]

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
+import { IconChevronRight } from "@/components/ledger";
 import type { Crumb } from "@/lib/breadcrumbs";
 
 /**
@@ -14,7 +14,7 @@ export function Breadcrumbs({ items, className }: { items: Crumb[]; className?: 
 
   return (
     <nav aria-label="Breadcrumb" className={className ?? "mx-auto max-w-7xl px-6  pb-2"}>
-      <ol className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-xs font-medium text-muted-foreground">
+      <ol className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-xs font-medium text-ink-3">
         {items.map((c, i) => {
           const last = i === items.length - 1;
           return (
@@ -31,7 +31,9 @@ export function Breadcrumbs({ items, className }: { items: Crumb[]; className?: 
                   {c.label}
                 </span>
               )}
-              {!last && <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-60" aria-hidden />}
+              {!last && (
+                <IconChevronRight className="h-3.5 w-3.5 shrink-0 opacity-60" aria-hidden />
+              )}
             </li>
           );
         })}

@@ -2,42 +2,24 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useMemo, useRef, useState, useEffect } from "react";
 import { recordRecentlyViewed } from "@/lib/recentlyViewed";
 import { motion, useScroll, useTransform } from "framer-motion";
-import {
-  ArrowLeft,
-  Phone,
-  Calendar,
-  CheckCircle2,
-  Fuel,
-  Gauge,
-  Cog,
-  Palette,
-  Shield,
-  Calculator,
-  ArrowRight,
-  ShieldCheck,
-  Award,
-  HelpCircle,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  BookOpen,
-  CreditCard,
-  Truck,
-  Wrench,
-  ListChecks,
-  DollarSign,
-  Tag,
-  MessageSquare,
-  Video,
-  Bell,
-  ClipboardCheck,
-  Mail,
-  Loader2,
-} from "lucide-react";
 import { breadcrumbSchema, crumbs, type Crumb } from "@/lib/breadcrumbs";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import {
+  Button,
+  IconArrowRight,
+  IconCheck,
+  IconChevronDown,
+  IconChevronRight,
+  IconDrivetrain,
+  IconFuel,
+  IconOdometer,
+  IconPhone,
+  IconPin,
+  IconSavings,
+  IconTag,
+} from "@/components/ledger";
+import { PublishDeskSubject } from "@/components/site/DeskContext";
 import { SiteShell } from "@/components/site/SiteShell";
-import { LeadCaptureModal, type ModalMode } from "@/components/site/LeadCaptureModal";
 import {
   getVehicle,
   vehicles,
@@ -47,10 +29,11 @@ import {
   type Vehicle,
 } from "@/lib/vehicles";
 import { FORD_MODELS, getRelatedReading } from "@/lib/fordModels";
-import { SectionTag } from "@/components/site/Home";
+import { SectionTag } from "@/components/site/SectionTag";
 import { VehicleCard } from "@/components/site/VehicleCard";
-import OTPPopup from "@/components/popups/OTPPopup";
-import { QuickEnquiryModal, type QuickEnquiryPreset } from "@/components/convert/QuickEnquiryModal";
+import { VehicleLeadDialog, type LeadIntent } from "@/components/lead/VehicleLeadDialog";
+import { modelAccent } from "@/lib/vehicles";
+import { PRICING_STANCE } from "@/lib/dealerContent";
 import { RESPONSE_PROMISE, smsLink, submitQuickLead } from "@/lib/leads";
 import { GARAGE_EVENT, isWatched } from "@/lib/garage";
 import { DeliveryBanner } from "@/components/site/DeliveryBanner";
@@ -202,12 +185,12 @@ export const Route = createFileRoute("/vehicle/$id")({
     <SiteShell>
       <div className="mx-auto max-w-3xl px-6 py-32 text-center">
         <h1 className="display text-5xl">Vehicle not found</h1>
-        <p className="mt-3 text-muted-foreground">It may have already been sold.</p>
+        <p className="mt-3 text-ink-3">It may have already been sold.</p>
         <Link
           to="/inventory"
-          className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground"
+          className="mt-8 inline-flex items-center gap-2 rounded-sm bg-brand px-5 py-3 text-sm font-semibold text-white"
         >
-          Browse inventory <ArrowRight className="h-4 w-4" />
+          Browse inventory <IconArrowRight className="h-4 w-4" />
         </Link>
       </div>
     </SiteShell>
@@ -216,10 +199,10 @@ export const Route = createFileRoute("/vehicle/$id")({
     <SiteShell>
       <div className="mx-auto max-w-3xl px-6 py-32 text-center">
         <h1 className="display text-3xl">Something went wrong</h1>
-        <p className="mt-3 text-muted-foreground">{error.message}</p>
+        <p className="mt-3 text-ink-3">{error.message}</p>
         <button
           onClick={reset}
-          className="mt-6 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground"
+          className="mt-6 rounded-sm bg-brand px-5 py-3 text-sm font-semibold text-white"
         >
           Try again
         </button>
@@ -468,21 +451,18 @@ function VehicleDetail() {
   const yImg = useTransform(scrollYProgress, [0, 1], [0, 140]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.05]);
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<ModalMode>("test_drive");
-  const [otpOpen, setOtpOpen] = useState(false);
+  // One dialog for every ask on this page. Four overlay components used to serve these
+  // buttons: two of them bypassed `submitQuickLead`, one shipped no consent checkbox at all,
+  // and one fabricated a VIN for its payload.
+  const [leadIntent, setLeadIntent] = useState<LeadIntent>("enquiry");
+  const [leadOpen, setLeadOpen] = useState(false);
+  const openLead = (intent: LeadIntent) => {
+    setLeadIntent(intent);
+    setLeadOpen(true);
+  };
   // Interruption popups removed: the sitewide exit-intent offer is the only
   // unsolicited surface. In-page CTAs below do the asking instead.
-  const [enquiryPreset, setEnquiryPreset] = useState<QuickEnquiryPreset | null>(null);
   const [financingDetails, setFinancingDetails] = useState<Record<string, unknown> | undefined>();
-  const [watching, setWatching] = useState(false);
-
-  useEffect(() => {
-    setWatching(isWatched(v.id));
-    const sync = () => setWatching(isWatched(v.id));
-    window.addEventListener(GARAGE_EVENT, sync);
-    return () => window.removeEventListener(GARAGE_EVENT, sync);
-  }, [v.id]);
 
   // Feed the inventory page's "Recently viewed" strip
   useEffect(() => {
@@ -498,18 +478,17 @@ function VehicleDetail() {
 
   return (
     <SiteShell>
+      {/* Tells the desk which vehicle this page is about, so its rows attach to it. */}
+      <PublishDeskSubject vehicle={v} />
       {/* Hero gallery */}
       <section ref={heroRef} className="relative overflow-hidden pt-2">
-        <div className="absolute inset-0 bg-gradient-soft" />
-        <div className="absolute inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
-
         <div className="relative mx-auto max-w-7xl px-6 pt-6">
           <Breadcrumbs items={breadcrumbs} className="mb-1" />
           <Link
             to="/inventory"
-            className="inline-flex items-center gap-2 py-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
+            className="inline-flex items-center gap-2 py-1.5 text-sm font-medium text-ink-3 transition hover:text-brand"
           >
-            <ArrowLeft className="h-4 w-4" /> Back to inventory
+            <IconChevronRight className="h-4 w-4" /> Back to inventory
           </Link>
         </div>
 
@@ -517,7 +496,7 @@ function VehicleDetail() {
           <div className="lg:col-span-7">
             <motion.div
               style={{ scale }}
-              className="relative overflow-hidden rounded-3xl bg-card shadow-elevated ring-1 ring-border"
+              className="relative overflow-hidden rounded-sm bg-card shadow-elevated ring-1 ring-border"
             >
               <motion.img
                 style={{ y: yImg }}
@@ -530,141 +509,88 @@ function VehicleDetail() {
               {v.badges && (
                 <div className="absolute left-4 top-4 flex gap-2">
                   {v.badges.map((b) => (
-                    <span
-                      key={b}
-                      className="glass rounded-full px-3 py-1 text-xs font-semibold text-ink"
-                    >
+                    <span key={b} className="rounded-sm px-3 py-1 text-xs font-semibold text-ink">
                       {b}
                     </span>
                   ))}
                 </div>
               )}
             </motion.div>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {[v.image, v.image, v.image].map((src, i) => (
-                <div
-                  key={i}
-                  className="aspect-[4/3] overflow-hidden rounded-2xl bg-surface-2 ring-1 ring-border"
-                >
-                  <img
-                    src={src}
-                    alt={`${v.model} gallery view ${i + 1}`}
-                    loading="lazy"
-                    className="h-full w-full object-cover opacity-90 transition hover:opacity-100"
-                  />
-                </div>
-              ))}
-            </div>
+            {/* No filmstrip. The record carries ONE photograph, and the version this
+                replaces rendered `[v.image, v.image, v.image]` into a three-up grid, which
+                promises a buyer three views of a car we have one view of. When the feed
+                carries real additional frames this becomes a strip of exactly those frames
+                and no placeholder tiles. */}
           </div>
 
           {/* Sticky CTA panel */}
           <div className="lg:col-span-5">
-            <div className="sticky top-28">
-              <div className="glass-strong rounded-3xl p-7">
-                <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            <div className="sticky top-[4.5rem] lg:top-20">
+              <div className="rounded-sm p-7">
+                <p className="text-xs font-medium uppercase tracking-widest text-ink-3">
                   {v.condition} · In stock in {dealerInfo.locality}
                 </p>
                 {/* Full year + make + model + trim: this is the page's target query. */}
                 <h1 className="display mt-1 text-balance text-4xl text-ink">
-                  {v.year} {v.make} {v.model}{" "}
-                  <span className="text-muted-foreground">{v.trim}</span>
+                  {v.year} {v.make} {v.model} <span className="text-ink-3">{v.trim}</span>
                 </h1>
                 <div className="mt-5 flex items-end justify-between">
                   <div>
-                    <p className="display text-4xl text-primary">${v.price.toLocaleString()}</p>
+                    <p className="display text-4xl text-brand">${v.price.toLocaleString()}</p>
                     {v.msrp && v.msrp > v.price && (
-                      <p className="text-sm font-semibold text-slate-600 line-through">
+                      <p className="text-sm font-semibold text-ink-2 line-through">
                         MSRP ${v.msrp.toLocaleString()}
                       </p>
                     )}
                   </div>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                    <Shield className="h-3 w-3" /> Lifetime warranty
-                  </span>
                 </div>
 
                 <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
                   <Spec
-                    icon={Gauge}
+                    icon={IconOdometer}
                     label={v.miles < 50 ? "New" : `${v.miles.toLocaleString()} mi`}
                   />
-                  <Spec icon={Fuel} label={v.fuel} />
-                  <Spec icon={Cog} label={v.drivetrain} />
-                  <Spec icon={Palette} label={v.exterior} />
+                  <Spec icon={IconFuel} label={v.fuel} />
+                  <Spec icon={IconDrivetrain} label={v.drivetrain} />
+                  <Spec icon={IconCheck} label={v.exterior} />
                 </div>
 
-                <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />1 in
-                  stock; when it's gone, it's gone
-                </p>
-
+                {/* ONE primary. What this replaces: four full-width buttons, two of which
+                    called openLead("price") with different labels ("Get Price" and "Request
+                    E-Price Quote"), one of them filled amber-500 — a colour in no token and on
+                    the client's random-bright-colour ban. Booking a drive is the action worth
+                    the fill; asking a question is not a lesser ask, it is a quieter one. */}
                 <div className="mt-5 space-y-2">
-                  <button
-                    onClick={() => setEnquiryPreset("availability")}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3.5 text-sm font-bold text-primary-foreground transition hover:opacity-90 shadow-md"
+                  <Button size="lg" block onClick={() => openLead("test_drive")}>
+                    Book a test drive
+                  </Button>
+                  <Button variant="secondary" size="lg" block onClick={() => openLead("price")}>
+                    Ask for the best price
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="lg"
+                    block
+                    onClick={() => openLead("availability")}
                   >
-                    <MessageSquare className="h-4 w-4" /> Is this still available?
-                  </button>
-                  <button
-                    onClick={() => setOtpOpen(true)}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-amber-500 py-3.5 text-sm font-bold text-slate-950 transition hover:bg-amber-400 shadow-md"
-                  >
-                    <Tag className="h-4 w-4" /> Get Price
-                  </button>
-                  <button
-                    onClick={() => {
-                      setModalMode("test_drive");
-                      setModalOpen(true);
-                    }}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 shadow-sm"
-                  >
-                    <Calendar className="h-4 w-4" /> Book test drive
-                  </button>
-                  <button
-                    onClick={() => {
-                      setModalMode("quote_request");
-                      setModalOpen(true);
-                    }}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-white/80 py-3.5 text-sm font-semibold text-ink ring-1 ring-border transition hover:bg-white"
-                  >
-                    <DollarSign className="h-4 w-4 text-primary" /> Request E-Price Quote
-                  </button>
+                    Is it still available?
+                  </Button>
                   <div className="grid grid-cols-2 gap-2">
                     <a
                       href={smsLink(v)}
-                      className="flex items-center justify-center gap-2 rounded-2xl bg-surface-2 py-3 text-xs font-semibold text-muted-foreground transition hover:text-ink"
+                      className="flex items-center justify-center gap-2 rounded-sm bg-surface-2 py-3 text-xs font-semibold text-ink-3 transition hover:text-ink"
                     >
-                      <MessageSquare className="h-3.5 w-3.5" /> Text us
+                      <IconPhone className="h-3.5 w-3.5" /> Text us
                     </a>
                     <a
                       href={dealerInfo.phoneHref}
-                      className="flex items-center justify-center gap-2 rounded-2xl bg-surface-2 py-3 text-xs font-semibold text-muted-foreground transition hover:text-ink"
+                      className="flex items-center justify-center gap-2 rounded-sm bg-surface-2 py-3 text-xs font-semibold text-ink-3 transition hover:text-ink"
                     >
-                      <Phone className="h-3.5 w-3.5" /> Call us
+                      <IconPhone className="h-3.5 w-3.5" /> Call us
                     </a>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => setEnquiryPreset("video_tour")}
-                      className="flex items-center justify-center gap-2 rounded-2xl bg-surface-2 py-3 text-xs font-semibold text-muted-foreground transition hover:text-ink"
-                    >
-                      <Video className="h-3.5 w-3.5" /> Video tour
-                    </button>
-                    <button
-                      onClick={() => setEnquiryPreset("price_watch")}
-                      className={cn(
-                        "flex items-center justify-center gap-2 rounded-2xl py-3 text-xs font-semibold transition",
-                        watching
-                          ? "bg-primary/10 text-primary"
-                          : "bg-surface-2 text-muted-foreground hover:text-ink",
-                      )}
-                    >
-                      <Bell className={cn("h-3.5 w-3.5", watching && "fill-current")} />
-                      {watching ? "Watching" : "Watch price"}
-                    </button>
-                  </div>
                 </div>
-                <p className="mt-4 text-center text-xs text-muted-foreground">
+                <p className="mt-4 text-center text-xs text-ink-3">
                   In stock today at {dealerInfo.address}
                 </p>
               </div>
@@ -682,42 +608,123 @@ function VehicleDetail() {
               <h2 className="display mt-3 text-balance text-4xl">
                 Built for performance & comfort.
               </h2>
-              <p className="mt-4 text-muted-foreground">
-                Every spec on this {v.year} {v.make} {v.model} has been optioned, inspected, and
-                verified by certified technicians at AM Ford in {dealerInfo.locality}.
+              <p className="mt-4 text-ink-3">
+                Every figure below is read from this vehicle's own record. Anything we cannot
+                evidence is not on this page.
               </p>
             </div>
             <div className="lg:col-span-8">
-              <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-border sm:grid-cols-3">
-                {[
-                  ["Year", v.year],
-                  ["Body Style", v.type],
-                  ["Drivetrain", v.drivetrain],
-                  ["Fuel Type", v.fuel],
-                  ["Transmission", v.transmission],
-                  ["Horsepower", `${v.horsepower} hp`],
-                  ["Exterior Color", v.exterior],
-                  ["Interior Trim", v.interior],
-                  ["MPG / Range", v.mpg],
-                ].map(([k, val]) => (
-                  <div key={k as string} className="bg-card p-5">
-                    <dt className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                      {k}
-                    </dt>
-                    <dd className="display mt-1 text-lg text-ink">{val}</dd>
-                  </div>
-                ))}
-              </dl>
+              {/* THE WINDOW STICKER.
+                  This is the signature of the redesign and this page is where it is full size.
+                  A Monroney label is the one document every buyer physically meets at the glass,
+                  it is legally required on every new car in America, and it exists in exactly one
+                  industry, which is why it cannot be lifted onto another business.
 
-              <div className="mt-8 rounded-3xl bg-card p-7 ring-1 ring-border">
-                <h3 className="display text-xl">Standout Features & Options</h3>
-                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                  {v.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-ink">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> {f}
-                    </li>
-                  ))}
-                </ul>
+                  What it replaces: a nine-cell grid of bordered tiles, each a label over a value,
+                  which is a spec table wearing a grid and reads as nine equal facts. A sticker is
+                  not nine equal facts. It has a masthead, one dominant figure, a boxed economy
+                  panel, and everything else ruled underneath in the order a buyer reads it. */}
+              <div className="border border-ink bg-white">
+                {/* Masthead. Heavy ink band, the way the top of a real label is printed. */}
+                <div
+                  className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b-4 bg-ink px-5 py-4"
+                  style={{ borderBottomColor: modelAccent(v.model) ?? "var(--brand)" }}
+                >
+                  <div className="min-w-0">
+                    <p className="font-sans text-micro font-bold uppercase tracking-[0.09em] text-background/60">
+                      {v.year} {v.make}
+                    </p>
+                    <p className="font-display text-h2 font-extrabold leading-none text-background">
+                      {v.model} <span className="font-normal text-background/70">{v.trim}</span>
+                    </p>
+                  </div>
+                  <p className="font-mono text-figure tabular-nums text-background/70">
+                    {v.condition}
+                  </p>
+                </div>
+
+                <div className="grid sm:grid-cols-[minmax(0,1fr)_13rem]">
+                  {/* The ruled body, in the order a buyer actually reads a sticker. */}
+                  <dl className="border-b border-rule sm:border-b-0 sm:border-r">
+                    {[
+                      ["Price", `$${v.price.toLocaleString("en-US")}`, true],
+                      v.msrp ? ["MSRP", `$${v.msrp.toLocaleString("en-US")}`, true] : null,
+                      [
+                        "Odometer",
+                        v.miles < 100 ? "Delivery miles" : `${v.miles.toLocaleString("en-US")} mi`,
+                        true,
+                      ],
+                      ["Body style", v.type, false],
+                      ["Drivetrain", v.drivetrain, false],
+                      ["Transmission", v.transmission, false],
+                      ["Fuel", v.fuel, false],
+                      ["Output", `${v.horsepower} hp`, true],
+                      ["Exterior", v.exterior, false],
+                      ["Interior", v.interior, false],
+                      // Absent facts are printed as absent. A sticker with a blank VIN is honest;
+                      // a generated one is a legal problem, and this codebase shipped one.
+                      ["VIN", v.vin ?? "Contact us", false],
+                      ["Stock number", v.stockNumber ?? "Contact us", false],
+                    ]
+                      .filter(Boolean)
+                      .map((row) => {
+                        const [label, value, figure] = row as [string, string, boolean];
+                        return (
+                          <div
+                            key={label}
+                            className="flex items-baseline justify-between gap-6 border-b border-rule px-5 py-2.5 last:border-b-0"
+                          >
+                            <dt className="font-sans text-meta text-ink-3">{label}</dt>
+                            <dd
+                              className={cn(
+                                "text-right text-ink",
+                                figure
+                                  ? "font-mono text-figure font-semibold tabular-nums"
+                                  : "font-sans text-ui font-medium",
+                              )}
+                            >
+                              {value}
+                            </dd>
+                          </div>
+                        );
+                      })}
+                  </dl>
+
+                  {/* The economy panel. On a real Monroney this is a boxed callout with one
+                      enormous figure, and it is the only place on the label where a number is
+                      allowed to be that big. Same here. */}
+                  <div className="flex flex-col justify-center bg-surface px-5 py-6 text-center">
+                    <p className="font-sans text-micro font-bold uppercase tracking-[0.09em] text-ink-3">
+                      {v.fuel === "Electric" ? "Range" : "Fuel economy"}
+                    </p>
+                    <p className="mt-2 font-mono text-[clamp(2.5rem,6vw,3.5rem)] font-semibold leading-none tabular-nums text-ink">
+                      {v.mpg.split("/")[0].trim()}
+                    </p>
+                    <p className="mt-1.5 font-sans text-meta text-ink-2">
+                      {v.fuel === "Electric"
+                        ? "miles of range"
+                        : `city · ${v.mpg.split("/")[1]?.trim() ?? ""} highway`}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Equipment closes the sticker, as it does on the real thing. */}
+                <div className="border-t border-ink/15 px-5 py-5">
+                  <p className="font-sans text-micro font-bold uppercase tracking-[0.09em] text-ink-3">
+                    Standard and optional equipment
+                  </p>
+                  <ul className="mt-3 grid gap-x-8 gap-y-1.5 sm:grid-cols-2">
+                    {v.features.map((f) => (
+                      <li
+                        key={f}
+                        className="flex items-start gap-2 font-sans text-meta leading-relaxed text-ink-2"
+                      >
+                        <IconCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink-3" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -739,23 +746,23 @@ function VehicleDetail() {
                 <h2 id="seller-notes" className="display mt-3 text-balance text-4xl">
                   What we would tell you about it.
                 </h2>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-4 text-sm leading-relaxed text-ink-3">
                   Written by the team at AM Ford about this specific {v.year} {v.model}, not the
                   model in general.
                 </p>
               </div>
               <div className="lg:col-span-8">
-                <div className="rounded-3xl bg-card p-7 ring-1 ring-border sm:p-9">
+                <div className="rounded-sm bg-card p-7 ring-1 ring-border sm:p-9">
                   <p className="text-base leading-relaxed text-ink sm:text-lg">{v.sellerNotes}</p>
                   <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-border pt-5">
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-ink-3">
                       Anything here you want to check in person?
                     </span>
                     <a
                       href={dealerInfo.phoneHref}
-                      className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-white transition-colors hover:bg-ink/90"
+                      className="inline-flex min-h-[44px] items-center gap-2 rounded-sm bg-ink px-5 text-sm font-semibold text-white transition-colors hover:bg-ink/90"
                     >
-                      <Phone className="h-4 w-4" aria-hidden />
+                      <IconPhone className="h-4 w-4" aria-hidden />
                       Call {dealerInfo.phone}
                     </a>
                   </div>
@@ -779,16 +786,16 @@ function VehicleDetail() {
               {/* Good-to-know fact strip */}
               <div className="mt-8 space-y-3">
                 {v.msrp && v.msrp > v.price && (
-                  <div className="flex items-center gap-3 rounded-2xl bg-primary/5 p-4 ring-1 ring-primary/15">
-                    <DollarSign className="h-5 w-5 shrink-0 text-primary" />
+                  <div className="flex items-center gap-3 rounded-sm bg-brand/5 p-4 ring-1 ring-primary/15">
+                    <IconSavings className="h-5 w-5 shrink-0 text-brand" />
                     <p className="text-sm text-ink">
                       Priced{" "}
                       <strong>${(v.msrp - v.price).toLocaleString()} below original MSRP</strong>
                     </p>
                   </div>
                 )}
-                <div className="flex items-center gap-3 rounded-2xl bg-primary/5 p-4 ring-1 ring-primary/15">
-                  <Gauge className="h-5 w-5 shrink-0 text-primary" />
+                <div className="flex items-center gap-3 rounded-sm bg-brand/5 p-4 ring-1 ring-primary/15">
+                  <IconOdometer className="h-5 w-5 shrink-0 text-brand" />
                   <p className="text-sm text-ink">
                     {v.miles < 100 ? (
                       <>
@@ -803,8 +810,7 @@ function VehicleDetail() {
                   </p>
                 </div>
                 {v.badges?.includes("Certified Pre-Owned") && (
-                  <div className="flex items-center gap-3 rounded-2xl bg-primary/5 p-4 ring-1 ring-primary/15">
-                    <ShieldCheck className="h-5 w-5 shrink-0 text-primary" />
+                  <div className="flex items-center gap-3 rounded-sm bg-brand/5 p-4 ring-1 ring-primary/15">
                     <p className="text-sm text-ink">
                       <strong>Certified Pre-Owned</strong>: 172-point inspection passed
                     </p>
@@ -813,7 +819,7 @@ function VehicleDetail() {
               </div>
             </div>
             <div className="lg:col-span-8">
-              <div className="space-y-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
+              <div className="space-y-5 text-base leading-relaxed text-ink-3 sm:text-lg">
                 {buildVehicleStory(v).map((paragraph, i) => (
                   <p key={i}>{paragraph}</p>
                 ))}
@@ -837,7 +843,7 @@ function VehicleDetail() {
             <h2 className="display mt-3 text-3xl font-bold text-ink sm:text-4xl">
               Why Buy the {v.year} {v.make} {v.model} {v.trim} at AM Ford in {dealerInfo.city}?
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-4 text-base leading-relaxed text-ink-3 sm:text-lg">
               Are you searching for a reliable{" "}
               <strong className="text-ink">
                 {v.year} {v.make} {v.model} {v.trim} for sale in {dealerInfo.city}
@@ -850,45 +856,39 @@ function VehicleDetail() {
             </p>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-3">
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <ShieldCheck className="h-6 w-6" />
-              </div>
-              <h3 className="display mt-5 text-lg font-bold text-ink">
-                Certified Mechanical Inspection
-              </h3>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                This {v.model} has undergone a full multi-point safety inspection covering brakes,
-                engine performance, tire wear, and fluid levels by factory-trained technicians.
-              </p>
-            </div>
+          {/* WHAT THIS REPLACES, AND WHY IT CANNOT COME BACK.
+              Three bordered tiles, each with a brand-tinted icon square above a heading above
+              a paragraph, asserting: a "full multi-point safety inspection ... by
+              factory-trained technicians"; "No hidden dealer markup" and "low monthly rates";
+              and a "Lifetime Powertrain Warranty". None of the three appears in any source
+              file. A warranty term and an inspection standard are not decoration, and a
+              dealership cannot publish them because a developer typed them.
 
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <DollarSign className="h-6 w-6" />
-              </div>
-              <h3 className="display mt-5 text-lg font-bold text-ink">
-                Transparent Pricing & Low APR
-              </h3>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                No hidden dealer markup. Take advantage of custom financing terms, flexible trade-in
-                valuation, and low monthly rates tailored to your budget.
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <Award className="h-6 w-6" />
-              </div>
-              <h3 className="display mt-5 text-lg font-bold text-ink">
-                Lifetime Powertrain Warranty
-              </h3>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                Drive with peace of mind. Eligible vehicles at AM Ford include lifetime powertrain
-                protection to keep you covered on Ohio highways.
-              </p>
-            </div>
+              What is left is what can be evidenced: Ford's own CPO programme terms, shown
+              only on a CPO vehicle, and the dealership's own two published sentences. */}
+          <div className="max-w-4xl border-t border-rule pt-8">
+            {v.condition === "Certified Pre-Owned" ? (
+              <>
+                <h3 className="font-display text-h3 font-bold text-ink">
+                  What Ford certifies on this vehicle
+                </h3>
+                <p className="mt-3 max-w-[62ch] font-sans text-body leading-relaxed text-ink-2">
+                  A Ford Certified Pre-Owned vehicle passes a Ford-authorised multi-point inspection
+                  and carries manufacturer-backed limited warranty coverage, roadside assistance,
+                  and a vehicle history report. Those are terms of Ford's programme, not claims we
+                  make about ourselves.
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="font-display text-h3 font-bold text-ink">
+                  How we sell this vehicle
+                </h3>
+                <p className="mt-3 max-w-[62ch] font-sans text-body leading-relaxed text-ink-2">
+                  {DELIVERY_CLAIM} AM Ford publishes one pricing stance: {`"${PRICING_STANCE}"`}.
+                </p>
+              </>
+            )}
           </div>
 
           {/* Vehicle FAQ Section */}
@@ -914,19 +914,18 @@ function VehicleDetail() {
                 <details
                   key={faq.q}
                   open={idx === 0}
-                  className="group overflow-hidden rounded-2xl border border-border bg-card"
+                  className="group overflow-hidden rounded-sm border border-border bg-card"
                 >
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-5 text-left font-semibold text-ink transition hover:text-primary [&::-webkit-details-marker]:hidden">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-5 text-left font-semibold text-ink transition hover:text-brand [&::-webkit-details-marker]:hidden">
                     <span className="flex items-start gap-3 text-sm sm:text-base">
-                      <HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
                       <span>{faq.q}</span>
                     </span>
-                    <ChevronDown
+                    <IconChevronDown
                       aria-hidden
-                      className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180 group-open:text-primary"
+                      className="h-4 w-4 shrink-0 text-ink-3 transition-transform duration-200 group-open:rotate-180 group-open:text-brand"
                     />
                   </summary>
-                  <div className="border-t border-border/60 bg-surface/40 px-5 py-4 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                  <div className="border-t border-border/60 bg-surface/40 px-5 py-4 text-xs leading-relaxed text-ink-3 sm:text-sm">
                     {faq.a}
                   </div>
                 </details>
@@ -946,8 +945,7 @@ function VehicleDetail() {
         price={v.price}
         onPreApprove={(details) => {
           setFinancingDetails({ ...details, vehicleId: v.id });
-          setModalMode("financing_preapproval");
-          setModalOpen(true);
+          openLead("finance");
         }}
       />
 
@@ -960,25 +958,21 @@ function VehicleDetail() {
               <Link
                 to="/inventory"
                 search={{ type: v.type }}
-                className="text-sm font-semibold text-primary"
+                className="text-sm font-semibold text-brand"
               >
                 More {v.type}s →
               </Link>
-              <Link to="/inventory" className="text-sm font-semibold text-muted-foreground">
+              <Link to="/inventory" className="text-sm font-semibold text-ink-3">
                 All inventory →
               </Link>
             </div>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {related.map((r, i) => (
-              <VehicleCard
-                key={r.id}
-                v={r}
-                index={i}
-                onGetPrice={(selectedCar) => {
-                  setOtpOpen(true);
-                }}
-              />
+            {/* The removed `onGetPrice` here bound `selectedCar` and discarded it, then built
+                the modal from the page's own vehicle — so clicking a related card filed a lead
+                for the car you were already looking at. The card links to the vehicle instead. */}
+            {related.map((r) => (
+              <VehicleCard key={r.id} v={r} enquireVariant="secondary" />
             ))}
           </div>
         </div>
@@ -998,33 +992,13 @@ function VehicleDetail() {
         groups={["models", "research", "bodyStyle", "price", "condition", "nearby"]}
       />
 
-      <LeadCaptureModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+      <VehicleLeadDialog
         vehicle={v}
-        initialMode={modalMode}
-        financingDetails={financingDetails}
+        intent={leadIntent}
+        open={leadOpen}
+        onOpenChange={setLeadOpen}
+        financingDetails={leadIntent === "finance" ? financingDetails : undefined}
       />
-
-      {otpOpen && (
-        <OTPPopup
-          onClose={() => setOtpOpen(false)}
-          initialCarData={{
-            title: `${v.year} ${v.make} ${v.model} ${v.trim}`,
-            price: String(v.price),
-            stock: v.id,
-            source: "VDP",
-          }}
-        />
-      )}
-
-      {enquiryPreset && (
-        <QuickEnquiryModal
-          vehicle={v}
-          preset={enquiryPreset}
-          onClose={() => setEnquiryPreset(null)}
-        />
-      )}
     </SiteShell>
   );
 }
@@ -1049,33 +1023,30 @@ function ListingDetail({ v }: { v: Vehicle }) {
             <h2 id="listing-detail" className="display mt-3 text-balance text-4xl">
               What the record actually says.
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-4 text-sm leading-relaxed text-ink-3">
               Price, odometer, condition, and equipment, straight off this vehicle&apos;s own
               record. If a number matters to your decision, it should come from here rather than
               from a brochure for the {v.model} range.
             </p>
             <a
               href={dealerInfo.phoneHref}
-              className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-white transition-colors hover:bg-ink/90"
+              className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-sm bg-ink px-5 text-sm font-semibold text-white transition-colors hover:bg-ink/90"
             >
-              <Phone className="h-4 w-4" aria-hidden />
+              <IconPhone className="h-4 w-4" aria-hidden />
               Ask about this {v.model} on {dealerInfo.phone}
             </a>
           </div>
 
           <div className="lg:col-span-8">
-            <div className="space-y-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <div className="space-y-5 text-base leading-relaxed text-ink-3 sm:text-lg">
               {buildListingDetail(v).map((paragraph) => (
                 <p key={paragraph.slice(0, 48)}>{paragraph}</p>
               ))}
             </div>
 
-            <div className="mt-8 rounded-3xl bg-card p-7 ring-1 ring-border">
-              <h3 className="display flex items-center gap-2 text-xl">
-                <ListChecks className="h-5 w-5 shrink-0 text-primary" aria-hidden />
-                What to weigh on this one
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground">
+            <div className="mt-8 rounded-sm bg-card p-7 ring-1 ring-border">
+              <h3 className="display flex items-center gap-2 text-xl">What to weigh on this one</h3>
+              <p className="mt-2 text-sm text-ink-3">
                 Three things this specific configuration asks of an owner in Northeast Ohio. None of
                 them is a reason not to buy it; all of them are easier to settle before you sign
                 than afterwards.
@@ -1083,7 +1054,7 @@ function ListingDetail({ v }: { v: Vehicle }) {
               <ul className="mt-5 space-y-4">
                 {considerations.map((note) => (
                   <li key={note.slice(0, 48)} className="flex items-start gap-3">
-                    <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden />
+                    <IconCheck className="mt-1 h-4 w-4 shrink-0 text-brand" aria-hidden />
                     <span className="text-sm leading-relaxed text-ink">{note}</span>
                   </li>
                 ))}
@@ -1117,7 +1088,7 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
   const workVehicle = v.type === "Truck" || v.type === "EV";
 
   const linkCls =
-    "font-semibold text-primary underline decoration-primary/30 underline-offset-4 transition hover:decoration-primary";
+    "font-semibold text-brand underline decoration-primary/30 underline-offset-4 transition hover:decoration-primary";
 
   return (
     <section className="border-t border-border bg-surface py-20" aria-labelledby="next-steps">
@@ -1128,19 +1099,19 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
             <h2 id="next-steps" className="display mt-3 text-balance text-4xl">
               The rest of the decision.
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-4 text-sm leading-relaxed text-ink-3">
               Every page linked below is on this site, and every filtered search runs against the
               Ford stock standing in {dealerInfo.locality} today.
             </p>
           </div>
 
           <div className="space-y-8 lg:col-span-8">
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border">
+            <div className="rounded-sm bg-card p-7 ring-1 ring-border">
               <h3 className="display flex items-center gap-2 text-xl">
-                <Tag className="h-5 w-5 shrink-0 text-primary" aria-hidden />
+                <IconTag className="h-5 w-5 shrink-0 text-brand" aria-hidden />
                 Still cross shopping
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-base leading-relaxed text-ink-3">
                 {model && (
                   <>
                     Our{" "}
@@ -1185,12 +1156,9 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
             </div>
 
             {reading.length > 0 && (
-              <div className="rounded-3xl bg-card p-7 ring-1 ring-border">
-                <h3 className="display flex items-center gap-2 text-xl">
-                  <BookOpen className="h-5 w-5 shrink-0 text-primary" aria-hidden />
-                  Read before you decide
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
+              <div className="rounded-sm bg-card p-7 ring-1 ring-border">
+                <h3 className="display flex items-center gap-2 text-xl">Read before you decide</h3>
+                <p className="mt-2 text-sm text-ink-3">
                   {/* "the" rather than "a": the article would have to agree with model names
                       that start with a vowel sound, and "a F-150 Lightning" is what that costs. */}
                   The comparisons and guides we have written that bear on the {v.model}{" "}
@@ -1202,7 +1170,7 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
                       <Link to={item.to} className={linkCls}>
                         {item.label}
                       </Link>
-                      <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                      <span className="mt-1 block text-sm leading-relaxed text-ink-3">
                         {item.why}
                       </span>
                     </li>
@@ -1211,12 +1179,9 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
               </div>
             )}
 
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border">
-              <h3 className="display flex items-center gap-2 text-xl">
-                <CreditCard className="h-5 w-5 shrink-0 text-primary" aria-hidden />
-                Paperwork and your trade
-              </h3>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+            <div className="rounded-sm bg-card p-7 ring-1 ring-border">
+              <h3 className="display flex items-center gap-2 text-xl">Paperwork and your trade</h3>
+              <p className="mt-3 text-base leading-relaxed text-ink-3">
                 You can{" "}
                 <Link to="/financing" className={linkCls}>
                   send a finance application to AM Ford
@@ -1244,12 +1209,12 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
               </p>
             </div>
 
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border">
+            <div className="rounded-sm bg-card p-7 ring-1 ring-border">
               <h3 className="display flex items-center gap-2 text-xl">
-                <Truck className="h-5 w-5 shrink-0 text-primary" aria-hidden />
+                <IconPin className="h-5 w-5 shrink-0 text-brand" aria-hidden />
                 Buying from outside Ashtabula County
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-base leading-relaxed text-ink-3">
                 {DELIVERY_CLAIM} If the drive is the only thing standing between you and this{" "}
                 {v.model}, start with{" "}
                 <Link to="/nationwide-vehicle-delivery" className={linkCls}>
@@ -1277,8 +1242,7 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
                 </Link>
                 .
               </p>
-              <p className="mt-4 flex flex-wrap items-center gap-x-1 text-base leading-relaxed text-muted-foreground">
-                <Wrench className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+              <p className="mt-4 flex flex-wrap items-center gap-x-1 text-base leading-relaxed text-ink-3">
                 <span>
                   Once it is yours,{" "}
                   <Link to="/service" className={linkCls}>
@@ -1314,7 +1278,7 @@ function VehiclePager({ v }: { v: Vehicle }) {
   if (!previous || !next) return null;
 
   const cardCls =
-    "group flex items-center gap-3 rounded-2xl bg-card p-4 ring-1 ring-border transition hover:ring-primary/40 sm:p-5";
+    "group flex items-center gap-3 rounded-sm bg-card p-4 ring-1 ring-border transition hover:ring-primary/40 sm:p-5";
 
   return (
     <nav
@@ -1324,18 +1288,18 @@ function VehiclePager({ v }: { v: Vehicle }) {
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-3 sm:grid-cols-2">
           <Link to="/vehicle/$id" params={{ id: previous.id }} rel="prev" className={cardCls}>
-            <ChevronLeft
+            <IconChevronRight
               aria-hidden
-              className="h-5 w-5 shrink-0 text-primary transition-transform group-hover:-translate-x-0.5"
+              className="h-5 w-5 shrink-0 text-brand transition-transform group-hover:-translate-x-0.5"
             />
             <span className="min-w-0">
-              <span className="block text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+              <span className="block text-[11px] font-bold uppercase tracking-widest text-ink-3">
                 Previous vehicle
               </span>
               <span className="mt-0.5 block truncate text-sm font-bold text-ink sm:text-base">
                 {previous.year} {previous.make} {previous.model} {previous.trim}
               </span>
-              <span className="block truncate text-xs text-muted-foreground">
+              <span className="block truncate text-xs text-ink-3">
                 ${previous.price.toLocaleString()} · {previous.condition}
               </span>
             </span>
@@ -1347,29 +1311,29 @@ function VehiclePager({ v }: { v: Vehicle }) {
             rel="next"
             className={cn(cardCls, "sm:flex-row-reverse sm:text-right")}
           >
-            <ChevronRight
+            <IconChevronRight
               aria-hidden
-              className="h-5 w-5 shrink-0 text-primary transition-transform group-hover:translate-x-0.5"
+              className="h-5 w-5 shrink-0 text-brand transition-transform group-hover:translate-x-0.5"
             />
             <span className="min-w-0">
-              <span className="block text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+              <span className="block text-[11px] font-bold uppercase tracking-widest text-ink-3">
                 Next vehicle
               </span>
               <span className="mt-0.5 block truncate text-sm font-bold text-ink sm:text-base">
                 {next.year} {next.make} {next.model} {next.trim}
               </span>
-              <span className="block truncate text-xs text-muted-foreground">
+              <span className="block truncate text-xs text-ink-3">
                 ${next.price.toLocaleString()} · {next.condition}
               </span>
             </span>
           </Link>
         </div>
 
-        <p className="mt-5 text-center text-xs text-muted-foreground">
+        <p className="mt-5 text-center text-xs text-ink-3">
           Vehicle {position} of {total} at AM Ford.{" "}
           <Link
             to="/inventory"
-            className="font-semibold text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
+            className="font-semibold text-brand underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
           >
             Back to all {total} Ford vehicles in stock in {dealerInfo.locality}
           </Link>
@@ -1385,7 +1349,7 @@ const INSPECTION_AREAS = [
   { area: "Tires, wheels & alignment", checks: 18 },
   { area: "Electrical & battery health", checks: 22 },
   { area: "Interior, electronics & safety", checks: 30 },
-  { area: "Exterior, glass & lighting", checks: 24 },
+  { area: "Exterior, & lighting", checks: 24 },
   { area: "Fluids, filters & leaks", checks: 14 },
 ] as const;
 
@@ -1406,7 +1370,7 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
             <h2 className="display mt-3 text-balance text-4xl">
               See exactly what our technicians checked.
             </h2>
-            <p className="mt-4 text-muted-foreground">
+            <p className="mt-4 text-ink-3">
               Every vehicle at AM Ford passes a 172-point inspection before sale. Unlock the
               category summary for this {vehicle.model}. The full written report is waiting for you
               at the dealership.
@@ -1414,33 +1378,30 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
           </div>
           <div className="lg:col-span-8">
             {status === "unlocked" ? (
-              <div className="rounded-3xl bg-card p-7 ring-1 ring-border">
+              <div className="rounded-sm bg-card p-7 ring-1 ring-border">
                 <div className="flex items-center gap-2">
-                  <ClipboardCheck className="h-5 w-5 text-emerald-600" />
                   <h3 className="display text-xl">172-point inspection: all categories passed</h3>
                 </div>
                 <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                   {INSPECTION_AREAS.map((item) => (
                     <li
                       key={item.area}
-                      className="flex items-center justify-between rounded-2xl bg-surface-2 px-4 py-3 text-sm"
+                      className="flex items-center justify-between rounded-sm bg-surface-2 px-4 py-3 text-sm"
                     >
                       <span className="flex items-center gap-2 text-ink">
-                        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                        <IconCheck className="h-4 w-4 shrink-0 text-emerald-600" />
                         {item.area}
                       </span>
-                      <span className="text-xs font-semibold text-muted-foreground">
-                        {item.checks} checks
-                      </span>
+                      <span className="text-xs font-semibold text-ink-3">{item.checks} checks</span>
                     </li>
                   ))}
                 </ul>
-                <p className="mt-5 text-xs text-muted-foreground">
+                <p className="mt-5 text-xs text-ink-3">
                   A copy is on its way to your email. {RESPONSE_PROMISE}
                 </p>
               </div>
             ) : (
-              <div className="relative overflow-hidden rounded-3xl bg-card p-7 ring-1 ring-border">
+              <div className="relative overflow-hidden rounded-sm bg-card p-7 ring-1 ring-border">
                 {/* Blurred teaser behind the gate */}
                 <ul
                   aria-hidden
@@ -1449,38 +1410,38 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
                   {INSPECTION_AREAS.slice(0, 4).map((item) => (
                     <li
                       key={item.area}
-                      className="flex items-center justify-between rounded-2xl bg-surface-2 px-4 py-3 text-sm"
+                      className="flex items-center justify-between rounded-sm bg-surface-2 px-4 py-3 text-sm"
                     >
                       <span className="text-ink">{item.area}</span>
-                      <span className="text-xs text-muted-foreground">{item.checks} checks</span>
+                      <span className="text-xs text-ink-3">{item.checks} checks</span>
                     </li>
                   ))}
                 </ul>
-                <div className="relative -mt-16 rounded-3xl bg-background/95 p-6 ring-1 ring-border backdrop-blur">
+                <div className="relative -mt-16 rounded-sm bg-background/95 p-6 ring-1 ring-border backdrop-blur">
                   <h3 className="display text-xl">Unlock the inspection summary</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
+                  <p className="mt-1 text-sm text-ink-3">
                     Free, and we'll also email you a copy for your records.
                   </p>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     <label className="relative block">
-                      <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <IconPhone className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-3" />
                       <input
                         type="email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
-                        className="w-full rounded-2xl border border-border bg-background py-3 pl-11 pr-4 text-sm outline-none transition focus:border-primary"
+                        className="w-full rounded-sm border border-border bg-background py-3 pl-11 pr-4 text-sm outline-none transition focus:border-primary"
                       />
                     </label>
                     <label className="relative block">
-                      <Phone className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <IconPhone className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-3" />
                       <input
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="Phone (optional)"
-                        className="w-full rounded-2xl border border-border bg-background py-3 pl-11 pr-4 text-sm outline-none transition focus:border-primary"
+                        className="w-full rounded-sm border border-border bg-background py-3 pl-11 pr-4 text-sm outline-none transition focus:border-primary"
                       />
                     </label>
                   </div>
@@ -1489,9 +1450,9 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
                       type="checkbox"
                       checked={consent}
                       onChange={(e) => setConsent(e.target.checked)}
-                      className="mt-0.5 h-6 w-6 shrink-0 accent-[#002c5f]"
+                      className="mt-0.5 h-6 w-6 shrink-0 accent-brand"
                     />
-                    <span className="text-xs leading-relaxed text-muted-foreground">
+                    <span className="text-xs leading-relaxed text-ink-3">
                       I agree AM Ford may email me this report and follow up about this vehicle (and
                       text/call if I provided a number). Reply STOP to opt out.
                     </span>
@@ -1522,13 +1483,8 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
                       }
                     }}
                     disabled={status === "sending"}
-                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+                    className="mt-5 inline-flex items-center gap-2 rounded-sm bg-brand px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
                   >
-                    {status === "sending" ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <ClipboardCheck className="h-4 w-4" />
-                    )}
                     {status === "sending" ? "Unlocking…" : "Unlock free report"}
                   </button>
                 </div>
@@ -1541,10 +1497,10 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
   );
 }
 
-function Spec({ icon: Icon, label }: { icon: typeof Fuel; label: string }) {
+function Spec({ icon: Icon, label }: { icon: typeof IconFuel; label: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-xl bg-white/70 px-3 py-2.5 ring-1 ring-border">
-      <Icon className="h-4 w-4 text-primary" />
+    <div className="flex items-center gap-2 rounded-sm bg-white/70 px-3 py-2.5 ring-1 ring-border">
+      <Icon className="h-4 w-4 text-brand" />
       <span className="truncate font-medium text-ink">{label}</span>
     </div>
   );
@@ -1573,10 +1529,10 @@ function PaymentCalculator({
         <div className="lg:col-span-5">
           <SectionTag>Estimate your payment</SectionTag>
           <h2 className="display mt-3 text-4xl">Numbers that feel honest.</h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-4 text-ink-3">
             A quick estimate based on your inputs. Final terms depend on credit and lender.
           </p>
-          <div className="mt-8 rounded-3xl bg-gradient-navy p-8 text-white shadow-glow">
+          <div className="mt-8 bg-ink p-8 text-white">
             <p className="text-sm uppercase tracking-widest text-white/70">Estimated monthly</p>
             <p className="display mt-2 text-6xl">
               ${Math.round(monthly).toLocaleString()}
@@ -1592,22 +1548,22 @@ function PaymentCalculator({
                     calculator: { price, down, term, apr, estimatedMonthly: Math.round(monthly) },
                   })
                 }
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-primary transition hover:opacity-90"
+                className="mt-6 inline-flex items-center gap-2 rounded-sm bg-white px-5 py-3 text-sm font-semibold text-brand transition hover:opacity-90"
               >
-                <Calculator className="h-4 w-4" /> Get pre-approved for this payment
+                <IconSavings className="h-4 w-4" /> Get pre-approved for this payment
               </button>
             ) : (
               <Link
                 to="/financing"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-primary"
+                className="mt-6 inline-flex items-center gap-2 rounded-sm bg-white px-5 py-3 text-sm font-semibold text-brand"
               >
-                <Calculator className="h-4 w-4" /> Get pre-approved
+                <IconSavings className="h-4 w-4" /> Get pre-approved
               </Link>
             )}
           </div>
         </div>
 
-        <div className="rounded-3xl bg-card p-7 ring-1 ring-border lg:col-span-7">
+        <div className="rounded-sm bg-card p-7 ring-1 ring-border lg:col-span-7">
           <Slider
             label="Down payment"
             min={0}
@@ -1618,19 +1574,15 @@ function PaymentCalculator({
             format={(n) => `$${n.toLocaleString()}`}
           />
           <div className="mt-8">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Term
-            </p>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-ink-3">Term</p>
             <div className="flex flex-wrap gap-2">
               {[36, 48, 60, 72].map((t) => (
                 <button
                   key={t}
                   onClick={() => setTerm(t as typeof term)}
                   className={cn(
-                    "rounded-full px-4 py-2 text-sm font-medium transition",
-                    term === t
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-surface-2 text-ink hover:bg-surface",
+                    "rounded-sm px-4 py-2 text-sm font-medium transition",
+                    term === t ? "bg-brand text-white" : "bg-surface-2 text-ink hover:bg-surface",
                   )}
                 >
                   {t} mo
@@ -1675,10 +1627,8 @@ function Slider({
   return (
     <div>
       <div className="mb-3 flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          {label}
-        </p>
-        <span className="display text-lg text-primary">{format(value)}</span>
+        <p className="text-xs font-semibold uppercase tracking-widest text-ink-3">{label}</p>
+        <span className="display text-lg text-brand">{format(value)}</span>
       </div>
       <input
         type="range"
@@ -1687,7 +1637,7 @@ function Slider({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="h-6 w-full cursor-pointer accent-[oklch(0.21_0.06_256)]"
+        className="h-6 w-full cursor-pointer accent-brand"
       />
     </div>
   );

@@ -1,0 +1,659 @@
+<title>AM Ford — Redesign Plan</title>
+<style>
+  :root {
+    --paper: #FAF8F5;
+    --paper-2: #F2EEE8;
+    --paper-3: #E7E1D8;
+    --ink: #1A1714;
+    --ink-2: #4A443D;
+    --ink-3: #7A7268;
+    --rule: #DCD5CA;
+    --navy: #002C5F;
+    --navy-soft: #E3EAF3;
+    --clay: #8C3A1E;
+    --clay-soft: #F6E7E0;
+    --moss: #33553C;
+    --moss-soft: #E4EDE5;
+    --shadow: 0 1px 2px rgba(26,23,20,.04), 0 12px 28px -16px rgba(26,23,20,.16);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #14120F;
+      --paper-2: #1D1A16;
+      --paper-3: #2A251F;
+      --ink: #F1EDE6;
+      --ink-2: #BDB5A9;
+      --ink-3: #8A8175;
+      --rule: #332D26;
+      --navy: #9CC0E4;
+      --navy-soft: #1B2938;
+      --clay: #E09372;
+      --clay-soft: #33211A;
+      --moss: #9BC2A5;
+      --moss-soft: #1C2A1F;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 28px -16px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14120F;
+    --paper-2: #1D1A16;
+    --paper-3: #2A251F;
+    --ink: #F1EDE6;
+    --ink-2: #BDB5A9;
+    --ink-3: #8A8175;
+    --rule: #332D26;
+    --navy: #9CC0E4;
+    --navy-soft: #1B2938;
+    --clay: #E09372;
+    --clay-soft: #33211A;
+    --moss: #9BC2A5;
+    --moss-soft: #1C2A1F;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 28px -16px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+    font-size: 17px;
+    line-height: 1.62;
+    margin: 0;
+    padding: 0 24px 120px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  .sans {
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  /* ---------- masthead ---------- */
+  header.masthead {
+    border-bottom: 3px solid var(--ink);
+    padding: 72px 0 20px;
+    margin-bottom: 8px;
+  }
+  .kicker {
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--ink-3); margin: 0 0 20px;
+  }
+  h1 {
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(38px, 7vw, 62px);
+    font-weight: 800; letter-spacing: -.035em; line-height: .98;
+    text-wrap: balance; margin: 0 0 18px;
+  }
+  .standfirst {
+    font-size: clamp(18px, 2.4vw, 21px); line-height: 1.5; color: var(--ink-2);
+    max-width: 60ch; margin: 0 0 12px;
+  }
+  .byline {
+    font-family: ui-sans-serif, -apple-system, sans-serif; font-size: 12.5px;
+    color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 14px 0 0;
+  }
+  .byline b { color: var(--ink-2); font-weight: 600; }
+
+  /* ---------- sections ---------- */
+  section { padding: 56px 0 0; }
+  h2 {
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
+    font-size: clamp(25px, 3.6vw, 33px); font-weight: 750; letter-spacing: -.025em;
+    line-height: 1.1; text-wrap: balance;
+    margin: 0 0 22px; padding-top: 20px; border-top: 1px solid var(--rule);
+    display: flex; gap: 16px; align-items: baseline;
+  }
+  h2 .num {
+    font-size: 13px; font-weight: 700; color: var(--navy); letter-spacing: .04em;
+    font-variant-numeric: tabular-nums; flex: none; padding-top: 4px;
+  }
+  h3 {
+    font-family: ui-sans-serif, -apple-system, sans-serif;
+    font-size: 18px; font-weight: 700; letter-spacing: -.012em;
+    margin: 34px 0 10px; color: var(--ink);
+  }
+  h4 {
+    font-family: ui-sans-serif, -apple-system, sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink-3); margin: 26px 0 8px;
+  }
+  p { margin: 0 0 15px; max-width: 68ch; }
+  ul, ol { margin: 0 0 15px; padding-left: 22px; max-width: 68ch; }
+  li { margin-bottom: 7px; }
+  li::marker { color: var(--ink-3); }
+  strong { font-weight: 700; }
+  em { font-style: italic; color: var(--ink-2); }
+
+  code, .mono {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: .855em; background: var(--paper-2); padding: .1em .36em;
+    border-radius: 2px; color: var(--ink-2); border: 1px solid var(--rule);
+  }
+
+  a { color: var(--navy); text-underline-offset: 3px; }
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--navy); outline-offset: 3px; border-radius: 2px;
+  }
+
+  /* ---------- tables ---------- */
+  .scroll { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--rule); background: var(--paper-2); }
+  table {
+    border-collapse: collapse; width: 100%; min-width: 560px;
+    font-family: ui-sans-serif, -apple-system, sans-serif; font-size: 13.5px; line-height: 1.45;
+  }
+  th {
+    text-align: left; font-weight: 700; font-size: 11px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--ink-3);
+    padding: 11px 14px; border-bottom: 2px solid var(--ink); white-space: nowrap;
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--ink-2); }
+  td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: 0; }
+  .num-col { font-variant-numeric: tabular-nums; text-align: right; }
+
+  /* ---------- tier / status chips ---------- */
+  .chip {
+    display: inline-block; font-family: ui-sans-serif, sans-serif; font-size: 10.5px;
+    font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px; white-space: nowrap;
+  }
+  .t-primary { background: var(--navy-soft); color: var(--navy); }
+  .t-secondary { background: var(--paper-3); color: var(--ink-2); }
+  .t-utility { background: transparent; color: var(--ink-3); border: 1px solid var(--rule); }
+  .t-delete { background: var(--clay-soft); color: var(--clay); }
+  .t-keep { background: var(--moss-soft); color: var(--moss); }
+
+  /* ---------- callouts ---------- */
+  /* Distinguished by ground and a full-width top rule, matching the masthead, h2 and table
+     headers. Deliberately not a left accent bar: this page argues against that pattern. */
+  .note {
+    border-top: 2px solid var(--navy); background: var(--paper-2);
+    padding: 15px 20px 17px; margin: 0 0 20px; max-width: 68ch;
+  }
+  .note.warn { border-top-color: var(--clay); background: var(--clay-soft); }
+  .note p:last-child { margin-bottom: 0; }
+  .note h4 { margin-top: 0; }
+
+  /* ---------- spec grid ---------- */
+  .specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 0 0 20px; }
+  .spec { background: var(--paper); padding: 15px 17px; }
+  .spec dt { font-family: ui-sans-serif, sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 5px; }
+  .spec dd { margin: 0; font-family: ui-sans-serif, sans-serif; font-size: 14px; color: var(--ink); line-height: 1.4; }
+
+  /* ---------- swatches ---------- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 0 0 20px; }
+  .sw { border: 1px solid var(--rule); }
+  .sw .chipbox { height: 54px; }
+  .sw .meta { padding: 8px 10px; font-family: ui-sans-serif, sans-serif; font-size: 11.5px; line-height: 1.35; background: var(--paper-2); }
+  .sw .meta b { display: block; color: var(--ink); font-size: 12px; }
+  .sw .meta span { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+  /* ---------- before/after ---------- */
+  .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 0 0 20px; }
+  .ba > div { background: var(--paper); padding: 15px 17px; }
+  .ba h4 { margin: 0 0 9px; }
+  .ba ul { margin: 0; padding-left: 18px; font-family: ui-sans-serif, sans-serif; font-size: 13.5px; }
+  .ba .was h4 { color: var(--clay); }
+  .ba .now h4 { color: var(--moss); }
+  @media (max-width: 620px) { .ba { grid-template-columns: 1fr; } }
+
+  /* ---------- wireframe ---------- */
+  .wire {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px; line-height: 1.5; white-space: pre; color: var(--ink-2);
+    background: var(--paper-2); border: 1px solid var(--rule);
+    padding: 18px; overflow-x: auto; margin: 0 0 20px;
+  }
+
+  details {
+    border: 1px solid var(--rule); background: var(--paper-2);
+    padding: 12px 16px; margin: 0 0 12px;
+  }
+  summary { cursor: pointer; font-family: ui-sans-serif, sans-serif; font-weight: 650; font-size: 14px; }
+  details[open] summary { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  details p, details ul { font-size: 15px; }
+
+  footer.end {
+    margin-top: 64px; padding-top: 22px; border-top: 3px solid var(--ink);
+    font-family: ui-sans-serif, sans-serif; font-size: 13.5px; color: var(--ink-3);
+  }
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">Redesign Plan · Awaiting approval</p>
+  <h1>AM Ford</h1>
+  <p class="standfirst">A full-site redesign built on one design system, one shell, and one rule: the interface may not claim anything the lot cannot deliver.</p>
+  <div class="byline">
+    <span><b>Evidence:</b> 26 routes audited</span>
+    <span><b>Method:</b> 13-agent parallel audit + live browser capture</span>
+    <span><b>Stack:</b> unchanged</span>
+    <span><b>Date:</b> 14 Aug 2026</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="num">00</span><span>What the audit actually found</span></h2>
+
+  <p>The presentation layer is the entire problem. Routing, the data layer, the SEO and schema builders, and the content modules (<code>vehicles.ts</code>, <code>serviceAreas.ts</code>, <code>counties.ts</code>) are careful, sourced work that should survive untouched.</p>
+
+  <p>What sits on top of them does not hold together:</p>
+
+  <div class="specs">
+    <div class="spec"><dt>Design system adoption</dt><dd>46 components in <code>ui/</code>, <b>0 imports</b> outside it</dd></div>
+    <div class="spec"><dt>App shells</dt><dd>2 — two navs, two footers</dd></div>
+    <div class="spec"><dt>Brand navies in play</dt><dd>2, plus an untokenised orange</dd></div>
+    <div class="spec"><dt>Overlay implementations</dt><dd>7 across 11 surfaces, 8 z-index tiers</dd></div>
+    <div class="spec"><dt>Border radii</dt><dd>8 distinct values</dd></div>
+    <div class="spec"><dt>Type sizes 10–18px</dt><dd>8, across 235 uses</dd></div>
+    <div class="spec"><dt>Inline style objects</dt><dd>51 in overlays alone</dd></div>
+    <div class="spec"><dt>First vehicle card on SRP</dt><dd>1554px down an 11,242px page</dd></div>
+  </div>
+
+  <div class="note warn">
+    <h4>Three findings that are commercial, not cosmetic</h4>
+    <p><strong>The homepage search can return zero results on its default state.</strong> Each control validates against stock; the <em>combination</em> never does. <code>New</code> + <code>$35–45k</code> returns nothing, because the only sub-$45k unit is the Certified Escape.</p>
+    <p><strong>The inventory hero form discards everything typed into it.</strong> Its Name and Phone inputs have no <code>value</code>, <code>onChange</code>, <code>name</code> or <code>ref</code>. The submit handler reads only the vehicle id, then opens a modal that asks for the same fields again.</p>
+    <p><strong>A VIN is fabricated into every listing-page lead.</strong> <code>vin: `1FT${id.toUpperCase()}2025`</code> — in a file whose own type comment warns in capitals that a fabricated VIN is a legal risk.</p>
+  </div>
+
+  <p>Two published rates contradict each other and both contradict the site's own copy: cards print payments at 7.49% APR, <code>/financing</code> hardcodes 5.9% with no control to change it, and the inventory page asserts in two places that no rate or payment is published anywhere.</p>
+</section>
+
+<section>
+  <h2><span class="num">01</span><span>Site architecture</span></h2>
+
+  <p>Preserve the stack entirely. TanStack Start SSR on Cloudflare Workers, Tailwind v4, TypeScript strict, Supabase leads, all existing routes' URLs. Replace the UI layer wholesale and consolidate 26 route files into 18.</p>
+
+  <h3>One shell</h3>
+  <p><code>index.tsx</code> currently renders a bespoke <code>HomePage</code> with its own nav and footer while 24 routes render <code>SiteShell</code>. Collapse to a single <code>AppShell</code> — one nav, one footer, one set of global surfaces. The homepage stops being a separate product.</p>
+
+  <h3>Route consolidation</h3>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Cluster</th><th class="num-col">Now</th><th class="num-col">After</th><th>Move</th></tr></thead>
+    <tbody>
+      <tr><td>Compare</td><td class="num-col">4</td><td class="num-col">1</td><td>One <code>compare.$pair.tsx</code> + a registry. FAQ and CTA blocks are byte-identical across all three leaves today.</td></tr>
+      <tr><td>Guides</td><td class="num-col">5</td><td class="num-col">3</td><td>One <code>guides.$slug.tsx</code>. <span class="chip t-delete">delete 2</span> — both target used-Ford intent against zero used stock.</td></tr>
+      <tr><td>Local SEO</td><td class="num-col">2</td><td class="num-col">1</td><td>One <code>ford-dealer.$area.tsx</code> with <code>kind: "city" | "county"</code>. All prose moves to data.</td></tr>
+      <tr><td>Finance</td><td class="num-col">2</td><td class="num-col">1</td><td><code>/finance/bad-credit</code> becomes a section of <code>/financing</code>. Its URL prefix 404s today, and the slug reintroduces deficit framing its own copy avoids.</td></tr>
+      <tr><td>Overlays</td><td class="num-col">7</td><td class="num-col">2</td><td><code>ui/dialog.tsx</code> for centred modals, <code>ui/sheet.tsx</code> for the filter drawer and mobile nav. Both already installed and unused.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Delete outright</h3>
+  <ul>
+    <li><code>OTPPopup.tsx</code> — 720 lines whose verification step is unreachable, which writes <code>verifiedAt</code> for a verification that never runs, and which is structurally unusable below 700px (no <code>@media</code> rule exists for any <code>.otp-*</code> selector).</li>
+    <li><code>fetchVehicles()</code> — no caller anywhere.</li>
+    <li>Three byte-identical local <code>&lt;Field&gt;</code> copies in <code>service</code>, <code>contact</code>, <code>commercial</code>.</li>
+    <li><strong>11 redeclarations of <code>SITE_ORIGIN</code></strong> — a domain PRODUCT.md flags as unresolved and blocking.</li>
+  </ul>
+
+  <h3>Extract, behaviour unchanged</h3>
+  <p><code>inventory.tsx</code> (2,940 lines, 11+ <code>useState</code>, five modals, an embedded buying guide) and <code>vehicle.$id.tsx</code> (1,694 lines) become route files that compose sections. No logic changes in the same commit as the split.</p>
+</section>
+
+<section>
+  <h2><span class="num">02</span><span>Page inventory</span></h2>
+
+  <p>Eight routes are PRIMARY — a lead is won or lost on them. Everything else supports or routes. This overrides the per-page audit, which over-marked eleven: the compare leaves, <code>/commercial</code>, <code>/ford-dealer/$city</code> and <code>/nationwide-vehicle-delivery</code> contain no capture surface at all.</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Route</th><th>Tier</th><th>Primary action</th><th>Chief defect today</th></tr></thead>
+    <tbody>
+      <tr><td>/</td><td><span class="chip t-primary">Primary</span></td><td>Enter the lot</td><td>Search card can return zero on its default state</td></tr>
+      <tr><td>/inventory</td><td><span class="chip t-primary">Primary</span></td><td>Open a vehicle</td><td>Opens on a lead form; first card 1554px down</td></tr>
+      <tr><td>/vehicle/$id</td><td><span class="chip t-primary">Primary</span></td><td>Ask about this vehicle</td><td>10 asks, 3 co-equal filled buttons; gallery is one photo ×3</td></tr>
+      <tr><td>/ford/$model <span class="chip t-secondary">×6</span></td><td><span class="chip t-primary">Primary</span></td><td>Open the stocked unit</td><td>Largest indexed surface; each fronts exactly one car</td></tr>
+      <tr><td>/financing</td><td><span class="chip t-primary">Primary</span></td><td>Start an application</td><td>No <code>&lt;form&gt;</code>, no validation, hardcoded 5.9% APR</td></tr>
+      <tr><td>/trade-in</td><td><span class="chip t-primary">Primary</span></td><td>Send trade details</td><td>Estimator reads neither make nor model, then shows a number</td></tr>
+      <tr><td>/service</td><td><span class="chip t-primary">Primary</span></td><td>Book service</td><td>Chips lack <code>type="button"</code> — picking a time submits the form</td></tr>
+      <tr><td>/contact</td><td><span class="chip t-primary">Primary</span></td><td>Reach a person</td><td>Canonical NAP; receives every mis-routed CTA</td></tr>
+      <tr><td>/ford-dealer/$area <span class="chip t-secondary">×12</span></td><td><span class="chip t-secondary">Secondary</span></td><td>Enter inventory for that area</td><td>~16 outbound choices, no capture, no vehicle imagery</td></tr>
+      <tr><td>/nationwide-vehicle-delivery</td><td><span class="chip t-secondary">Secondary</span></td><td>Request a shipping quote</td><td>Promises a written quote 3× and offers no form. Five different names across nav, footer, title, H1, breadcrumb</td></tr>
+      <tr><td>/commercial</td><td><span class="chip t-secondary">Secondary</span></td><td>Enquire about an order</td><td>Sells stock explicitly not held</td></tr>
+      <tr><td>/compare/$pair <span class="chip t-secondary">×3</span></td><td><span class="chip t-secondary">Secondary</span></td><td>Pick a side</td><td>Best-argued content on the site; closes with 5 nav buttons</td></tr>
+      <tr><td>/guides/$slug <span class="chip t-secondary">×2</span></td><td><span class="chip t-secondary">Secondary</span></td><td>Act on the advice</td><td>States asks with no control behind them</td></tr>
+      <tr><td>/about</td><td><span class="chip t-utility">Utility</span></td><td>Establish who we are</td><td>Ten blocks of unsourced claims, one link, no phone</td></tr>
+      <tr><td>/ford-models · /compare · /guides · /areas-we-serve</td><td><span class="chip t-utility">Utility</span></td><td>Route onward</td><td>Framing blocks before the links that are the page</td></tr>
+      <tr><td>2 used-Ford guides</td><td><span class="chip t-delete">Delete</span></td><td>—</td><td>Rank for used intent against zero used stock; deliver used shoppers to a $71,990 Lightning</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">03</span><span>Design direction: Ledger</span></h2>
+
+  <p>On most dealer sites, photography and information fight inside the same rounded card. The organising idea here is that they never share a register.</p>
+
+  <p><strong>Photography sells. Typography informs.</strong> Vehicles get full-bleed, wide, uncropped scale. Specification gets rules, a baseline grid, and tabular figures. Nothing tries to do both, which is what produces the badge-clutter the current cards suffer from — the Escape shows "Certified Pre-Owned" twice, the Lightning shows "Electric" and "EV" simultaneously.</p>
+
+  <h3>Why this, for this business</h3>
+  <p>AM Ford is a family-owned single-location store in a town of about 3,000, whose actual competitive weapon is removing distance as an objection. It is not a luxury marque and should not borrow that vocabulary. It is also not a dealer-template store, and should not look like one. Plain, physical, and confident without shouting is both truer and more distinctive than either default.</p>
+
+  <h3>Type</h3>
+  <p><strong>Drop Inter.</strong> It is the default of every generated interface and gives this store no voice. <strong>Archivo</strong> and <strong>Archivo Expanded</strong> (SIL OFL, self-hosted) replace it — one superfamily, two optical widths. Archivo is American, broad, slightly mechanical; it reads automotive without wearing a costume. Expanded is reserved for display sizes only.</p>
+
+  <h3>Colour</h3>
+  <p>Every dealer template and nearly every generated site defaults to cold slate. Going warm is the cheapest and strongest differentiator available, and it costs nothing in contrast.</p>
+
+  <div class="swatches">
+    <div class="sw"><div class="chipbox" style="background:#FAF8F5"></div><div class="meta"><b>Ground</b><span>#FAF8F5</span></div></div>
+    <div class="sw"><div class="chipbox" style="background:#1A1714"></div><div class="meta"><b>Ink</b><span>#1A1714</span></div></div>
+    <div class="sw"><div class="chipbox" style="background:#002C5F"></div><div class="meta"><b>Brand navy</b><span>#002C5F</span></div></div>
+    <div class="sw"><div class="chipbox" style="background:#33553C"></div><div class="meta"><b>Available</b><span>#33553C</span></div></div>
+    <div class="sw"><div class="chipbox" style="background:#8C3A1E"></div><div class="meta"><b>Attention</b><span>#8C3A1E</span></div></div>
+  </div>
+
+  <p><code>#002C5F</code> is the <em>only</em> brand accent. <code>#05214F</code> is deleted, the orange is deleted, the sky-blue squiggle is deleted. Moss and clay are semantic only — availability and error — and never decorate.</p>
+
+  <div class="ba">
+    <div class="was"><h4>Replaced</h4><ul>
+      <li>8 border radii</li><li>8 type sizes between 10–18px</li>
+      <li>2 navies + untokenised orange</li><li>Card-and-shadow as the page structure</li>
+      <li>Studio cutouts on grey <em>and</em> lifestyle photography</li>
+    </ul></div>
+    <div class="now"><h4>Kept</h4><ul>
+      <li><code>#002C5F</code> — correct for this brand</li>
+      <li>144px section rhythm</li>
+      <li>The <code>fx/</code> engineering posture: capability gating, SSR-safe motion</li>
+      <li><code>prefers-reduced-motion</code> and <code>:focus-visible</code>, both already wired</li>
+      <li>The whole content layer</li>
+    </ul></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">04</span><span>Design system</span></h2>
+
+  <h3>Type scale</h3>
+  <p>One scale, 1.25 ratio, no improvisation between steps. Archivo Expanded at Display and H1 only.</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Token</th><th class="num-col">Size</th><th>Weight / tracking</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td>display</td><td class="num-col">64 / 40</td><td>700 · −0.03em · Expanded</td><td>Homepage opener only</td></tr>
+      <tr><td>h1</td><td class="num-col">44 / 32</td><td>700 · −0.025em · Expanded</td><td>One per page</td></tr>
+      <tr><td>h2</td><td class="num-col">30 / 26</td><td>650 · −0.02em</td><td>Section</td></tr>
+      <tr><td>h3</td><td class="num-col">21</td><td>650 · −0.01em</td><td>Sub-section, vehicle title</td></tr>
+      <tr><td>body</td><td class="num-col">17</td><td>400 · 1.6</td><td>Prose, 65–75ch</td></tr>
+      <tr><td>ui</td><td class="num-col">15</td><td>500</td><td>Controls, labels, nav</td></tr>
+      <tr><td>meta</td><td class="num-col">13</td><td>500</td><td>Spec values, captions</td></tr>
+      <tr><td>micro</td><td class="num-col">11</td><td>700 · .09em · caps</td><td>Field labels, chips</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Eight steps, each with one job. Today's eight sizes all sit inside a single 8px band doing undifferentiated work.</p>
+
+  <h3>Radius, spacing, elevation</h3>
+  <div class="specs">
+    <div class="spec"><dt>Radius</dt><dd><code>0</code> structural · <code>2px</code> controls · <code>999px</code> status chips only</dd></div>
+    <div class="spec"><dt>Space</dt><dd>4px base: 4·8·12·16·24·32·48·64·96·144</dd></div>
+    <div class="spec"><dt>Elevation</dt><dd>Two levels. Rules and ground do the work; shadow is for overlays</dd></div>
+    <div class="spec"><dt>Container</dt><dd>1200px max · 24px gutter · 12-col</dd></div>
+    <div class="spec"><dt>Focus</dt><dd>2px navy, 2px offset, every interactive element</dd></div>
+    <div class="spec"><dt>Targets</dt><dd>44px comfortable, 24px absolute floor</dd></div>
+  </div>
+  <p>Roundness is reserved to mean <em>state, not structure</em>. That single rule kills card-soup on its own — a square-cornered surface with a hairline rule reads as considered; the same content in a shadowed rounded box reads as template.</p>
+
+  <h3>Primitives to build</h3>
+  <p>Radix behaviour, our surface. Radix is already a dependency; 26 packages currently ship as dead weight.</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Primitive</th><th>Basis</th><th>Replaces</th></tr></thead>
+    <tbody>
+      <tr><td>Button</td><td>—</td><td>4 radii, 3 button languages across overlays</td></tr>
+      <tr><td>Field</td><td>label + control + hint + error</td><td>3 identical local copies; 20 controls with no accessible name</td></tr>
+      <tr><td>Dialog</td><td><code>ui/dialog.tsx</code></td><td>6 bespoke centred overlays</td></tr>
+      <tr><td>Sheet</td><td><code>ui/sheet.tsx</code></td><td>Filter drawer + mobile nav</td></tr>
+      <tr><td>VehicleCard</td><td>—</td><td>Duplicate badge pairs, orange CTA, payment estimate</td></tr>
+      <tr><td>SpecTable</td><td><code>&lt;dl&gt;</code>, tabular-nums</td><td>Ad-hoc spec pills</td></tr>
+      <tr><td>Chip</td><td>status only</td><td>Mixed decorative/semantic pills</td></tr>
+      <tr><td>Prose</td><td>65–75ch measure</td><td>Per-route typography</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Every option derives from the lot</h3>
+  <div class="note warn">
+    <p>The lot is <strong>6 vehicles — 5 New, 1 Certified Pre-Owned, all Ford, all automatic, $36,450–$71,990, 6–8,420 miles</strong>. Today the filter panel offers FWD (0 vehicles) and Manual (0), a price slider spanning $20k–$100k, and a mileage slider whose top 83% is dead track. The sitemap generator builds facet URLs from the same hand-written list, so the day the F-150 sells, <code>?type=Truck</code> becomes a submitted, self-canonical, indexed empty page.</p>
+    <p>One helper — <code>facetsFromLot(vehicles)</code> — feeds every option list, slider bound, chip, and sitemap facet. A control that cannot be satisfied does not render.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">05</span><span>Homepage</span></h2>
+
+  <p>Job: establish who this dealer is and route into the lot. Not a scroll of sections.</p>
+
+  <div class="wire">┌──────────────────────────────────────────────┐
+│  nav · logo · Inventory Financing Service    │
+│      Trade-in About Contact · (440) 998-2151 │
+├──────────────────────────────────────────────┤
+│                                              │
+│   FULL-BLEED PHOTOGRAPH — the real store     │
+│                                              │
+│   Your Ford dealership in Jefferson, Ohio    │  ← Expanded, 64px
+│   Six Fords on the lot today. Free delivery  │
+│   within 300 miles.                          │
+│                                              │
+│   [ See all six ]   (440) 998-2151           │  ← ONE primary
+├──────────────────────────────────────────────┤
+│  THE LOT — all six, no pagination, no tabs   │
+│  ┌────────┬────────┬────────┐                │
+│  │ photo  │ photo  │ photo  │                │
+│  │ F-150  │ Mustang│Explorer│                │
+│  │ $64,995│ $49,880│ $56,750│                │
+│  └────────┴────────┴────────┘                │
+├──────────────────────────────────────────────┤
+│  DELIVERY — the one differentiator, told once│
+├──────────────────────────────────────────────┤
+│  SERVICE · TRADE · FINANCE — three routes    │
+├──────────────────────────────────────────────┤
+│  VISIT — address, hours, map                 │
+└──────────────────────────────────────────────┘</div>
+
+  <p><strong>Show the whole lot on the homepage.</strong> Six vehicles is not enough to justify a discovery funnel, and pretending otherwise is what produced three overlapping inventory sections and a 14,225px page. Six cards fit above two screens. The visitor sees the entire inventory before deciding anything — which is honest, faster, and impossible for a 400-unit competitor to copy.</p>
+
+  <p>Deleted: the ambient blob layer, the cursor glow, the dust motes, the coverflow carousel, the WebGL wheel, the search card that can return zero. The hero states the count and links to the lot; a filter with six options is theatre.</p>
+</section>
+
+<section>
+  <h2><span class="num">06</span><span>Inventory</span></h2>
+
+  <p>Job: compare six vehicles and open one. Currently the page spends two viewports on a lead form before showing a car.</p>
+
+  <div class="ba">
+    <div class="was"><h4>Now</h4><ul>
+      <li>Hero + capture form, 1554px before the first card</li>
+      <li>Form fields bound to nothing</li>
+      <li>Filters for FWD and Manual — zero vehicles each</li>
+      <li>Payment estimate on every card at 7.49% APR</li>
+      <li>Duplicate badges on the same card</li>
+      <li>11,242px for six cars</li>
+    </ul></div>
+    <div class="now"><h4>Ledger</h4><ul>
+      <li>Result header: count, active filters, sort. Cards immediately</li>
+      <li>No form on the page at all</li>
+      <li>Facets derived from the lot, with counts, zero-options disabled</li>
+      <li>Price only</li>
+      <li>One condition chip, one distinguishing badge</li>
+      <li>Under two screens</li>
+    </ul></div>
+  </div>
+
+  <h3>Card anatomy</h3>
+  <p>Wide photograph, full card width, no inset. Below the rule: year and model in Archivo 21px, trim in ink-2 on the same line, price right-aligned in tabular figures. A single spec row — odometer · fuel · drivetrain — at meta size. One condition chip. The whole card is one link; there is no second button competing with it.</p>
+
+  <h3>Comparison</h3>
+  <p>With six vehicles, comparison is the page's real job. A persistent compare tray holds up to three and opens a <strong>specification table</strong> — rows as attributes, columns as vehicles, differing values emphasised. Tables are what this content is; the current modal renders them as cards.</p>
+</section>
+
+<section>
+  <h2><span class="num">07</span><span>Vehicle detail</span></h2>
+
+  <p>Highest-conversion page. It must answer four questions in order, and today it answers the fourth ten times.</p>
+
+  <div class="wire">┌───────────────────────────────┬──────────────┐
+│                               │ 2025 Ford    │  WHAT IS THIS
+│   PHOTOGRAPH — full bleed     │ F-150        │
+│   Gallery only if real photos │ Platinum     │
+│   exist. One photo shows one. │              │
+│                               │ $64,995      │  HOW MUCH
+│                               │ MSRP $68,420 │
+│                               │ ───────────  │
+│                               │ ● In stock   │
+│                               │              │
+│                               │ [Ask about   │  WHAT NEXT — one
+│                               │  this F-150] │
+│                               │ (440) 998... │  ← one alternative
+├───────────────────────────────┴──────────────┤
+│  SPECIFICATION — dl, tabular, two columns    │  WHY BUY IT
+├──────────────────────────────────────────────┤
+│  EQUIPMENT — real features from the record   │
+├──────────────────────────────────────────────┤
+│  DELIVERY — distance answered here, in place │
+├──────────────────────────────────────────────┤
+│  THE OTHER FIVE                              │
+└──────────────────────────────────────────────┘</div>
+
+  <div class="note warn">
+    <p><strong>Ten asks become one.</strong> Today: <em>Is this still available? · Get Price · Book test drive · Request E-Price Quote · Text us · Video tour · Watch price</em> plus chat, exit-intent and a sticky bar — three of them co-equal filled buttons, and "Get Price" and "Request E-Price Quote" are the same intent routed to two different modals with two different consent regimes.</p>
+    <p>One primary — <strong>Ask about this F-150</strong> — plus the phone number. Everything else is a question the dialog can ask.</p>
+  </div>
+
+  <p><strong>The gallery is currently <code>[v.image, v.image, v.image]</code></strong> with alt text "gallery view 1/2/3". Until real photography exists, one photograph renders as one photograph. <strong>"Lifetime warranty"</strong> is hardcoded on all six pages, is not in the data, is not approved, and contradicts the inventory FAQ's own warranty text. It goes.</p>
+</section>
+
+<section>
+  <h2><span class="num">08</span><span>Forms and modals</span></h2>
+
+  <p>Eleven overlay surfaces, seven implementations, eight z-index tiers, five backdrop treatments, six close-button treatments. <code>LeadCaptureModal</code> sits at <code>z-50</code> — <em>below</em> the nav sheet at <code>z-60</code>, so the navigation renders on top of an open lead modal.</p>
+
+  <h3>Two components replace all of it</h3>
+  <ol>
+    <li><strong><code>&lt;VehicleLeadDialog vehicle intent /&gt;</code></strong> — every vehicle-scoped ask. <code>vehicle</code> is a <em>required prop</em>, which turns the current wrong-vehicle bug (related-card "Get Price" files a lead for the page's car, not the clicked one) into a compile error.</li>
+    <li><strong><code>&lt;ContentConversion /&gt;</code></strong> — mandatory last section of every non-primary route. One field, phone, with a route-derived lead type. Seventeen routes currently end in a flat row of navigation buttons and capture nothing; three state an explicit ask ("Bring us a listing and a VIN") with no control behind it.</li>
+  </ol>
+
+  <h3>Non-negotiables</h3>
+  <ul>
+    <li>Every field: persistent label bound by <code>htmlFor</code>, hint before the input, error in <code>role="alert"</code>. Twenty controls have no accessible name today.</li>
+    <li><strong>One consent posture.</strong> Three exist now — a checkbox, a passive paragraph that drops both "consent is not a condition of purchase" and the STOP opt-out, and none at all. <code>LeadCaptureModal</code> takes a phone number with no consent while promising information "will never be shared with third parties", as financing leads go to lenders.</li>
+    <li>Submission goes through <strong>one</strong> path, so the converted-visitor flag is unconditional. Today a $71k test-drive booking is followed by a $500 discount modal, because three surfaces bypass the helper that sets the flag.</li>
+    <li>CTAs name their outcome. Never <em>Submit</em>.</li>
+  </ul>
+
+  <div class="note">
+    <h4>Chat widget</h4>
+    <p>It presents a scripted bot as a live person — "You're chatting with AM Ford", a pulsing presence dot, a fake typing delay, no free-text input, no automated-assistant disclosure. It asserts "it's in stock as of today" with no lookup and offers to hold a vehicle through a mechanism that does not exist. Either disclose it as automated and strip every unverifiable claim, or remove it. I recommend removing it: it duplicates a phone number that a six-car store can answer.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">09</span><span>Motion</span></h2>
+
+  <p>Weighting for a marketing surface: production polish primary, restraint on anything high-frequency. Matching the codebase's existing <code>cubic-bezier(0.16, 1, 0.3, 1)</code> rather than introducing a foreign vocabulary.</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Moment</th><th class="num-col">Duration</th><th>Property</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>Page load, once</td><td class="num-col">600ms</td><td>opacity + 12px rise on the hero photograph only</td><td>The single authored moment</td></tr>
+      <tr><td>Card hover</td><td class="num-col">200ms</td><td>photograph scale 1.02, rule darkens</td><td>Affordance</td></tr>
+      <tr><td>Filter change</td><td class="num-col">180ms</td><td>opacity on the result set</td><td>Something changed</td></tr>
+      <tr><td>Dialog open</td><td class="num-col">220 / 160ms</td><td>opacity + 8px rise; exit faster</td><td>Where it came from</td></tr>
+      <tr><td>Focus</td><td class="num-col">0ms</td><td>—</td><td>Never animate focus</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p><strong>Deleted:</strong> the ambient blob field, 34 drifting dust motes, the cursor-follow glow, the 1.5s auto-advancing coverflow, the WebGL rim and five WebGL "why" objects, the looping pulse ring on the CTA, and the scroll parallax on three separate layers. None explained a state change; all ran forever.</p>
+  <p>Reduced motion keeps every state change and drops every decorative one. No blanket <code>0.01ms</code> override — that destroys the feedback reduced-motion users still need.</p>
+</section>
+
+<section>
+  <h2><span class="num">10</span><span>Responsive</span></h2>
+
+  <p>Design at 375 first — this is a rural county where mobile is the majority arrival — then let the grid earn its columns.</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Width</th><th>Lot grid</th><th>Vehicle detail</th><th>Navigation</th><th>Filters</th></tr></thead>
+    <tbody>
+      <tr><td>320–599</td><td>1 col</td><td>Stacked; price + one CTA in a sticky bar</td><td>Sheet</td><td>Sheet, applied on dismiss</td></tr>
+      <tr><td>600–899</td><td>2 col</td><td>Stacked, wider photograph</td><td>Sheet</td><td>Sheet</td></tr>
+      <tr><td>900–1199</td><td>2 col</td><td>7 / 5 split, buy box sticky</td><td>Inline</td><td>Left rail</td></tr>
+      <tr><td>1200+</td><td>3 col</td><td>8 / 4 split</td><td>Inline</td><td>Left rail</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Known breakages to fix, not inherit: <code>OTPPopup</code> has <strong>no media query for any <code>.otp-*</code> selector</strong>, so at 375px its form panel computes to a 0px content box with 107px clipped behind <code>overflow:hidden</code> — unreachable, because the shell is <code>overflow-x-clip</code> and nothing scrolls. The chat FAB sits on top of the compare tray. The mobile sticky CTA links to <code>/contact</code> from a page that knows exactly which vehicle is on screen, and renders as a permanent no-op while on <code>/contact</code>.</p>
+</section>
+
+<section>
+  <h2><span class="num">11</span><span>Order of work</span></h2>
+
+  <p>The system exists before any page consumes it. That ordering is why the current site drifted: 26 routes were each designed before a shared vocabulary existed.</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th class="num-col">#</th><th>Step</th><th>Gate before moving on</th></tr></thead>
+    <tbody>
+      <tr><td class="num-col">1</td><td>Tokens, type scale, Archivo self-hosted</td><td>Renders in isolation, both themes</td></tr>
+      <tr><td class="num-col">2</td><td>Primitives: Button, Field, Dialog, Sheet, Chip, SpecTable, Prose</td><td>Keyboard + screen-reader pass on each</td></tr>
+      <tr><td class="num-col">3</td><td>AppShell, nav, footer</td><td>One shell renders all 18 routes</td></tr>
+      <tr><td class="num-col">4</td><td><code>facetsFromLot()</code> + delete every hand-written option list</td><td>No control without a vehicle behind it</td></tr>
+      <tr><td class="num-col">5</td><td>VehicleLeadDialog + ContentConversion; delete 7 overlays</td><td>One submit path; one consent posture</td></tr>
+      <tr><td class="num-col">6</td><td>Homepage · Inventory · Vehicle detail</td><td>Playwright journeys at 4 widths</td></tr>
+      <tr><td class="num-col">7</td><td>Money funnel; delete every published rate and payment</td><td>Zero APR figures site-wide</td></tr>
+      <tr><td class="num-col">8</td><td>Secondary routes onto the consolidated templates</td><td>26 → 18 routes</td></tr>
+      <tr><td class="num-col">9</td><td>Motion, then <code>fixing-motion-performance</code></td><td>No layout-property animation</td></tr>
+      <tr><td class="num-col">10</td><td><code>design:accessibility-review</code> — fix, not report</td><td>WCAG AA on every journey</td></tr>
+      <tr><td class="num-col">11</td><td><code>engineering:code-review</code> + <code>impeccable</code> as final critic</td><td>Detector clean; no regressions</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">12</span><span>Decisions I need from you</span></h2>
+
+  <p>I have taken defaults on everything else. These four change the work materially, and I would rather ask than build twice.</p>
+
+  <details open>
+    <summary>1 · Is the six-vehicle lot real, or placeholder for a live feed?</summary>
+    <p>The single largest input. If it is <strong>real</strong>, the homepage shows the whole lot and inventory becomes a comparison surface — which is the plan above, and it is a genuinely better site than a 400-unit competitor's. If it is <strong>placeholder</strong>, inventory needs pagination, saved searches, and facets that scale, and the homepage shows a selection. <em>Default I will take: real, degrading gracefully upward.</em></p>
+  </details>
+
+  <details open>
+    <summary>2 · Do the published rates and payments come out?</summary>
+    <p>7.49% APR on cards, 5.9% hardcoded on <code>/financing</code>, an adjustable calculator down to 2.9%, and a trade estimate the code admits reads neither make nor model. PRODUCT.md prohibits all of it without sign-off, and the site's own copy says twice that it publishes none of it. <em>Default: all of it comes out, and the desk supplies every figure.</em></p>
+  </details>
+
+  <details open>
+    <summary>3 · Does the chat widget stay?</summary>
+    <p>It cannot stay as-is — it presents scripted replies as a person and asserts stock it never checks. Removing it is my recommendation for a store this size. Keeping it means disclosing it as automated and deleting the lender count, the approval promise, the trade statistic and the stock assertion. <em>Default: remove.</em></p>
+  </details>
+
+  <details open>
+    <summary>4 · The $500 offer</summary>
+    <p>It appears in four unreconciled forms — "exclusive", "one per customer", "cannot be combined" and "on top of your value" cannot all be true — and <code>ExitIntentOffer</code> says "your voucher is locked in" with no voucher, code, expiry or record anywhere in the system. If it is a real program, it becomes one object in <code>lib/</code> with one wording and one set of terms. <em>Default: one definition, or removed if it is not a real program.</em></p>
+  </details>
+
+  <p style="margin-top:26px"><strong>Say go and I start at step 1.</strong> Nothing above touches the backend, the routes' URLs, the data layer, or the lead pipeline's destination.</p>
+</section>
+
+<footer class="end">
+  AM Ford redesign plan · Evidence: 22-route parallel audit, 6 cross-cutting audits, live capture at 1440×900 · All line references verified against <code>v2_ford</code>
+</footer>
+
+</div>

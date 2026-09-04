@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { HelpCircle } from "lucide-react";
-import { SectionTag } from "@/components/site/Home";
+import { SectionTag } from "@/components/site/SectionTag";
 
 /**
  * Presentation shell for the /guides articles (spec Template F).
@@ -18,8 +18,8 @@ export type GuideFaq = { q: string; a: string };
 
 /** Shared button styling so guide CTAs match the model and delivery pages. */
 export const guideCtaPrimary =
-  "inline-flex items-center gap-2 rounded-full bg-[#002c5f] px-5 py-3 text-sm font-bold " +
-  "text-white transition hover:bg-[#001f44]";
+  "inline-flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-bold " +
+  "text-white transition hover:bg-brand-deep";
 
 export const guideCtaSecondary =
   "inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-3 " +
@@ -27,8 +27,8 @@ export const guideCtaSecondary =
 
 /** Inline anchor inside body copy. Anchor text is always descriptive, never "learn more". */
 export const guideInlineLink =
-  "font-semibold text-[#002c5f] underline decoration-[#002c5f]/30 underline-offset-2 " +
-  "transition hover:decoration-[#002c5f]";
+  "font-semibold text-brand underline decoration-brand/30 underline-offset-2 " +
+  "transition hover:decoration-brand";
 
 /** The single H1 on the page, plus the direct answer that follows it. */
 export function GuideHero({
@@ -81,7 +81,7 @@ export function GuideSection({ heading, children }: { heading: string; children:
 
 /** Bulleted list inside a section. */
 export function GuideList({ children }: { children: ReactNode }) {
-  return <ul className="list-disc space-y-2.5 pl-5 marker:text-[#002c5f]/50">{children}</ul>;
+  return <ul className="list-disc space-y-2.5 pl-5 marker:text-brand/50">{children}</ul>;
 }
 
 /** A pulled-out checklist card, used where a section is a list of things to verify. */

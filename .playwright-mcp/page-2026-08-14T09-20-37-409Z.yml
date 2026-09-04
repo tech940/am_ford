@@ -1,0 +1,263 @@
+- generic [ref=e2]:
+  - link "Skip to main content" [ref=e3] [cursor=pointer]:
+    - /url: "#content"
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "AM Ford" [ref=e7]
+      - navigation "Primary" [ref=e8]:
+        - link "Inventory" [ref=e9] [cursor=pointer]:
+          - /url: /inventory
+        - link "Financing" [ref=e10] [cursor=pointer]:
+          - /url: /financing
+        - link "Service" [ref=e11] [cursor=pointer]:
+          - /url: /service
+        - link "About" [ref=e12] [cursor=pointer]:
+          - /url: /about
+        - link "Contact" [ref=e13] [cursor=pointer]:
+          - /url: /contact
+      - link "(440) 998-2151" [ref=e15] [cursor=pointer]:
+        - /url: tel:+14409982151
+  - main [ref=e18]:
+    - region [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - heading "Ford sales and service in Jefferson, Ohio" [level=1] [ref=e22]
+          - paragraph [ref=e23]: Free home delivery within 300 miles and vehicle shipping available to all 50 states.
+          - generic [ref=e24]:
+            - generic [ref=e25]:
+              - term [ref=e26]: Address
+              - definition [ref=e27]: 1059 State Route 46 North, Jefferson, OH 44047
+            - generic [ref=e28]:
+              - term [ref=e29]: Phone
+              - definition [ref=e30]:
+                - link "(440) 998-2151" [ref=e31] [cursor=pointer]:
+                  - /url: tel:+14409982151
+            - generic [ref=e32]:
+              - term [ref=e33]: Open today
+              - definition [ref=e34]: 9:00 AM - 6:00 PM
+          - paragraph [ref=e35]:
+            - link "Get directions" [ref=e36] [cursor=pointer]:
+              - /url: https://www.google.com/maps/dir/?api=1&destination=AM%20Ford%2C%201059%20State%20Route%2046%20North%2C%20Jefferson%2C%20OH%2044047
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - generic [ref=e41]:
+                - generic [ref=e42]: Condition
+                - combobox "Condition" [ref=e43] [cursor=pointer]:
+                  - option "New" [selected]
+                  - option "Certified Pre-Owned"
+              - generic [ref=e44]:
+                - generic [ref=e45]: Budget
+                - combobox "Budget" [ref=e46] [cursor=pointer]:
+                  - option "Any price" [selected]
+                  - option "$35,000 to $45,000"
+                  - option "$45,000 to $55,000"
+                  - option "$55,000 to $65,000"
+                  - option "$65,000 to $75,000"
+              - generic [ref=e47]:
+                - generic [ref=e48]: Body style
+                - combobox "Body style" [ref=e49] [cursor=pointer]:
+                  - option "All body styles" [selected]
+                  - option "Trucks"
+                  - option "SUVs"
+                  - option "Cars"
+                  - option "Electric"
+            - button "Search inventory" [ref=e50]
+        - img "The AM Ford lot on 1059 State Route 46 North in Jefferson, Ohio" [ref=e53]
+    - region [ref=e54]:
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - heading "On the lot now" [level=2] [ref=e57]
+          - paragraph [ref=e58]: Priced and specified. Call to confirm availability before you travel.
+        - paragraph [ref=e59]: We will beat any deal
+        - generic [ref=e60]:
+          - article [ref=e61]:
+            - generic [ref=e63]:
+              - img "New 2025 Ford F-150 Platinum for sale at AM Ford" [ref=e66]
+              - generic [ref=e67]: New
+            - generic [ref=e69]:
+              - generic [ref=e70]:
+                - paragraph [ref=e71]: 2025 Ford
+                - heading [level=3] [ref=e72]:
+                  - link "F-150" [ref=e73] [cursor=pointer]:
+                    - /url: /vehicle/f150-platinum-2025
+                  - text: Platinum
+                - paragraph [ref=e75]: $64,995
+              - generic [ref=e76]:
+                - generic [ref=e77]:
+                  - term [ref=e78]: Odometer
+                  - definition [ref=e83]: Delivery
+                - generic [ref=e84]:
+                  - term [ref=e85]: Fuel
+                  - definition [ref=e89]: Gas
+                - generic [ref=e90]:
+                  - term [ref=e91]: Drivetrain
+                  - definition [ref=e96]: 4WD
+                - generic [ref=e97]:
+                  - term [ref=e98]: Economy
+                  - definition [ref=e103]: 20 / 26
+                - generic [ref=e104]:
+                  - term [ref=e105]: Output
+                  - definition [ref=e109]: 400 hp
+              - button "Want a lower price? Ask us about the best price on the 2025 Ford F-150 Platinum" [ref=e111]:
+                - generic [ref=e115]: Want a lower price?
+                - generic [ref=e116]: Ask us
+                - generic [ref=e119]: about the best price on the 2025 Ford F-150 Platinum
+              - generic [ref=e121]:
+                - button "Enquire about the 2025 Ford F-150 Platinum" [ref=e122]:
+                  - text: Enquire
+                  - generic [ref=e123]: about the 2025 Ford F-150 Platinum
+                - button "Save 2025 F-150" [ref=e124]: Save
+          - generic [ref=e127]:
+            - article [ref=e128]:
+              - generic [ref=e130]:
+                - img "New 2025 Ford Explorer ST for sale at AM Ford" [ref=e133]
+                - generic [ref=e134]: New
+              - generic [ref=e136]:
+                - generic [ref=e137]:
+                  - paragraph [ref=e138]: 2025 Ford
+                  - heading [level=3] [ref=e139]:
+                    - link "Explorer" [ref=e140] [cursor=pointer]:
+                      - /url: /vehicle/explorer-st-2025
+                    - text: ST
+                  - paragraph [ref=e142]: $56,750
+                - generic [ref=e143]:
+                  - generic [ref=e144]:
+                    - term [ref=e145]: Odometer
+                    - definition [ref=e150]: Delivery
+                  - generic [ref=e151]:
+                    - term [ref=e152]: Fuel
+                    - definition [ref=e156]: Gas
+                  - generic [ref=e157]:
+                    - term [ref=e158]: Drivetrain
+                    - definition [ref=e163]: AWD
+                - button "Want a lower price? Ask us about the best price on the 2025 Ford Explorer ST" [ref=e165]:
+                  - generic [ref=e169]: Want a lower price?
+                  - generic [ref=e170]: Ask us
+                  - generic [ref=e173]: about the best price on the 2025 Ford Explorer ST
+                - generic [ref=e175]:
+                  - button "Enquire about the 2025 Ford Explorer ST" [ref=e176]:
+                    - text: Enquire
+                    - generic [ref=e177]: about the 2025 Ford Explorer ST
+                  - button "Save 2025 Explorer" [ref=e178]: Save
+            - article [ref=e181]:
+              - generic [ref=e183]:
+                - img "New 2025 Ford F-150 Lightning Lariat for sale at AM Ford" [ref=e186]
+                - generic [ref=e187]: New
+              - generic [ref=e189]:
+                - generic [ref=e190]:
+                  - paragraph [ref=e191]: 2025 Ford
+                  - heading [level=3] [ref=e192]:
+                    - link "F-150 Lightning" [ref=e193] [cursor=pointer]:
+                      - /url: /vehicle/f150-lightning-2025
+                    - text: Lariat
+                  - paragraph [ref=e195]: $71,990
+                - generic [ref=e196]:
+                  - generic [ref=e197]:
+                    - term [ref=e198]: Odometer
+                    - definition [ref=e203]: Delivery
+                  - generic [ref=e204]:
+                    - term [ref=e205]: Fuel
+                    - definition [ref=e208]: Electric
+                  - generic [ref=e209]:
+                    - term [ref=e210]: Drivetrain
+                    - definition [ref=e215]: 4WD
+                - button "Want a lower price? Ask us about the best price on the 2025 Ford F-150 Lightning Lariat" [ref=e217]:
+                  - generic [ref=e221]: Want a lower price?
+                  - generic [ref=e222]: Ask us
+                  - generic [ref=e225]: about the best price on the 2025 Ford F-150 Lightning Lariat
+                - generic [ref=e227]:
+                  - button "Enquire about the 2025 Ford F-150 Lightning Lariat" [ref=e228]:
+                    - text: Enquire
+                    - generic [ref=e229]: about the 2025 Ford F-150 Lightning Lariat
+                  - button "Save 2025 F-150 Lightning" [ref=e230]: Save
+            - article [ref=e233]:
+              - generic [ref=e235]:
+                - img "New 2025 Ford Mustang GT Premium for sale at AM Ford" [ref=e238]
+                - generic [ref=e239]: New
+              - generic [ref=e241]:
+                - generic [ref=e242]:
+                  - paragraph [ref=e243]: 2025 Ford
+                  - heading [level=3] [ref=e244]:
+                    - link "Mustang" [ref=e245] [cursor=pointer]:
+                      - /url: /vehicle/mustang-gt-2025
+                    - text: GT Premium
+                  - paragraph [ref=e247]: $49,880
+                - generic [ref=e248]:
+                  - generic [ref=e249]:
+                    - term [ref=e250]: Odometer
+                    - definition [ref=e255]: Delivery
+                  - generic [ref=e256]:
+                    - term [ref=e257]: Fuel
+                    - definition [ref=e261]: Gas
+                  - generic [ref=e262]:
+                    - term [ref=e263]: Drivetrain
+                    - definition [ref=e268]: RWD
+                - button "Want a lower price? Ask us about the best price on the 2025 Ford Mustang GT Premium" [ref=e270]:
+                  - generic [ref=e274]: Want a lower price?
+                  - generic [ref=e275]: Ask us
+                  - generic [ref=e278]: about the best price on the 2025 Ford Mustang GT Premium
+                - generic [ref=e280]:
+                  - button "Enquire about the 2025 Ford Mustang GT Premium" [ref=e281]:
+                    - text: Enquire
+                    - generic [ref=e282]: about the 2025 Ford Mustang GT Premium
+                  - button "Save 2025 Mustang" [ref=e283]: Save
+        - paragraph [ref=e286]:
+          - link "See all inventory" [ref=e287] [cursor=pointer]:
+            - /url: /inventory
+  - contentinfo [ref=e296]:
+    - generic [ref=e297]:
+      - generic [ref=e298]:
+        - generic [ref=e299]:
+          - link [ref=e300] [cursor=pointer]:
+            - /url: /
+            - img "AM Ford" [ref=e301]
+          - paragraph [ref=e302]: A family-owned Ford dealership in Jefferson, serving Ashtabula County, Northeast Ohio, and Northwestern Pennsylvania.
+        - generic [ref=e303]:
+          - paragraph [ref=e304]: Explore
+          - list [ref=e305]:
+            - listitem [ref=e306]:
+              - link "Inventory" [ref=e307] [cursor=pointer]:
+                - /url: /inventory
+            - listitem [ref=e308]:
+              - link "Ford Models" [ref=e309] [cursor=pointer]:
+                - /url: /ford-models
+            - listitem [ref=e310]:
+              - link "Compare Models" [ref=e311] [cursor=pointer]:
+                - /url: /compare
+            - listitem [ref=e312]:
+              - link "Buying Guides" [ref=e313] [cursor=pointer]:
+                - /url: /guides
+            - listitem [ref=e314]:
+              - link "Financing" [ref=e315] [cursor=pointer]:
+                - /url: /financing
+            - listitem [ref=e316]:
+              - link "Value Your Trade" [ref=e317] [cursor=pointer]:
+                - /url: /trade-in
+            - listitem [ref=e318]:
+              - link "Commercial" [ref=e319] [cursor=pointer]:
+                - /url: /commercial
+            - listitem [ref=e320]:
+              - link "Service" [ref=e321] [cursor=pointer]:
+                - /url: /service
+            - listitem [ref=e322]:
+              - link "Areas We Serve" [ref=e323] [cursor=pointer]:
+                - /url: /areas-we-serve
+            - listitem [ref=e324]:
+              - link "Vehicle Delivery" [ref=e325] [cursor=pointer]:
+                - /url: /nationwide-vehicle-delivery
+            - listitem [ref=e326]:
+              - link "About" [ref=e327] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e328]:
+              - link "Contact" [ref=e329] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e330]:
+          - paragraph [ref=e331]: Visit Us
+          - list [ref=e332]:
+            - listitem [ref=e333]: 1059 State Route 46 North, Jefferson, OH 44047
+            - listitem [ref=e337]:
+              - link "(440) 998-2151" [ref=e338] [cursor=pointer]:
+                - /url: tel:+14409982151
+      - generic [ref=e341]: © 2026 AM Ford. All rights reserved.

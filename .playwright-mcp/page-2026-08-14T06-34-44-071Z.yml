@@ -1,0 +1,852 @@
+- generic [ref=f9e2]:
+  - banner [ref=f9e3]:
+    - navigation "Primary" [ref=f9e4]:
+      - link [ref=f9e5] [cursor=pointer]:
+        - /url: /
+        - img "AM Ford" [ref=f9e6]
+      - generic [ref=f9e7]:
+        - link "Home" [ref=f9e8] [cursor=pointer]:
+          - /url: /
+        - link "Inventory" [ref=f9e9] [cursor=pointer]:
+          - /url: /inventory
+        - link "Models" [ref=f9e11] [cursor=pointer]:
+          - /url: /ford-models
+        - link "Financing" [ref=f9e14] [cursor=pointer]:
+          - /url: /financing
+        - link "Areas" [ref=f9e16] [cursor=pointer]:
+          - /url: /areas-we-serve
+        - link "Research" [ref=f9e20] [cursor=pointer]:
+          - /url: /guides
+        - link "Service" [ref=f9e23] [cursor=pointer]:
+          - /url: /service
+        - link "About" [ref=f9e24] [cursor=pointer]:
+          - /url: /about
+        - link "Contact" [ref=f9e25] [cursor=pointer]:
+          - /url: /contact
+      - link "(440) 998-2151" [ref=f9e27] [cursor=pointer]:
+        - /url: tel:+14409982151
+  - main [ref=f9e30]:
+    - generic [ref=f9e31]:
+      - generic [ref=f9e34]:
+        - navigation "Breadcrumb" [ref=f9e35]:
+          - list [ref=f9e36]:
+            - listitem [ref=f9e37]:
+              - link "Home" [ref=f9e38] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=f9e41]:
+              - link "Inventory" [ref=f9e42] [cursor=pointer]:
+                - /url: /inventory
+            - listitem [ref=f9e45]:
+              - generic [ref=f9e46]: 2025 Ford F-150 Platinum
+        - link "Back to inventory" [ref=f9e47] [cursor=pointer]:
+          - /url: /inventory
+      - generic [ref=f9e50]:
+        - generic [ref=f9e51]:
+          - generic [ref=f9e52]:
+            - img "2025 Ford F-150 Platinum in Jefferson, OH" [ref=f9e53]
+            - generic [ref=f9e54]:
+              - generic [ref=f9e55]: New Arrival
+              - generic [ref=f9e56]: Best Seller
+          - generic [ref=f9e57]:
+            - img "F-150 gallery view 1" [ref=f9e59]
+            - img "F-150 gallery view 2" [ref=f9e61]
+            - img "F-150 gallery view 3" [ref=f9e63]
+        - generic [ref=f9e66]:
+          - paragraph [ref=f9e67]: New · In stock in Jefferson
+          - heading "2025 Ford F-150 Platinum" [level=1] [ref=f9e68]
+          - generic [ref=f9e69]:
+            - generic [ref=f9e70]:
+              - paragraph [ref=f9e71]: $64,995
+              - paragraph [ref=f9e72]: MSRP $68,420
+            - generic [ref=f9e73]: Lifetime warranty
+          - generic [ref=f9e76]:
+            - generic [ref=f9e77]: New
+            - generic [ref=f9e82]: Gas
+            - generic [ref=f9e87]: 4WD
+            - generic [ref=f9e100]: Oxford White
+          - paragraph [ref=f9e108]: 1 in stock; when it's gone, it's gone
+          - generic [ref=f9e110]:
+            - button "Is this still available?" [ref=f9e111]
+            - button "Get Price" [ref=f9e114]
+            - button "Book test drive" [ref=f9e118]
+            - button "Request E-Price Quote" [ref=f9e121]
+            - generic [ref=f9e124]:
+              - link "Text us" [ref=f9e125] [cursor=pointer]:
+                - /url: sms:+14409982151?&body=Hi%20AM%20Ford%20%E2%80%94%20I'm%20interested%20in%20the%202025%20Ford%20F-150%20Platinum%20listed%20at%20%2464%2C995.%20Is%20it%20still%20available%3F
+              - link "Call us" [ref=f9e128] [cursor=pointer]:
+                - /url: tel:+14409982151
+            - generic [ref=f9e131]:
+              - button "Video tour" [ref=f9e132]
+              - button "Watch price" [ref=f9e136]
+          - paragraph [ref=f9e140]: In stock today at 1059 State Route 46 North, Jefferson, OH 44047
+    - generic [ref=f9e143]:
+      - generic [ref=f9e144]:
+        - generic [ref=f9e145]: Vehicle Overview & Specs
+        - heading "Built for performance & comfort." [level=2] [ref=f9e146]
+        - paragraph [ref=f9e147]: Every spec on this 2025 Ford F-150 has been optioned, inspected, and verified by certified technicians at AM Ford in Jefferson.
+      - generic [ref=f9e148]:
+        - generic [ref=f9e149]:
+          - generic [ref=f9e150]:
+            - term [ref=f9e151]: Year
+            - definition [ref=f9e152]: "2025"
+          - generic [ref=f9e153]:
+            - term [ref=f9e154]: Body Style
+            - definition [ref=f9e155]: Truck
+          - generic [ref=f9e156]:
+            - term [ref=f9e157]: Drivetrain
+            - definition [ref=f9e158]: 4WD
+          - generic [ref=f9e159]:
+            - term [ref=f9e160]: Fuel Type
+            - definition [ref=f9e161]: Gas
+          - generic [ref=f9e162]:
+            - term [ref=f9e163]: Transmission
+            - definition [ref=f9e164]: Automatic
+          - generic [ref=f9e165]:
+            - term [ref=f9e166]: Horsepower
+            - definition [ref=f9e167]: 400 hp
+          - generic [ref=f9e168]:
+            - term [ref=f9e169]: Exterior Color
+            - definition [ref=f9e170]: Oxford White
+          - generic [ref=f9e171]:
+            - term [ref=f9e172]: Interior Trim
+            - definition [ref=f9e173]: Black Leather
+          - generic [ref=f9e174]:
+            - term [ref=f9e175]: MPG / Range
+            - definition [ref=f9e176]: 20 / 26
+        - generic [ref=f9e177]:
+          - heading "Standout Features & Options" [level=3] [ref=f9e178]
+          - list [ref=f9e179]:
+            - listitem [ref=f9e180]: 360° Camera
+            - listitem [ref=f9e184]: Heated & Cooled Seats
+            - listitem [ref=f9e188]: Pro Power Onboard
+            - listitem [ref=f9e192]: BlueCruise Hands-Free
+            - listitem [ref=f9e196]: Twin-Panel Moonroof
+    - region [ref=f9e200]:
+      - generic [ref=f9e202]:
+        - generic [ref=f9e203]:
+          - generic [ref=f9e204]: Seller's Notes
+          - heading "What we would tell you about it." [level=2] [ref=f9e205]
+          - paragraph [ref=f9e206]: Written by the team at AM Ford about this specific 2025 F-150, not the model in general.
+        - generic [ref=f9e208]:
+          - paragraph [ref=f9e209]: Platinum sits at the top of the F-150 range, so this one already carries the equipment most buyers otherwise add a piece at a time. Heated and cooled front seats, a 360 degree camera that earns its keep in a tight yard or backing to a trailer, and BlueCruise for hands-free highway miles. Pro Power Onboard turns the bed into a generator on a job site or during an outage. Four-wheel drive, delivery miles only.
+          - generic [ref=f9e210]:
+            - generic [ref=f9e211]: Anything here you want to check in person?
+            - link "Call (440) 998-2151" [ref=f9e212] [cursor=pointer]:
+              - /url: tel:+14409982151
+    - generic [ref=f9e217]:
+      - generic [ref=f9e218]:
+        - generic [ref=f9e219]: About This F-150
+        - heading "What it's like to own this truck." [level=2] [ref=f9e220]
+        - generic [ref=f9e221]:
+          - paragraph [ref=f9e225]:
+            - text: Priced
+            - strong [ref=f9e226]: $3,425 below original MSRP
+          - paragraph [ref=f9e231]:
+            - strong [ref=f9e232]: Delivery miles only
+            - text: ", effectively factory-new"
+      - generic [ref=f9e234]:
+        - paragraph [ref=f9e235]: Under the hood, this 2025 F-150 Platinum produces 400 horsepower through an automatic transmission, and the 4WD system delivers sure-footed traction through lake-effect snow, gravel back roads, and muddy job sites alike, which is exactly what Northeast Ohio winters demand.
+        - paragraph [ref=f9e236]: Rated at 20 / 26 MPG (city/highway), it pairs straightforward gas-engine ownership with the proven reliability Ford powertrains are known for. There is no charging to plan; just fill up and go.
+        - paragraph [ref=f9e237]: "As a full-size truck, it's built to work: hauling mulch from Saybrook garden centers, towing a boat to Lake Erie, or handling winter storm cleanup without breaking a sweat. Finished in Oxford White over a Black Leather interior, this example is effectively brand new with delivery miles only, and it's available to see today at AM Ford, 1059 State Route 46 North, Jefferson, OH 44047, serving Ashtabula County drivers in Saybrook, Geneva, and Conneaut, and an easy drive from Mentor and Erie, PA."
+    - region [ref=f9e238]:
+      - generic [ref=f9e240]:
+        - generic [ref=f9e241]:
+          - generic [ref=f9e242]: The Detail Behind This Listing
+          - heading "What the record actually says." [level=2] [ref=f9e243]
+          - paragraph [ref=f9e244]: Price, odometer, condition, and equipment, straight off this vehicle's own record. If a number matters to your decision, it should come from here rather than from a brochure for the F-150 range.
+          - link "Ask about this F-150 on (440) 998-2151" [ref=f9e245] [cursor=pointer]:
+            - /url: tel:+14409982151
+        - generic [ref=f9e248]:
+          - generic [ref=f9e249]:
+            - paragraph [ref=f9e250]: AM Ford lists this one at $64,995, against an original MSRP of $68,420 on the record, a difference of $3,425. That figure covers the vehicle. Tax, title, and registration sit outside it, and a trade allowance moves the total again, so ask us to put the numbers on one page in writing before you commit to anything.
+            - paragraph [ref=f9e251]: The odometer reads 12 miles, short enough that this one has not been driven in any meaningful sense. The record lists the condition as New, so the equipment on it is the factory build rather than anything a previous owner chose to add or take off.
+            - paragraph [ref=f9e252]: The equipment recorded against this 2025 F-150 is 360° Camera, Heated & Cooled Seats, Pro Power Onboard, BlueCruise Hands-Free, and Twin-Panel Moonroof. That is the whole list. Anything you have read about the F-150 range that is not named there is not fitted to this vehicle, and we would far rather you learn that here than after a drive to Jefferson.
+          - generic [ref=f9e253]:
+            - heading "What to weigh on this one" [level=3] [ref=f9e254]
+            - paragraph [ref=f9e258]: Three things this specific configuration asks of an owner in Northeast Ohio. None of them is a reason not to buy it; all of them are easier to settle before you sign than afterwards.
+            - list [ref=f9e259]:
+              - listitem [ref=f9e260]:
+                - generic [ref=f9e264]: If you intend to tow, tell us what and how heavy before you buy. What a truck can pull is set by its own combination of engine, axle ratio, cab, bed, and factory tow equipment, and the figures that apply come off this truck's door jamb label rather than a brochure for the model range.
+              - listitem [ref=f9e265]:
+                - generic [ref=f9e269]: Four-wheel drive is something you select rather than something that runs on its own in the background. Ask us to walk you through the selector and what each setting is for before you drive away, particularly if everything you have owned until now has been all-wheel drive.
+              - listitem [ref=f9e270]:
+                - generic [ref=f9e274]: Nothing about this one changes your routine. It fuels at any pump, needs no charging plan, and asks nothing of your electrical panel.
+    - region [ref=f9e275]:
+      - generic [ref=f9e277]:
+        - generic [ref=f9e278]:
+          - generic [ref=f9e279]: Where To Go From Here
+          - heading "The rest of the decision." [level=2] [ref=f9e280]
+          - paragraph [ref=f9e281]: Every page linked below is on this site, and every filtered search runs against the Ford stock standing in Jefferson today.
+        - generic [ref=f9e282]:
+          - generic [ref=f9e283]:
+            - heading "Still cross shopping" [level=3] [ref=f9e284]
+            - paragraph [ref=f9e288]:
+              - text: Our
+              - link "Ford F-150 page for Jefferson and Ashtabula County buyers" [ref=f9e289] [cursor=pointer]:
+                - /url: /ford/f-150
+              - text: covers the trims, the local reasoning, and what we hold in stock. To stay in the same shape of vehicle, browse
+              - link "every Ford truck on the lot today" [ref=f9e290] [cursor=pointer]:
+                - /url: /inventory?type=Truck
+              - text: ", or narrow by what it runs on with"
+              - link "gas powered Fords in stock in Jefferson OH" [ref=f9e291] [cursor=pointer]:
+                - /url: /inventory?fuel=Gas
+              - text: . Working to a number instead? This one sits in the
+              - link "Fords priced $55,000 to $65,000" [ref=f9e292] [cursor=pointer]:
+                - /url: /inventory?priceMin=55000&priceMax=65000
+              - text: band. It is listed alongside the rest of the
+              - link "new Fords for sale in Jefferson OH" [ref=f9e293] [cursor=pointer]:
+                - /url: /inventory?condition=New
+              - text: .
+          - generic [ref=f9e294]:
+            - heading "Read before you decide" [level=3] [ref=f9e295]
+            - paragraph [ref=f9e298]: The comparisons and guides we have written that bear on the F-150 specifically.
+            - list [ref=f9e299]:
+              - listitem [ref=f9e300]:
+                - link "Compare the F-150 and the F-150 Lightning" [ref=f9e301] [cursor=pointer]:
+                  - /url: /compare/f-150-vs-f-150-lightning
+                - generic [ref=f9e302]: Worth reading before you rule the electric truck in or out on towing and charging.
+              - listitem [ref=f9e303]:
+                - link "Our guide to used F-150 reliability" [ref=f9e304] [cursor=pointer]:
+                  - /url: /guides/is-a-used-ford-f-150-reliable
+                - generic [ref=f9e305]: Covers the service history and corrosion checks that decide whether a used truck is worth the money.
+              - listitem [ref=f9e306]:
+                - link "Our guide to EcoBoost engine reliability" [ref=f9e307] [cursor=pointer]:
+                  - /url: /guides/is-ford-ecoboost-reliable
+                - generic [ref=f9e308]: Useful if the F-150 you are looking at has a turbocharged EcoBoost engine rather than a V8.
+          - generic [ref=f9e309]:
+            - heading "Paperwork and your trade" [level=3] [ref=f9e310]
+            - paragraph [ref=f9e313]:
+              - text: You can
+              - link "send a finance application to AM Ford" [ref=f9e314] [cursor=pointer]:
+                - /url: /financing
+              - text: before you ever visit, and if your credit is something you are rebuilding, our page on
+              - link "financing a Ford while you rebuild your credit" [ref=f9e315] [cursor=pointer]:
+                - /url: /finance/bad-credit
+              - text: sets out what we ask for and why. To put your current vehicle against this one,
+              - link "start a trade appraisal for this 2025 F-150" [ref=f9e316] [cursor=pointer]:
+                - /url: /trade-in
+              - text: ; photographs are enough to begin. Buying through a business, a farm, or a fleet changes the paperwork, and
+              - link "commercial and work vehicle buying at AM Ford" [ref=f9e317] [cursor=pointer]:
+                - /url: /commercial
+              - text: covers how.
+          - generic [ref=f9e318]:
+            - heading "Buying from outside Ashtabula County" [level=3] [ref=f9e319]
+            - paragraph [ref=f9e325]:
+              - text: Free home delivery within 300 miles and vehicle shipping available to all 50 states. If the drive is the only thing standing between you and this F-150, start with
+              - link "how free home delivery and nationwide shipping work" [ref=f9e326] [cursor=pointer]:
+                - /url: /nationwide-vehicle-delivery
+              - text: . For the route and the notes on where you live, see
+              - link "every town and county AM Ford serves" [ref=f9e327] [cursor=pointer]:
+                - /url: /areas-we-serve
+              - text: ","
+              - link "the Ford dealer in Ashtabula County" [ref=f9e328] [cursor=pointer]:
+                - /url: /ford-dealer/county/ashtabula-oh
+              - text: ","
+              - link "buying a Ford from Erie, PA" [ref=f9e329] [cursor=pointer]:
+                - /url: /ford-dealer/erie-pa
+              - text: ", or"
+              - link "the Ford dealership serving Cleveland, OH" [ref=f9e330] [cursor=pointer]:
+                - /url: /ford-dealer/cleveland-oh
+              - text: .
+            - paragraph [ref=f9e331]:
+              - generic [ref=f9e334]:
+                - text: Once it is yours,
+                - link "book Ford service at our Jefferson, Ohio shop" [ref=f9e335] [cursor=pointer]:
+                  - /url: /service
+                - text: ", or"
+                - link "contact the AM Ford sales team" [ref=f9e336] [cursor=pointer]:
+                  - /url: /contact
+                - text: about anything this page did not answer.
+    - generic [ref=f9e338]:
+      - generic [ref=f9e339]:
+        - generic [ref=f9e340]: Vehicle Buying Guide
+        - heading "Why Buy the 2025 Ford F-150 Platinum at AM Ford in Jefferson, OH?" [level=2] [ref=f9e341]
+        - paragraph [ref=f9e342]:
+          - text: Are you searching for a reliable
+          - strong [ref=f9e343]: 2025 Ford F-150 Platinum for sale in Jefferson, OH
+          - text: "? At AM Ford, we are proud to offer this exceptional truck featuring a powerful"
+          - strong [ref=f9e344]: 400 HP
+          - text: engine,
+          - strong [ref=f9e345]: 4WD
+          - text: drive system, and premium
+          - strong [ref=f9e346]: Oxford White
+          - text: finish. Located at 1059 State Route 46 North, Jefferson, OH 44047, AM Ford serves drivers across Ashtabula County, Saybrook, Geneva, Mentor, and Erie, PA.
+      - generic [ref=f9e347]:
+        - generic [ref=f9e348]:
+          - heading "Certified Mechanical Inspection" [level=3] [ref=f9e353]
+          - paragraph [ref=f9e354]: This F-150 has undergone a full multi-point safety inspection covering brakes, engine performance, tire wear, and fluid levels by factory-trained technicians.
+        - generic [ref=f9e355]:
+          - heading "Transparent Pricing & Low APR" [level=3] [ref=f9e359]
+          - paragraph [ref=f9e360]: No hidden dealer markup. Take advantage of custom financing terms, flexible trade-in valuation, and low monthly rates tailored to your budget.
+        - generic [ref=f9e361]:
+          - heading "Lifetime Powertrain Warranty" [level=3] [ref=f9e366]
+          - paragraph [ref=f9e367]: Drive with peace of mind. Eligible vehicles at AM Ford include lifetime powertrain protection to keep you covered on Ohio highways.
+      - generic [ref=f9e368]:
+        - generic [ref=f9e369]:
+          - generic [ref=f9e370]: Questions About This Vehicle?
+          - heading "2025 Ford F-150 Frequently Asked Questions" [level=3] [ref=f9e371]
+        - generic [ref=f9e372]:
+          - group [ref=f9e373]:
+            - generic "Is this 2025 Ford F-150 Platinum still available in Jefferson, OH?" [ref=f9e374] [cursor=pointer]
+            - generic [ref=f9e382]: This 2025 F-150 Platinum is listed in stock at AM Ford, 1059 State Route 46 North, Jefferson, OH 44047. One vehicle can sell while another shopper is still reading about it, so call (440) 998-2151 or send an enquiry and we will confirm it is on the lot before you make the drive.
+          - group [ref=f9e383]:
+            - generic "What does this 2025 F-150 cost at AM Ford?" [ref=f9e384] [cursor=pointer]
+          - group [ref=f9e392]:
+            - generic "What drivetrain and powertrain does this F-150 have?" [ref=f9e393] [cursor=pointer]
+          - group [ref=f9e401]:
+            - generic "How many miles are on this 2025 F-150, and what condition is it listed as?" [ref=f9e402] [cursor=pointer]
+          - group [ref=f9e410]:
+            - generic "Can I put my current vehicle toward this 2025 F-150?" [ref=f9e411] [cursor=pointer]
+          - group [ref=f9e419]:
+            - generic "Can this 2025 F-150 be delivered to my home?" [ref=f9e420] [cursor=pointer]
+    - generic [ref=f9e429]:
+      - generic [ref=f9e430]:
+        - paragraph [ref=f9e431]: Shop from wherever you live
+        - heading "Free home delivery within 300 miles, and vehicle shipping available to all 50 states" [level=2] [ref=f9e432]
+        - paragraph [ref=f9e433]: You do not have to live in Ashtabula County to buy from AM Ford. Choose your vehicle online, complete much of the financing and paperwork remotely, and we will bring it to your driveway free of charge within 300 miles of our Jefferson, Ohio dealership. Farther away? We can arrange shipping to any of the 50 states.
+        - paragraph [ref=f9e434]: Shipping charges may apply outside the complimentary 300-mile delivery area. Delivery timing depends on your location, vehicle availability, completed documentation, and financing approval. Confirm terms with the dealership before purchase.
+      - generic [ref=f9e435]:
+        - link "Learn About Free Home Delivery" [ref=f9e436] [cursor=pointer]:
+          - /url: /nationwide-vehicle-delivery
+        - link "Request a Shipping Quote" [ref=f9e439] [cursor=pointer]:
+          - /url: tel:+14409982151
+    - generic [ref=f9e442]:
+      - generic [ref=f9e443]:
+        - generic [ref=f9e444]: Inspection Report
+        - heading "See exactly what our technicians checked." [level=2] [ref=f9e445]
+        - paragraph [ref=f9e446]: Every vehicle at AM Ford passes a 172-point inspection before sale. Unlock the category summary for this F-150. The full written report is waiting for you at the dealership.
+      - generic [ref=f9e448]:
+        - list:
+          - listitem:
+            - generic: Engine & powertrain
+            - generic: 38 checks
+          - listitem:
+            - generic: Brakes & suspension
+            - generic: 26 checks
+          - listitem:
+            - generic: Tires, wheels & alignment
+            - generic: 18 checks
+          - listitem:
+            - generic: Electrical & battery health
+            - generic: 22 checks
+        - generic [ref=f9e449]:
+          - heading "Unlock the inspection summary" [level=3] [ref=f9e450]
+          - paragraph [ref=f9e451]: Free, and we'll also email you a copy for your records.
+          - generic [ref=f9e452]:
+            - textbox [ref=f9e457]:
+              - /placeholder: you@example.com
+            - textbox [ref=f9e461]:
+              - /placeholder: Phone (optional)
+          - generic [ref=f9e462]:
+            - checkbox "I agree AM Ford may email me this report and follow up about this vehicle (and text/call if I provided a number). Reply STOP to opt out." [ref=f9e463]
+            - generic [ref=f9e464]: I agree AM Ford may email me this report and follow up about this vehicle (and text/call if I provided a number). Reply STOP to opt out.
+          - button "Unlock free report" [ref=f9e465]
+    - generic [ref=f9e471]:
+      - generic [ref=f9e472]:
+        - generic [ref=f9e473]: Estimate your payment
+        - heading "Numbers that feel honest." [level=2] [ref=f9e474]
+        - paragraph [ref=f9e475]: A quick estimate based on your inputs. Final terms depend on credit and lender.
+        - generic [ref=f9e476]:
+          - paragraph [ref=f9e477]: Estimated monthly
+          - paragraph [ref=f9e478]: $1,128/mo
+          - paragraph [ref=f9e479]: 60 months · 5.9% APR · $6,500 down
+          - button "Get pre-approved for this payment" [ref=f9e480]
+      - generic [ref=f9e483]:
+        - generic [ref=f9e484]:
+          - generic [ref=f9e485]:
+            - paragraph [ref=f9e486]: Down payment
+            - generic [ref=f9e487]: $6,500
+          - slider [ref=f9e488] [cursor=pointer]: "6500"
+        - generic [ref=f9e489]:
+          - paragraph [ref=f9e490]: Term
+          - generic [ref=f9e491]:
+            - button "36 mo" [ref=f9e492]
+            - button "48 mo" [ref=f9e493]
+            - button "60 mo" [ref=f9e494]
+            - button "72 mo" [ref=f9e495]
+        - generic [ref=f9e497]:
+          - generic [ref=f9e498]:
+            - paragraph [ref=f9e499]: APR
+            - generic [ref=f9e500]: 5.9%
+          - slider [ref=f9e501] [cursor=pointer]: "5.9"
+    - generic [ref=f9e503]:
+      - generic [ref=f9e504]:
+        - heading "You might also like" [level=2] [ref=f9e505]
+        - generic [ref=f9e506]:
+          - link "More Trucks →" [ref=f9e507] [cursor=pointer]:
+            - /url: /inventory?type=Truck
+          - link "All inventory →" [ref=f9e508] [cursor=pointer]:
+            - /url: /inventory
+      - generic [ref=f9e509]:
+        - generic [ref=f9e510]:
+          - generic [ref=f9e511]:
+            - generic [ref=f9e512]:
+              - img "New 2025 Ford Mustang GT Premium for sale at AM Ford" [ref=f9e514]
+              - generic [ref=f9e515]: Performance
+              - generic [ref=f9e517]:
+                - generic [ref=f9e518]: Car
+                - generic [ref=f9e519]: New
+              - button "Save 2025 Mustang to your garage" [ref=f9e520]
+            - generic [ref=f9e523]:
+              - generic [ref=f9e524]:
+                - generic [ref=f9e525]:
+                  - paragraph [ref=f9e526]: 2025 · Ford
+                  - heading "Mustang GT Premium" [level=3] [ref=f9e527]
+                - generic [ref=f9e528]:
+                  - paragraph [ref=f9e529]: $49,880
+                  - paragraph [ref=f9e530]: $52,100
+                  - paragraph [ref=f9e531]: ~$776/mo est.
+              - generic [ref=f9e532]:
+                - generic [ref=f9e533]: 8 mi
+                - generic [ref=f9e538]: Gas
+                - generic [ref=f9e543]: RWD
+          - generic [ref=f9e556]:
+            - button "Get Price" [ref=f9e557]
+            - link "View details" [ref=f9e561] [cursor=pointer]:
+              - /url: /vehicle/mustang-gt-2025
+        - generic [ref=f9e565]:
+          - generic [ref=f9e566]:
+            - generic [ref=f9e567]:
+              - img "New 2025 Ford Explorer ST for sale at AM Ford" [ref=f9e569]
+              - generic [ref=f9e570]: 3-Row
+              - generic [ref=f9e572]:
+                - generic [ref=f9e573]: SUV
+                - generic [ref=f9e574]: New
+              - button "Save 2025 Explorer to your garage" [ref=f9e575]
+            - generic [ref=f9e578]:
+              - generic [ref=f9e579]:
+                - generic [ref=f9e580]:
+                  - paragraph [ref=f9e581]: 2025 · Ford
+                  - heading "Explorer ST" [level=3] [ref=f9e582]
+                - generic [ref=f9e583]:
+                  - paragraph [ref=f9e584]: $56,750
+                  - paragraph [ref=f9e585]: ~$883/mo est.
+              - generic [ref=f9e586]:
+                - generic [ref=f9e587]: 15 mi
+                - generic [ref=f9e592]: Gas
+                - generic [ref=f9e597]: AWD
+          - generic [ref=f9e610]:
+            - button "Get Price" [ref=f9e611]
+            - link "View details" [ref=f9e615] [cursor=pointer]:
+              - /url: /vehicle/explorer-st-2025
+        - generic [ref=f9e619]:
+          - generic [ref=f9e620]:
+            - generic [ref=f9e621]:
+              - img "New 2025 Ford F-150 Lightning Lariat for sale at AM Ford" [ref=f9e623]
+              - generic [ref=f9e624]:
+                - generic [ref=f9e625]: Electric
+                - generic [ref=f9e626]: New
+              - generic [ref=f9e627]:
+                - generic [ref=f9e628]: EV
+                - generic [ref=f9e629]: New
+              - button "Save 2025 F-150 Lightning to your garage" [ref=f9e630]
+            - generic [ref=f9e633]:
+              - generic [ref=f9e634]:
+                - generic [ref=f9e635]:
+                  - paragraph [ref=f9e636]: 2025 · Ford
+                  - heading "F-150 Lightning Lariat" [level=3] [ref=f9e637]
+                - generic [ref=f9e638]:
+                  - paragraph [ref=f9e639]: $71,990
+                  - paragraph [ref=f9e640]: ~$1120/mo est.
+              - generic [ref=f9e641]:
+                - generic [ref=f9e642]: 6 mi
+                - generic [ref=f9e647]: Electric
+                - generic [ref=f9e652]: 4WD
+          - generic [ref=f9e665]:
+            - button "Get Price" [ref=f9e666]
+            - link "View details" [ref=f9e670] [cursor=pointer]:
+              - /url: /vehicle/f150-lightning-2025
+    - navigation "Browse the rest of the inventory" [ref=f9e674]:
+      - generic [ref=f9e675]:
+        - generic [ref=f9e676]:
+          - link "Previous vehicle 2024 Ford Escape Titanium Hybrid $36,450 · Certified Pre-Owned" [ref=f9e677] [cursor=pointer]:
+            - /url: /vehicle/escape-titanium-2024
+            - generic [ref=f9e680]:
+              - generic [ref=f9e681]: Previous vehicle
+              - generic [ref=f9e682]: 2024 Ford Escape Titanium Hybrid
+              - generic [ref=f9e683]: $36,450 · Certified Pre-Owned
+          - link "Next vehicle 2025 Ford Mustang GT Premium $49,880 · New" [ref=f9e684] [cursor=pointer]:
+            - /url: /vehicle/mustang-gt-2025
+            - generic [ref=f9e687]:
+              - generic [ref=f9e688]: Next vehicle
+              - generic [ref=f9e689]: 2025 Ford Mustang GT Premium
+              - generic [ref=f9e690]: $49,880 · New
+        - paragraph [ref=f9e691]:
+          - text: Vehicle 1 of 6 at AM Ford.
+          - link "Back to all 6 Ford vehicles in stock in Jefferson" [ref=f9e692] [cursor=pointer]:
+            - /url: /inventory
+    - navigation "Frequent searches leading to this page" [ref=f9e695]:
+      - link "Skip past the frequent searches" [ref=f9e696] [cursor=pointer]:
+        - /url: "#frequent-searches-end-vehicle"
+      - heading "Frequent Searches Leading to This Page" [level=2] [ref=f9e697]
+      - paragraph [ref=f9e698]: Every link opens a page on this site, and each filtered search runs against the Ford stock standing in Jefferson today.
+      - generic [ref=f9e699]:
+        - generic [ref=f9e701]:
+          - heading "Ford models we stock" [level=3] [ref=f9e702]
+          - list "Ford models we stock" [ref=f9e703]:
+            - listitem [ref=f9e704]:
+              - link "Ford F-150 for sale in Jefferson OH" [ref=f9e705] [cursor=pointer]:
+                - /url: /ford/f-150
+            - listitem [ref=f9e706]:
+              - generic [ref=f9e707]: "|"
+              - link "Ford Mustang near Ashtabula OH" [ref=f9e708] [cursor=pointer]:
+                - /url: /ford/mustang
+            - listitem [ref=f9e709]:
+              - generic [ref=f9e710]: "|"
+              - link "Ford Explorer trims, specs, and current stock" [ref=f9e711] [cursor=pointer]:
+                - /url: /ford/explorer
+            - listitem [ref=f9e712]:
+              - generic [ref=f9e713]: "|"
+              - link "Ford F-150 Lightning at a Ford dealer in Ashtabula County" [ref=f9e714] [cursor=pointer]:
+                - /url: /ford/f-150-lightning
+            - listitem [ref=f9e715]:
+              - generic [ref=f9e716]: "|"
+              - link "Ford Bronco for Northeast Ohio drivers" [ref=f9e717] [cursor=pointer]:
+                - /url: /ford/bronco
+            - listitem [ref=f9e718]:
+              - generic [ref=f9e719]: "|"
+              - link "Buying a Ford Escape in Jefferson OH" [ref=f9e720] [cursor=pointer]:
+                - /url: /ford/escape
+        - generic [ref=f9e722]:
+          - heading "Research and compare" [level=3] [ref=f9e723]
+          - list "Research and compare" [ref=f9e724]:
+            - listitem [ref=f9e725]:
+              - link "Is a Used Ford F-150 Reliable?" [ref=f9e726] [cursor=pointer]:
+                - /url: /guides/is-a-used-ford-f-150-reliable
+            - listitem [ref=f9e727]:
+              - generic [ref=f9e728]: "|"
+              - link "Is the Ford EcoBoost Engine Reliable?" [ref=f9e729] [cursor=pointer]:
+                - /url: /guides/is-ford-ecoboost-reliable
+            - listitem [ref=f9e730]:
+              - generic [ref=f9e731]: "|"
+              - link "What to Check Before Buying a Used Ford" [ref=f9e732] [cursor=pointer]:
+                - /url: /guides/what-to-check-before-buying-a-used-ford
+            - listitem [ref=f9e733]:
+              - generic [ref=f9e734]: "|"
+              - link "Best Ford SUV for Families" [ref=f9e735] [cursor=pointer]:
+                - /url: /guides/best-ford-suv-for-families
+            - listitem [ref=f9e736]:
+              - generic [ref=f9e737]: "|"
+              - link "Ford Explorer vs Ford Escape" [ref=f9e738] [cursor=pointer]:
+                - /url: /compare/explorer-vs-escape
+            - listitem [ref=f9e739]:
+              - generic [ref=f9e740]: "|"
+              - link "Ford F-150 vs Ford F-150 Lightning" [ref=f9e741] [cursor=pointer]:
+                - /url: /compare/f-150-vs-f-150-lightning
+            - listitem [ref=f9e742]:
+              - generic [ref=f9e743]: "|"
+              - link "Ford Bronco vs Ford Explorer" [ref=f9e744] [cursor=pointer]:
+                - /url: /compare/bronco-vs-explorer
+        - generic [ref=f9e746]:
+          - heading "Shop by body style" [level=3] [ref=f9e747]
+          - list "Shop by body style" [ref=f9e748]:
+            - listitem [ref=f9e749]:
+              - link "Ford trucks for sale in Jefferson OH" [ref=f9e750] [cursor=pointer]:
+                - /url: /inventory?type=Truck
+            - listitem [ref=f9e751]:
+              - generic [ref=f9e752]: "|"
+              - link "Ford SUVs near Ashtabula" [ref=f9e753] [cursor=pointer]:
+                - /url: /inventory?type=SUV
+            - listitem [ref=f9e754]:
+              - generic [ref=f9e755]: "|"
+              - link "Ford cars available in Jefferson, Ohio" [ref=f9e756] [cursor=pointer]:
+                - /url: /inventory?type=Car
+            - listitem [ref=f9e757]:
+              - generic [ref=f9e758]: "|"
+              - link "Electric Fords for Northeast Ohio drivers" [ref=f9e759] [cursor=pointer]:
+                - /url: /inventory?type=EV
+        - generic [ref=f9e761]:
+          - heading "Shop by price" [level=3] [ref=f9e762]
+          - list "Shop by price" [ref=f9e763]:
+            - listitem [ref=f9e764]:
+              - link "Fords priced $35,000 to $45,000" [ref=f9e765] [cursor=pointer]:
+                - /url: /inventory?priceMin=35000&priceMax=45000
+            - listitem [ref=f9e766]:
+              - generic [ref=f9e767]: "|"
+              - link "Ford models from $45,000 to $55,000" [ref=f9e768] [cursor=pointer]:
+                - /url: /inventory?priceMin=45000&priceMax=55000
+            - listitem [ref=f9e769]:
+              - generic [ref=f9e770]: "|"
+              - link "Ford stock in the $55,000 to $65,000 range" [ref=f9e771] [cursor=pointer]:
+                - /url: /inventory?priceMin=55000&priceMax=65000
+            - listitem [ref=f9e772]:
+              - generic [ref=f9e773]: "|"
+              - link "Fords near Ashtabula priced $65,000 to $75,000" [ref=f9e774] [cursor=pointer]:
+                - /url: /inventory?priceMin=65000&priceMax=75000
+        - generic [ref=f9e776]:
+          - heading "New and certified pre-owned" [level=3] [ref=f9e777]
+          - list "New and certified pre-owned" [ref=f9e778]:
+            - listitem [ref=f9e779]:
+              - link "New Fords for sale in Jefferson OH" [ref=f9e780] [cursor=pointer]:
+                - /url: /inventory?condition=New
+            - listitem [ref=f9e781]:
+              - generic [ref=f9e782]: "|"
+              - link "Certified pre-owned Fords near Ashtabula" [ref=f9e783] [cursor=pointer]:
+                - /url: /inventory?condition=Certified+Pre-Owned
+            - listitem [ref=f9e784]:
+              - generic [ref=f9e785]: "|"
+              - link "New Ford trucks near Ashtabula" [ref=f9e786] [cursor=pointer]:
+                - /url: /inventory?condition=New&type=Truck
+            - listitem [ref=f9e787]:
+              - generic [ref=f9e788]: "|"
+              - link "New Ford SUVs in Jefferson OH" [ref=f9e789] [cursor=pointer]:
+                - /url: /inventory?condition=New&type=SUV
+            - listitem [ref=f9e790]:
+              - generic [ref=f9e791]: "|"
+              - link "New Ford cars on the lot today" [ref=f9e792] [cursor=pointer]:
+                - /url: /inventory?condition=New&type=Car
+            - listitem [ref=f9e793]:
+              - generic [ref=f9e794]: "|"
+              - link "New electric Fords for Ashtabula County drivers" [ref=f9e795] [cursor=pointer]:
+                - /url: /inventory?condition=New&type=EV
+            - listitem [ref=f9e796]:
+              - generic [ref=f9e797]: "|"
+              - link "Certified pre-owned Ford SUVs near Ashtabula" [ref=f9e798] [cursor=pointer]:
+                - /url: /inventory?condition=Certified+Pre-Owned&type=SUV
+        - generic [ref=f9e800]:
+          - heading "Ford dealer near you" [level=3] [ref=f9e801]
+          - list "Ford dealer near you" [ref=f9e802]:
+            - listitem [ref=f9e803]:
+              - link "Ford dealer near Ashtabula, OH" [ref=f9e804] [cursor=pointer]:
+                - /url: /ford-dealer/ashtabula-oh
+            - listitem [ref=f9e805]:
+              - generic [ref=f9e806]: "|"
+              - link "Ford trucks and SUVs for Geneva drivers" [ref=f9e807] [cursor=pointer]:
+                - /url: /ford-dealer/geneva-oh
+            - listitem [ref=f9e808]:
+              - generic [ref=f9e809]: "|"
+              - link "Ford dealership serving Conneaut, OH" [ref=f9e810] [cursor=pointer]:
+                - /url: /ford-dealer/conneaut-oh
+            - listitem [ref=f9e811]:
+              - generic [ref=f9e812]: "|"
+              - link "Buying a Ford from Austinburg" [ref=f9e813] [cursor=pointer]:
+                - /url: /ford-dealer/austinburg-oh
+            - listitem [ref=f9e814]:
+              - generic [ref=f9e815]: "|"
+              - link "Ford dealer near Madison, OH" [ref=f9e816] [cursor=pointer]:
+                - /url: /ford-dealer/madison-oh
+            - listitem [ref=f9e817]:
+              - generic [ref=f9e818]: "|"
+              - link "Ford trucks and SUVs for Chardon drivers" [ref=f9e819] [cursor=pointer]:
+                - /url: /ford-dealer/chardon-oh
+            - listitem [ref=f9e820]:
+              - generic [ref=f9e821]: "|"
+              - link "Ford dealership serving Erie, PA" [ref=f9e822] [cursor=pointer]:
+                - /url: /ford-dealer/erie-pa
+            - listitem [ref=f9e823]:
+              - generic [ref=f9e824]: "|"
+              - link "Buying a Ford from Cleveland" [ref=f9e825] [cursor=pointer]:
+                - /url: /ford-dealer/cleveland-oh
+            - listitem [ref=f9e826]:
+              - generic [ref=f9e827]: "|"
+              - link "Ford dealer in Ashtabula County" [ref=f9e828] [cursor=pointer]:
+                - /url: /ford-dealer/county/ashtabula-oh
+            - listitem [ref=f9e829]:
+              - generic [ref=f9e830]: "|"
+              - link "Ford dealer serving Lake County" [ref=f9e831] [cursor=pointer]:
+                - /url: /ford-dealer/county/lake-oh
+            - listitem [ref=f9e832]:
+              - generic [ref=f9e833]: "|"
+              - link "Geauga County Ford trucks and SUVs" [ref=f9e834] [cursor=pointer]:
+                - /url: /ford-dealer/county/geauga-oh
+            - listitem [ref=f9e835]:
+              - generic [ref=f9e836]: "|"
+              - link "Buying a Ford from Trumbull County" [ref=f9e837] [cursor=pointer]:
+                - /url: /ford-dealer/county/trumbull-oh
+      - generic [ref=f9e838]: End of the frequent searches links
+  - contentinfo [ref=f9e839]:
+    - generic [ref=f9e842]:
+      - generic [ref=f9e843]:
+        - link [ref=f9e844] [cursor=pointer]:
+          - /url: /
+          - img "AM Ford" [ref=f9e845]
+        - paragraph [ref=f9e846]: A family-owned Ford dealership in Jefferson, Ohio serving Ashtabula County, Northeast Ohio, and Northwestern Pennsylvania. Free home delivery within 300 miles and vehicle shipping available to all 50 states.
+        - link "(440) 998-2151" [ref=f9e847] [cursor=pointer]:
+          - /url: tel:+14409982151
+      - generic [ref=f9e850]:
+        - generic [ref=f9e851]:
+          - heading "Shop" [level=2] [ref=f9e852]
+          - list [ref=f9e853]:
+            - listitem [ref=f9e854]:
+              - link "New & Used Inventory" [ref=f9e855] [cursor=pointer]:
+                - /url: /inventory
+            - listitem [ref=f9e856]:
+              - link "Ford Models" [ref=f9e857] [cursor=pointer]:
+                - /url: /ford-models
+            - listitem [ref=f9e858]:
+              - link "Compare Ford Models" [ref=f9e859] [cursor=pointer]:
+                - /url: /compare
+            - listitem [ref=f9e860]:
+              - link "Commercial & Work Vehicles" [ref=f9e861] [cursor=pointer]:
+                - /url: /commercial
+        - generic [ref=f9e862]:
+          - heading "Financing & Trade" [level=2] [ref=f9e863]
+          - list [ref=f9e864]:
+            - listitem [ref=f9e865]:
+              - link "Apply for Financing" [ref=f9e866] [cursor=pointer]:
+                - /url: /financing
+            - listitem [ref=f9e867]:
+              - link "Financing With Limited Credit" [ref=f9e868] [cursor=pointer]:
+                - /url: /finance/bad-credit
+            - listitem [ref=f9e869]:
+              - link "Value Your Trade" [ref=f9e870] [cursor=pointer]:
+                - /url: /trade-in
+            - listitem [ref=f9e871]:
+              - link "Ford Buying Guides" [ref=f9e872] [cursor=pointer]:
+                - /url: /guides
+        - generic [ref=f9e873]:
+          - heading "Dealership Services" [level=2] [ref=f9e874]
+          - list [ref=f9e875]:
+            - listitem [ref=f9e876]:
+              - link "Service & Parts" [ref=f9e877] [cursor=pointer]:
+                - /url: /service
+            - listitem [ref=f9e878]:
+              - link "Vehicle Delivery & Shipping" [ref=f9e879] [cursor=pointer]:
+                - /url: /nationwide-vehicle-delivery
+            - listitem [ref=f9e880]:
+              - link "Areas We Serve" [ref=f9e881] [cursor=pointer]:
+                - /url: /areas-we-serve
+            - listitem [ref=f9e882]:
+              - link "About AM Ford" [ref=f9e883] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=f9e884]:
+              - link "Contact" [ref=f9e885] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=f9e886]:
+          - heading "Visit Us" [level=2] [ref=f9e887]
+          - list [ref=f9e888]:
+            - listitem [ref=f9e889]: 1059 State Route 46 North, Jefferson, OH 44047
+            - listitem [ref=f9e893]: (440) 998-2151
+            - listitem [ref=f9e896]: sales@amfordashtabula.com
+            - listitem [ref=f9e900]: Mon to Sat · See hours
+      - navigation "Ford models, areas served, and research" [ref=f9e904]:
+        - heading "More ways to browse AM Ford" [level=2] [ref=f9e905]
+        - generic [ref=f9e906]:
+          - generic [ref=f9e907]:
+            - heading "Ford models we stock" [level=3] [ref=f9e908]
+            - list "Ford models we stock" [ref=f9e909]:
+              - listitem [ref=f9e910]:
+                - link "Ford F-150 for sale in Jefferson OH" [ref=f9e911] [cursor=pointer]:
+                  - /url: /ford/f-150
+              - listitem [ref=f9e912]:
+                - generic [ref=f9e913]: "|"
+                - link "Ford Mustang near Ashtabula OH" [ref=f9e914] [cursor=pointer]:
+                  - /url: /ford/mustang
+              - listitem [ref=f9e915]:
+                - generic [ref=f9e916]: "|"
+                - link "Ford Explorer trims, specs, and current stock" [ref=f9e917] [cursor=pointer]:
+                  - /url: /ford/explorer
+              - listitem [ref=f9e918]:
+                - generic [ref=f9e919]: "|"
+                - link "Ford F-150 Lightning at a Ford dealer in Ashtabula County" [ref=f9e920] [cursor=pointer]:
+                  - /url: /ford/f-150-lightning
+              - listitem [ref=f9e921]:
+                - generic [ref=f9e922]: "|"
+                - link "Ford Bronco for Northeast Ohio drivers" [ref=f9e923] [cursor=pointer]:
+                  - /url: /ford/bronco
+              - listitem [ref=f9e924]:
+                - generic [ref=f9e925]: "|"
+                - link "Buying a Ford Escape in Jefferson OH" [ref=f9e926] [cursor=pointer]:
+                  - /url: /ford/escape
+          - generic [ref=f9e927]:
+            - heading "Shop by body style" [level=3] [ref=f9e928]
+            - list "Shop by body style" [ref=f9e929]:
+              - listitem [ref=f9e930]:
+                - link "Ford trucks for sale in Jefferson OH" [ref=f9e931] [cursor=pointer]:
+                  - /url: /inventory?type=Truck
+              - listitem [ref=f9e932]:
+                - generic [ref=f9e933]: "|"
+                - link "Ford SUVs near Ashtabula" [ref=f9e934] [cursor=pointer]:
+                  - /url: /inventory?type=SUV
+              - listitem [ref=f9e935]:
+                - generic [ref=f9e936]: "|"
+                - link "Ford cars available in Jefferson, Ohio" [ref=f9e937] [cursor=pointer]:
+                  - /url: /inventory?type=Car
+              - listitem [ref=f9e938]:
+                - generic [ref=f9e939]: "|"
+                - link "Electric Fords for Northeast Ohio drivers" [ref=f9e940] [cursor=pointer]:
+                  - /url: /inventory?type=EV
+          - generic [ref=f9e941]:
+            - heading "Ford dealer near you" [level=3] [ref=f9e942]
+            - list "Ford dealer near you" [ref=f9e943]:
+              - listitem [ref=f9e944]:
+                - link "Ford dealer near Ashtabula, OH" [ref=f9e945] [cursor=pointer]:
+                  - /url: /ford-dealer/ashtabula-oh
+              - listitem [ref=f9e946]:
+                - generic [ref=f9e947]: "|"
+                - link "Ford trucks and SUVs for Geneva drivers" [ref=f9e948] [cursor=pointer]:
+                  - /url: /ford-dealer/geneva-oh
+              - listitem [ref=f9e949]:
+                - generic [ref=f9e950]: "|"
+                - link "Ford dealership serving Conneaut, OH" [ref=f9e951] [cursor=pointer]:
+                  - /url: /ford-dealer/conneaut-oh
+              - listitem [ref=f9e952]:
+                - generic [ref=f9e953]: "|"
+                - link "Buying a Ford from Austinburg" [ref=f9e954] [cursor=pointer]:
+                  - /url: /ford-dealer/austinburg-oh
+              - listitem [ref=f9e955]:
+                - generic [ref=f9e956]: "|"
+                - link "Ford dealer near Madison, OH" [ref=f9e957] [cursor=pointer]:
+                  - /url: /ford-dealer/madison-oh
+              - listitem [ref=f9e958]:
+                - generic [ref=f9e959]: "|"
+                - link "Ford trucks and SUVs for Chardon drivers" [ref=f9e960] [cursor=pointer]:
+                  - /url: /ford-dealer/chardon-oh
+              - listitem [ref=f9e961]:
+                - generic [ref=f9e962]: "|"
+                - link "Ford dealership serving Erie, PA" [ref=f9e963] [cursor=pointer]:
+                  - /url: /ford-dealer/erie-pa
+              - listitem [ref=f9e964]:
+                - generic [ref=f9e965]: "|"
+                - link "Buying a Ford from Cleveland" [ref=f9e966] [cursor=pointer]:
+                  - /url: /ford-dealer/cleveland-oh
+              - listitem [ref=f9e967]:
+                - generic [ref=f9e968]: "|"
+                - link "Ford dealer in Ashtabula County" [ref=f9e969] [cursor=pointer]:
+                  - /url: /ford-dealer/county/ashtabula-oh
+              - listitem [ref=f9e970]:
+                - generic [ref=f9e971]: "|"
+                - link "Ford dealer serving Lake County" [ref=f9e972] [cursor=pointer]:
+                  - /url: /ford-dealer/county/lake-oh
+              - listitem [ref=f9e973]:
+                - generic [ref=f9e974]: "|"
+                - link "Geauga County Ford trucks and SUVs" [ref=f9e975] [cursor=pointer]:
+                  - /url: /ford-dealer/county/geauga-oh
+              - listitem [ref=f9e976]:
+                - generic [ref=f9e977]: "|"
+                - link "Buying a Ford from Trumbull County" [ref=f9e978] [cursor=pointer]:
+                  - /url: /ford-dealer/county/trumbull-oh
+          - generic [ref=f9e979]:
+            - heading "Research and compare" [level=3] [ref=f9e980]
+            - list "Research and compare" [ref=f9e981]:
+              - listitem [ref=f9e982]:
+                - link "Is a Used Ford F-150 Reliable?" [ref=f9e983] [cursor=pointer]:
+                  - /url: /guides/is-a-used-ford-f-150-reliable
+              - listitem [ref=f9e984]:
+                - generic [ref=f9e985]: "|"
+                - link "Is the Ford EcoBoost Engine Reliable?" [ref=f9e986] [cursor=pointer]:
+                  - /url: /guides/is-ford-ecoboost-reliable
+              - listitem [ref=f9e987]:
+                - generic [ref=f9e988]: "|"
+                - link "What to Check Before Buying a Used Ford" [ref=f9e989] [cursor=pointer]:
+                  - /url: /guides/what-to-check-before-buying-a-used-ford
+              - listitem [ref=f9e990]:
+                - generic [ref=f9e991]: "|"
+                - link "Best Ford SUV for Families" [ref=f9e992] [cursor=pointer]:
+                  - /url: /guides/best-ford-suv-for-families
+              - listitem [ref=f9e993]:
+                - generic [ref=f9e994]: "|"
+                - link "Ford Explorer vs Ford Escape" [ref=f9e995] [cursor=pointer]:
+                  - /url: /compare/explorer-vs-escape
+              - listitem [ref=f9e996]:
+                - generic [ref=f9e997]: "|"
+                - link "Ford F-150 vs Ford F-150 Lightning" [ref=f9e998] [cursor=pointer]:
+                  - /url: /compare/f-150-vs-f-150-lightning
+              - listitem [ref=f9e999]:
+                - generic [ref=f9e1000]: "|"
+                - link "Ford Bronco vs Ford Explorer" [ref=f9e1001] [cursor=pointer]:
+                  - /url: /compare/bronco-vs-explorer
+      - generic [ref=f9e1002]:
+        - generic [ref=f9e1003]: © 2026 AM Ford. All rights reserved.
+        - generic [ref=f9e1004]: Jefferson, Ohio · Serving Ashtabula County and beyond.
+  - button "Chat with AM Ford" [ref=f9e1006]
