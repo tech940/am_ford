@@ -793,3 +793,22 @@
     font-size: 2.125rem;
   } /* 36 -> 34 */
 }
+
+/* 360 viewer: one-shot nudge telling people the frame is draggable. The keyframes
+   carry the -50% base so they compose with the -translate-x-1/2 centering utility.
+   The prefers-reduced-motion block above collapses this to a static pill. */
+@keyframes spin360-nudge {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  40% {
+    transform: translate(calc(-50% - 6px), 0);
+  }
+  70% {
+    transform: translate(calc(-50% + 6px), 0);
+  }
+}
+.spin360-hint {
+  animation: spin360-nudge 1.6s ease-in-out 2;
+}

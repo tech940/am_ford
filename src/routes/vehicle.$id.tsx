@@ -33,6 +33,8 @@ import {
   ClipboardCheck,
   Mail,
   Loader2,
+  Camera,
+  Rotate3d,
 } from "lucide-react";
 import { breadcrumbSchema, crumbs, type Crumb } from "@/lib/breadcrumbs";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
@@ -56,6 +58,8 @@ import { GARAGE_EVENT, isWatched } from "@/lib/garage";
 import { DeliveryBanner } from "@/components/site/DeliveryBanner";
 import { FrequentSearches } from "@/components/site/FrequentSearches";
 import { cn } from "@/lib/utils";
+import { getSpin } from "@/lib/spin360";
+import { Spin360, preloadSpin } from "@/components/site/Spin360";
 
 /**
  * Home > Inventory > this vehicle.
@@ -477,6 +481,19 @@ function VehicleDetail() {
   const [financingDetails, setFinancingDetails] = useState<Record<string, unknown> | undefined>();
   const [watching, setWatching] = useState(false);
 
+  // 360 spin. getSpin is a build-time module read, so server and client agree on
+  // whether this vehicle has frames without any runtime probe. view starts at
+  // "photo" on both sides, so the toggle can never cause a hydration mismatch.
+  const spin = getSpin(v.id);
+  const [view, setView] = useState<"photo" | "spin">("photo");
+  const [spinFailed, setSpinFailed] = useState(false);
+  const showSpinUi = !!spin && !spinFailed;
+  // Frames cost zero bytes until someone reaches for the toggle, so they never
+  // compete with the hero image for LCP.
+  const prefetchSpin = () => {
+    if (spin) preloadSpin(v.id, spin);
+  };
+
   useEffect(() => {
     setWatching(isWatched(v.id));
     const sync = () => setWatching(isWatched(v.id));
@@ -519,16 +536,36 @@ function VehicleDetail() {
               style={{ scale }}
               className="relative overflow-hidden rounded-3xl bg-card shadow-elevated ring-1 ring-border"
             >
-              <motion.img
-                style={{ y: yImg }}
-                src={v.image}
-                alt={`${v.year} ${v.make} ${v.model} ${v.trim} in ${dealerInfo.city}`}
-                width={1280}
-                height={800}
-                className="h-[420px] w-full object-cover sm:h-[520px]"
-              />
+              {showSpinUi && view === "spin" ? (
+                // Height comes from the same class string as the photo below, written
+                // at the same call site, so the two branches cannot drift apart and
+                // the card never changes size when you toggle. The spin surface does
+                // NOT take yImg: sliding it 140px would fight pointer capture.
+                <Spin360
+                  key={v.id}
+                  vehicleId={v.id}
+                  manifest={spin!}
+                  poster={v.image}
+                  label={`${v.year} ${v.make} ${v.model}`}
+                  className="h-[420px] w-full sm:h-[520px]"
+                  onUnavailable={() => {
+                    setSpinFailed(true);
+                    setView("photo");
+                  }}
+                />
+              ) : (
+                <motion.img
+                  style={{ y: yImg }}
+                  src={v.image}
+                  alt={`${v.year} ${v.make} ${v.model} ${v.trim} in ${dealerInfo.city}`}
+                  width={1280}
+                  height={800}
+                  className="h-[420px] w-full object-cover sm:h-[520px]"
+                />
+              )}
               {v.badges && (
-                <div className="absolute left-4 top-4 flex gap-2">
+                // pointer-events-none so a drag that starts on a badge still rotates.
+                <div className="pointer-events-none absolute left-4 top-4 z-10 flex gap-2">
                   {v.badges.map((b) => (
                     <span
                       key={b}
@@ -537,6 +574,45 @@ function VehicleDetail() {
                       {b}
                     </span>
                   ))}
+                </div>
+              )}
+              {showSpinUi && (
+                <div
+                  role="group"
+                  aria-label="Gallery mode"
+                  className="glass absolute bottom-4 left-4 z-10 flex items-center gap-1 rounded-full p-1"
+                >
+                  <button
+                    type="button"
+                    aria-pressed={view === "photo"}
+                    onClick={() => setView("photo")}
+                    className={cn(
+                      "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition",
+                      view === "photo"
+                        ? "bg-primary text-primary-foreground shadow-md"
+                        : "text-ink hover:bg-white/60",
+                    )}
+                  >
+                    <Camera className="h-3.5 w-3.5" aria-hidden /> Photos
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={view === "spin"}
+                    onPointerEnter={prefetchSpin}
+                    onFocus={prefetchSpin}
+                    onClick={() => {
+                      prefetchSpin();
+                      setView("spin");
+                    }}
+                    className={cn(
+                      "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition",
+                      view === "spin"
+                        ? "bg-primary text-primary-foreground shadow-md"
+                        : "text-ink hover:bg-white/60",
+                    )}
+                  >
+                    <Rotate3d className="h-3.5 w-3.5" aria-hidden /> 360
+                  </button>
                 </div>
               )}
             </motion.div>

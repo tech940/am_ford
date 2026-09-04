@@ -7,6 +7,7 @@
     "dev": "vite dev",
     "seo:generate": "bun scripts/generate-sitemap.ts",
     "images:optimize": "bun scripts/optimize-images.ts",
+    "spin360:generate": "bun scripts/generate-360.mjs",
     "prebuild": "bun run seo:generate",
     "build": "vite build",
     "build:dev": "vite build --mode development",
