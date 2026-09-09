@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Clock, MapPin, Navigation, Phone, Star } from "lucide-react";
+import { dealerInfo } from "@/lib/vehicles";
 
 const REVIEWS = [
   {
@@ -79,7 +80,7 @@ export function Reviews() {
               </div>
 
               <div className="relative mt-5 min-h-[120px]">
-                <AnimatePresence mode="wait" custom={dir} initial={false}>
+                <AnimatePresence mode="popLayout" custom={dir} initial={false}>
                   <motion.blockquote
                     key={index}
                     initial={{ opacity: 0, x: dir * 30 }}
@@ -140,50 +141,52 @@ export function Reviews() {
                 <div className="mt-6 flex flex-col gap-5">
                   {/* Address */}
                   <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-sky-300 backdrop-blur-sm">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white/70 backdrop-blur-sm">
                       <MapPin className="h-4 w-4" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-wider text-sky-300">
-                        MAIN FLAGSHIP SHOWROOM
+                      <p className="text-[10px] font-black uppercase tracking-wider text-white/60">
+                        SHOWROOM
                       </p>
                       <p className="mt-0.5 text-xs font-semibold text-slate-200 leading-snug">
-                        1999 S Lake St, Jefferson, OH 44047
+                        {dealerInfo.address}
                       </p>
                     </div>
                   </div>
 
                   {/* Phone */}
                   <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-sky-300 backdrop-blur-sm">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white/70 backdrop-blur-sm">
                       <Phone className="h-4 w-4" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-wider text-sky-300">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-white/60">
                         CALL US
                       </p>
                       <a
-                        href="tel:4405761010"
+                        href={dealerInfo.phoneHref}
                         className="mt-0.5 block text-xs font-bold text-slate-200 hover:text-white transition"
                       >
-                        (440) 576-1010
+                        {dealerInfo.phone}
                       </a>
                     </div>
                   </div>
 
                   {/* Hours */}
                   <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-sky-300 backdrop-blur-sm">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white/70 backdrop-blur-sm">
                       <Clock className="h-4 w-4" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-wider text-sky-300">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-white/60">
                         BUSINESS HOURS
                       </p>
                       <p className="mt-0.5 text-xs font-semibold text-slate-200 leading-snug">
-                        Mon - Sat: 9:00 AM - 7:00 PM
-                        <br />
-                        Sunday: Closed
+                        {dealerInfo.hours.map((h) => (
+                          <span key={h.day} className="block">
+                            {h.day}: {h.time}
+                          </span>
+                        ))}
                       </p>
                     </div>
                   </div>
@@ -205,7 +208,7 @@ export function Reviews() {
             {/* Embedded Google Map Column */}
             <div className="md:col-span-6 relative min-h-[260px] md:min-h-full w-full bg-slate-900">
               <iframe
-                src="https://maps.google.com/maps?q=1999%20S%20Lake%20St,%20Jefferson,%20OH%2044047&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(dealerInfo.address)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

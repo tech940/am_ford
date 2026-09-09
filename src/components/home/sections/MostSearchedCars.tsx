@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles, Tag } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { vehicles, type Vehicle } from "@/lib/vehicles";
 import { OfferPopup } from "@/components/popups/OfferPopup";
 
@@ -97,7 +97,6 @@ export function MostSearchedCars() {
                   />
                   <div className="absolute left-3 top-3">
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-slate-900/80 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-md backdrop-blur-md">
-                      <Sparkles className="h-3 w-3 text-sky-400" />
                       {car.condition === "New" ? "IN STOCK NOW" : "CERTIFIED PRE-OWNED"}
                     </span>
                   </div>
@@ -126,7 +125,6 @@ export function MostSearchedCars() {
                       }}
                       className="w-full rounded-2xl border-2 border-[#002c5f] bg-white py-2.5 text-xs font-black uppercase tracking-wider text-[#002c5f] transition-all hover:bg-[#002c5f] hover:text-white hover:shadow-md active:scale-[0.98] flex items-center justify-center gap-1.5"
                     >
-                      <Tag className="h-3.5 w-3.5" />
                       <span>View Offers</span>
                     </button>
                   </div>

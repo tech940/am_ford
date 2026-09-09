@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, ShieldCheck, Tag } from "lucide-react";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { vehicles, type Vehicle } from "@/lib/vehicles";
 import { OfferPopup } from "@/components/popups/OfferPopup";
 import { ResponsiveImage } from "@/components/site/ResponsiveImage";
@@ -71,7 +71,6 @@ export function FeaturedSpotlight() {
             onClick={() => setOfferModalOpen(true)}
             className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#002c5f] px-6 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-xl shadow-[#002c5f]/20 hover:bg-[#001f44] transition active:scale-95 shrink-0"
           >
-            <Tag className="h-4 w-4" />
             <span>CLAIM DEALER PRICE</span>
           </button>
         </div>
@@ -81,14 +80,12 @@ export function FeaturedSpotlight() {
           <div className="grid gap-4 lg:grid-cols-12">
             {/* LEFT MAIN TILE (7 Columns) */}
             <div className="relative aspect-[16/10] lg:aspect-auto w-full overflow-hidden rounded-[2rem] bg-slate-900 lg:col-span-7">
-              <AnimatePresence mode="wait">
-                <ResponsiveImage
-                  name={mainImageName}
-                  alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                  sizes="(max-width: 1024px) 100vw, 640px"
-                  className="h-full w-full object-cover object-center"
-                />
-              </AnimatePresence>
+              <ResponsiveImage
+                name={mainImageName}
+                alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                sizes="(max-width: 1024px) 100vw, 640px"
+                className="h-full w-full object-cover object-center"
+              />
 
               {/* Top Left Badge */}
               <div className="absolute left-4 top-4 z-10">
@@ -104,7 +101,7 @@ export function FeaturedSpotlight() {
                     {vehicle.year} {vehicle.make} {vehicle.model} {vehicle.trim}
                   </span>
                   <span className="text-slate-400">·</span>
-                  <span className="text-sky-300 font-extrabold">
+                  <span className="font-semibold text-slate-300">
                     {vehicle.miles.toLocaleString()} Miles
                   </span>
                 </span>
@@ -113,7 +110,6 @@ export function FeaturedSpotlight() {
               {/* Bottom Left Dealer Price Badge */}
               <div className="absolute bottom-4 left-4 z-10">
                 <div className="inline-flex items-center gap-2 rounded-2xl bg-white/95 px-4 py-2.5 shadow-2xl backdrop-blur-md border border-slate-200">
-                  <ShieldCheck className="h-4 w-4 text-[#002c5f]" />
                   <span className="text-xs font-bold text-slate-700">Special Dealer Price:</span>
                   <span className="text-sm font-black text-[#002c5f]">
                     ${vehicle.price.toLocaleString()}

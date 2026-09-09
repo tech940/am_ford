@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { vehicles } from "@/lib/vehicles";
 import { ResponsiveImage } from "@/components/site/ResponsiveImage";
 
@@ -77,15 +77,12 @@ export function ExtraordinaryCarousel() {
       <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-12 text-center">
         {/* Header Badge */}
         <div className="inline-flex items-center gap-1.5 rounded-full bg-[#002c5f]/10 px-4 py-1 text-[11px] font-black uppercase tracking-[0.25em] text-[#002c5f]">
-          <Sparkles className="h-3.5 w-3.5 text-[#002c5f]" />
           EXPLORE THE COLLECTION
         </div>
 
         <h2 className="mt-3 text-3xl font-black tracking-tight text-[#002c5f] sm:text-5xl lg:text-6xl">
           Drive Something <br className="hidden sm:inline" />
-          <span className="bg-gradient-to-r from-[#002c5f] via-[#004085] to-[#0056b3] bg-clip-text text-transparent">
-            Extraordinary
-          </span>
+          Extraordinary
         </h2>
 
         <p className="mx-auto mt-4 max-w-xl text-sm font-semibold leading-relaxed text-slate-600 sm:text-base">
