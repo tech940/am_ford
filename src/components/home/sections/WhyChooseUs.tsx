@@ -1,63 +1,48 @@
-import { lazy } from "react";
-import { KeyRound, Disc3, ShieldCheck, ScrollText, Cog } from "lucide-react";
+import { ResponsiveImage } from "@/components/site/ResponsiveImage";
+import { dealerInfo } from "@/lib/vehicles";
 import { SectionHeading, Stagger, StaggerItem } from "../fx/Reveal";
-import { Scene3D } from "../fx/Scene3D";
-import type { WhyObjectKind } from "../three/WhyObject";
-
-const WhyObject = lazy(() => import("../three/WhyObject"));
 
 /**
- * Shown wherever WebGL is skipped (phones, low-end hardware, reduced motion).
- * It has to carry the meaning on its own, not leave a blank box.
+ * Each reason is fronted by a photograph of the actual store. These were five live WebGL
+ * scenes (a key, a wheel, a shield, a certificate, an engine), which pulled ~930 KB of
+ * three.js (254 KB gzipped) onto the homepage purely for decoration.
+ *
+ * The am-ford-* photos are of AM Ford itself: storefront, lot, and aerial. The service bay
+ * photo is Ford imagery, so its alt text says Ford technicians rather than claiming ours.
  */
-const FALLBACK_ICON: Record<WhyObjectKind, typeof KeyRound> = {
-  key: KeyRound,
-  wheel: Disc3,
-  shield: ShieldCheck,
-  certificate: ScrollText,
-  engine: Cog,
-};
-
-function ObjectFallback({ kind }: { kind: WhyObjectKind }) {
-  const Icon = FALLBACK_ICON[kind];
-  return (
-    <div className="flex h-40 w-full items-center justify-center" aria-hidden>
-      <span className="flex h-20 w-20 items-center justify-center rounded-3xl bg-[#002c5f]/8 ring-1 ring-[#002c5f]/15">
-        <Icon className="h-9 w-9 text-[#002c5f]" strokeWidth={1.5} />
-      </span>
-    </div>
-  );
-}
-
-const REASONS: { kind: WhyObjectKind; title: string; copy: string }[] = [
+const REASONS: { title: string; copy: string; image: string; alt: string }[] = [
   {
-    kind: "key",
     title: "Effortless handover",
     copy: "Paperwork prepared before you arrive, so your visit stays short.",
+    image: "am-ford-front",
+    alt: `The AM Ford storefront in ${dealerInfo.locality}, Ohio`,
   },
   {
-    kind: "wheel",
     title: "Driven by specialists",
     copy: "Our advisors are car people first. No scripts, no pressure, straight answers.",
+    image: "am-ford-new-bronco",
+    alt: "A new Ford Bronco on the AM Ford lot",
   },
   {
-    kind: "shield",
     title: "Certified protection",
     copy: "Every vehicle passes a 172-point inspection and carries real warranty coverage.",
+    image: "am-ford-front-lot",
+    alt: "Vehicles lined up on the AM Ford lot",
   },
   {
-    kind: "certificate",
     title: "Transparent history",
     copy: "Full service records and vehicle history reports, shown before you ask.",
+    image: "am-ford-aerial",
+    alt: "Aerial view of the AM Ford dealership and lot",
   },
   {
-    kind: "engine",
     title: "Factory-level service",
     copy: "An on-site workshop with factory-trained technicians keeps your car at its best.",
+    image: "ford-service-bay",
+    alt: "Ford technicians working on a vehicle in a service bay",
   },
 ];
 
-/** Five reasons, each fronted by a slowly rotating 3D object instead of a flat icon. */
 export function WhyChooseUs() {
   return (
     <section
@@ -76,13 +61,21 @@ export function WhyChooseUs() {
       />
       <Stagger className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" gap={0.1}>
         {REASONS.map((r) => (
-          <StaggerItem key={r.kind}>
-            <article className="hm-glass group relative h-full overflow-hidden rounded-[1.75rem] p-7 transition-colors duration-500 hover:border-[#002c5f]/30">
-              <Scene3D className="relative h-40 w-full" fallback={<ObjectFallback kind={r.kind} />}>
-                {(active, quality) => <WhyObject kind={r.kind} active={active} quality={quality} />}
-              </Scene3D>
-              <h3 className="mt-4 text-lg font-bold text-slate-900">{r.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">{r.copy}</p>
+          <StaggerItem key={r.title}>
+            <article className="hm-glass relative h-full overflow-hidden rounded-[1.75rem] transition-colors duration-500 hover:border-[#002c5f]/30">
+              {/* h-44 keeps each card the height the 3D object slot made it, so the
+                  section does not grow. The photos are all wider than this box, and
+                  every subject sits near centre, so a centred cover crop keeps it. */}
+              <ResponsiveImage
+                name={r.image}
+                alt={r.alt}
+                sizes="(min-width: 1024px) 352px, (min-width: 640px) 45vw, 100vw"
+                className="h-44 w-full object-cover"
+              />
+              <div className="px-7 pb-7 pt-5">
+                <h3 className="text-lg font-bold text-slate-900">{r.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">{r.copy}</p>
+              </div>
             </article>
           </StaggerItem>
         ))}

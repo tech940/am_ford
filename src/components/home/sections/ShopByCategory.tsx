@@ -77,7 +77,7 @@ const TRADE: Category = {
 export function ShopByCategory() {
   return (
     <section
-      className="relative z-10 mx-auto max-w-6xl px-6 py-28 sm:py-36"
+      className="relative z-10 mx-auto max-w-6xl px-6 pb-28 pt-16 sm:pb-36 sm:pt-20"
       aria-label="Shop by category"
     >
       <SectionHeading

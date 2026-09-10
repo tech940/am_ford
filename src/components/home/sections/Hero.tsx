@@ -194,7 +194,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative flex min-h-[92svh] lg:min-h-[105svh] flex-col justify-center overflow-hidden"
+      className="relative flex min-h-[92svh] lg:min-h-[64svh] flex-col justify-center overflow-hidden"
       aria-label="Hero"
     >
       {/* Background HD Ford Vehicle Stage */}
@@ -222,7 +222,7 @@ export function Hero() {
       </motion.div>
 
       {/* Main hero grid: Left Text Headline + Right "Find your right car" Search Widget */}
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 sm:px-8 lg:px-12 pb-24 pt-24 sm:pt-32 sm:pb-32 lg:pt-36 lg:pb-36">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 sm:px-8 lg:px-12 pb-16 pt-24 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24">
         <div className="grid items-center gap-8 lg:grid-cols-12">
           {/* LEFT SIDE (col-span-7): Headline & Brand Messaging */}
           <div className="flex flex-col items-start lg:col-span-7 xl:col-span-7">
