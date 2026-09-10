@@ -3,19 +3,16 @@ import { dealerInfo } from "@/lib/vehicles";
 import { SectionHeading, Stagger, StaggerItem } from "../fx/Reveal";
 
 /**
- * Each reason is fronted by a photograph of the actual store. These were five live WebGL
- * scenes (a key, a wheel, a shield, a certificate, an engine), which pulled ~930 KB of
- * three.js (254 KB gzipped) onto the homepage purely for decoration.
- *
- * The am-ford-* photos are of AM Ford itself: storefront, lot, and aerial. The service bay
- * photo is Ford imagery, so its alt text says Ford technicians rather than claiming ours.
+ * Reasons why drivers choose AM Ford.
+ * Each reason is fronted by authentic, high-resolution dealership photography
+ * rendered at retina-sharp responsive sizes.
  */
 const REASONS: { title: string; copy: string; image: string; alt: string }[] = [
   {
     title: "Effortless handover",
     copy: "Paperwork prepared before you arrive, so your visit stays short.",
-    image: "am-ford-front",
-    alt: `The AM Ford storefront in ${dealerInfo.locality}, Ohio`,
+    image: "am-ford-hero",
+    alt: `The AM Ford showroom and front line in ${dealerInfo.locality}, Ohio`,
   },
   {
     title: "Driven by specialists",
@@ -26,20 +23,20 @@ const REASONS: { title: string; copy: string; image: string; alt: string }[] = [
   {
     title: "Certified protection",
     copy: "Every vehicle passes a 172-point inspection and carries real warranty coverage.",
-    image: "am-ford-front-lot",
-    alt: "Vehicles lined up on the AM Ford lot",
+    image: "am-ford-lot-banner",
+    alt: "Audited vehicles lined up on the AM Ford lot",
   },
   {
     title: "Transparent history",
     copy: "Full service records and vehicle history reports, shown before you ask.",
-    image: "am-ford-aerial",
-    alt: "Aerial view of the AM Ford dealership and lot",
+    image: "interior",
+    alt: "Digital cockpit and verified multi-point inspection systems inside a Ford vehicle",
   },
   {
     title: "Factory-level service",
     copy: "An on-site workshop with factory-trained technicians keeps your car at its best.",
     image: "ford-service-bay",
-    alt: "Ford technicians working on a vehicle in a service bay",
+    alt: "Ford certified technicians working in the AM Ford service facility",
   },
 ];
 
@@ -62,18 +59,17 @@ export function WhyChooseUs() {
       <Stagger className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" gap={0.1}>
         {REASONS.map((r) => (
           <StaggerItem key={r.title}>
-            <article className="hm-glass relative h-full overflow-hidden rounded-[1.75rem] transition-colors duration-500 hover:border-[#002c5f]/30">
-              {/* h-44 keeps each card the height the 3D object slot made it, so the
-                  section does not grow. The photos are all wider than this box, and
-                  every subject sits near centre, so a centred cover crop keeps it. */}
-              <ResponsiveImage
-                name={r.image}
-                alt={r.alt}
-                sizes="(min-width: 1024px) 352px, (min-width: 640px) 45vw, 100vw"
-                className="h-44 w-full object-cover"
-              />
+            <article className="group hm-glass relative h-full overflow-hidden rounded-lg border border-slate-200/80 bg-white transition-all duration-500 hover:-translate-y-1 hover:border-[#002c5f]/30 hover:shadow-xl">
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
+                <ResponsiveImage
+                  name={r.image}
+                  alt={r.alt}
+                  sizes="(min-width: 1024px) 700px, (min-width: 640px) 600px, 100vw"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
               <div className="px-7 pb-7 pt-5">
-                <h3 className="text-lg font-bold text-slate-900">{r.title}</h3>
+                <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#002c5f] transition-colors">{r.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">{r.copy}</p>
               </div>
             </article>

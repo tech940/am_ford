@@ -77,9 +77,11 @@ function ManifestRow({ v, index }: { v: Vehicle; index: number }) {
 export function StockLedger() {
   const total = vehicles.length;
   const newCount = vehicles.filter((v) => v.condition === "New").length;
+  const usedCount = vehicles.filter((v) => v.condition === "Used").length;
   const cpoCount = vehicles.filter((v) => v.condition === "Certified Pre-Owned").length;
-  const low = Math.min(...vehicles.map((v) => v.price));
-  const high = Math.max(...vehicles.map((v) => v.price));
+  const validPrices = vehicles.map((v) => v.price).filter((p) => p > 0);
+  const low = validPrices.length ? Math.min(...validPrices) : 0;
+  const high = validPrices.length ? Math.max(...validPrices) : 0;
 
   return (
     <section
@@ -91,7 +93,7 @@ export function StockLedger() {
           Everything on the lot
         </h2>
         <p className="lg-fig text-[13px] font-medium text-ink/55">
-          {total} vehicles · {newCount} new, {cpoCount} certified · {money(low)} to {money(high)}
+          {total} vehicles · {newCount} new, {usedCount} used, {cpoCount} certified · {money(low)} to {money(high)}
         </p>
       </div>
 
@@ -107,15 +109,15 @@ export function StockLedger() {
       </div>
 
       <div className="lg-rule border-b">
-        {vehicles.map((v, i) => (
+        {vehicles.slice(0, 8).map((v, i) => (
           <ManifestRow key={v.id} v={v} index={i} />
         ))}
       </div>
 
       <p className="mt-6 max-w-[68ch] text-[15px] leading-relaxed text-ink/65">
-        That is the whole lot, not a selection from it. We are one store at {dealerInfo.address}, so
+        Here is a sample of our active inventory. We are one store at {dealerInfo.address}, so
         what is listed here is what is standing on the ground in {dealerInfo.locality} today. If the
-        right vehicle is not among these six, tell us what you need and we will source it.
+        right vehicle is not among these, explore our full inventory of {total} vehicles or tell us what you need and we will source it.
       </p>
 
       <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">

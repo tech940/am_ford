@@ -64,8 +64,12 @@ export function SiteFooter() {
             className="inline-flex items-center rounded-2xl bg-white px-6 py-3.5 shadow-xl transition hover:bg-white/95 hover:scale-[1.02]"
           >
             <img
-              src="https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/Am-ford.png"
+              src="/am-ford-logo.png"
               alt="AM Ford"
+              width={260}
+              height={80}
+              loading="lazy"
+              decoding="async"
               className="h-10 sm:h-12 md:h-14 w-auto object-contain"
             />
           </Link>
@@ -146,7 +150,12 @@ export function SiteFooter() {
 
         <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-white/10 pt-4 text-[11px] font-semibold text-slate-200 sm:flex-row">
           <span>© {new Date().getFullYear()} AM Ford. All rights reserved.</span>
-          <span>Jefferson, Ohio · Serving Ashtabula County and beyond.</span>
+          <div className="flex items-center gap-4">
+            <span>Jefferson, Ohio · Serving Ashtabula County and beyond.</span>
+            <Link to="/admin" className="text-white/40 hover:text-white/80 transition text-[10px] uppercase tracking-wider font-mono">
+              Staff Portal
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

@@ -6,4 +6,29 @@
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig();
+export default defineConfig({
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              if (id.includes("@supabase")) {
+                return "vendor-supabase";
+              }
+              if (id.includes("framer-motion")) {
+                return "vendor-framer-motion";
+              }
+              if (id.includes("lucide-react")) {
+                return "vendor-lucide";
+              }
+              if (id.includes("@radix-ui")) {
+                return "vendor-radix";
+              }
+            }
+          },
+        },
+      },
+    },
+  },
+});

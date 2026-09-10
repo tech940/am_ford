@@ -80,14 +80,22 @@ const STEP_TITLES = [
   "Your estimate is ready",
 ];
 
-export function TradeValuatorModal(props: { onClose: () => void }) {
-  const { onClose } = props;
+export function TradeValuatorModal(props: {
+  onClose: () => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  initialYear?: number;
+  initialMake?: string;
+  initialModel?: string;
+  initialMileage?: string;
+}) {
+  const { onClose, initialYear, initialMake, initialModel, initialMileage } = props;
 
-  const [step, setStep] = useState(1);
-  const [year, setYear] = useState<number | null>(null);
-  const [make, setMake] = useState<string | null>(null);
-  const [model, setModel] = useState("");
-  const [milesText, setMilesText] = useState("");
+  const [step, setStep] = useState(initialYear ? 3 : 1);
+  const [year, setYear] = useState<number | null>(initialYear ?? null);
+  const [make, setMake] = useState<string | null>(initialMake ?? null);
+  const [model, setModel] = useState(initialModel ?? "");
+  const [milesText, setMilesText] = useState(initialMileage ?? "");
   const [condition, setCondition] = useState<Condition | null>(null);
 
   const [name, setName] = useState("");
@@ -242,17 +250,16 @@ export function TradeValuatorModal(props: { onClose: () => void }) {
           ring-1 ring-slate-200"
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-[#002c5f]" />
+        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+          <div>
             <h3 className="text-base font-bold text-slate-900">Trade-In Value Estimator</h3>
+            <p className="text-[11px] font-medium text-slate-500">Fast appraisal based on current Ohio market data</p>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="grid h-10 w-10 place-items-center rounded-full bg-slate-100 text-slate-600
-              transition hover:bg-slate-200"
+            className="grid h-8 w-8 place-items-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900"
           >
             <X className="h-4 w-4" />
           </button>

@@ -151,21 +151,21 @@ export function SectionHeading({
     <Stagger className={`max-w-2xl ${align === "center" ? "mx-auto" : ""}`} gap={0.12}>
       <StaggerItem>
         <p
-          className={`text-[11px] font-semibold uppercase tracking-[0.32em] text-[#002c5f] ${alignCls}`}
+          className={`text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.3em] text-[#002c5f] ${alignCls}`}
         >
           {eyebrow}
         </p>
       </StaggerItem>
       <StaggerItem>
         <h2
-          className={`mt-4 text-3xl font-semibold leading-[1.08] tracking-tight text-slate-900 sm:text-4xl lg:text-[2.75rem] ${alignCls}`}
+          className={`mt-2.5 sm:mt-4 text-2xl font-semibold leading-[1.1] tracking-tight text-slate-900 sm:text-4xl lg:text-[2.75rem] ${alignCls}`}
         >
           {title}
         </h2>
       </StaggerItem>
       {copy ? (
         <StaggerItem>
-          <p className={`mt-5 text-base leading-relaxed text-slate-600 ${alignCls}`}>{copy}</p>
+          <p className={`mt-2 sm:mt-4 text-[13px] sm:text-base leading-relaxed text-slate-600 ${alignCls}`}>{copy}</p>
         </StaggerItem>
       ) : null}
     </Stagger>

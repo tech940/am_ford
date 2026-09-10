@@ -117,8 +117,8 @@ export function ServiceAndParts() {
           <Stagger className="mt-10 space-y-4" gap={0.12}>
             {PROMISES.map((p) => (
               <StaggerItem key={p.title}>
-                <div className="hm-glass flex items-start gap-4 rounded-3xl p-5 transition-colors duration-500 hover:border-[#002c5f]/20">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#002c5f] text-white shadow-sm">
+                <div className="hm-glass flex items-start gap-4 rounded-lg p-5 transition-colors duration-500 hover:border-[#002c5f]/20">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-[#002c5f] text-white shadow-sm">
                     <p.icon className="h-5 w-5 text-white" aria-hidden />
                   </div>
                   <div className="min-w-0">
@@ -157,8 +157,8 @@ export function ServiceAndParts() {
         <Stagger className="grid gap-4 sm:grid-cols-2" gap={0.07}>
           {SERVICES.map((s) => (
             <StaggerItem key={s.title} variants={scaleVariants}>
-              <article className="hm-glass h-full rounded-3xl p-5 transition-colors duration-500 hover:border-[#002c5f]/25">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#002c5f]/10 text-[#002c5f]">
+              <article className="hm-glass h-full rounded-lg p-5 transition-colors duration-500 hover:border-[#002c5f]/25">
+                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#002c5f]/10 text-[#002c5f]">
                   <s.icon className="h-5 w-5" aria-hidden />
                 </div>
                 <h3 className="mt-4 text-[15px] font-bold text-slate-900">{s.title}</h3>

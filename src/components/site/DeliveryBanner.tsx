@@ -23,22 +23,22 @@ export function DeliveryBanner({ variant = "full" }: { variant?: "full" | "compa
   }
 
   return (
-    <section className="border-y border-slate-200 bg-white py-14">
-      <div className="mx-auto grid max-w-7xl items-center gap-8 px-6 lg:grid-cols-12">
+    <section className="border-y border-slate-200 bg-white py-8 sm:py-14">
+      <div className="mx-auto grid max-w-7xl items-center gap-6 sm:gap-8 px-4 sm:px-6 lg:grid-cols-12">
         <div className="lg:col-span-8">
-          <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
+          <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-[#002c5f]">
             Shop from wherever you live
           </p>
-          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
             {DELIVERY_SHORT}, and {DELIVERY_SHIPPING.toLowerCase()}
           </h2>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600">
+          <p className="mt-3 max-w-2xl text-xs sm:text-sm leading-relaxed text-slate-600">
             You do not have to live in Ashtabula County to buy from AM Ford. Choose your vehicle
             online, complete much of the financing and paperwork remotely, and we will bring it to
             your driveway free of charge within 300 miles of our {dealerInfo.locality}, Ohio
             dealership. Farther away? We can arrange shipping to any of the 50 states.
           </p>
-          <p className="mt-3 text-xs text-slate-500">
+          <p className="mt-2 text-[11px] text-slate-500">
             Shipping charges may apply outside the complimentary 300-mile delivery area. Delivery
             timing depends on your location, vehicle availability, completed documentation, and
             financing approval. Confirm terms with the dealership before purchase.
@@ -47,14 +47,14 @@ export function DeliveryBanner({ variant = "full" }: { variant?: "full" | "compa
         <div className="lg:col-span-4">
           <Link
             to="/nationwide-vehicle-delivery"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#002c5f] px-6 py-4 text-sm font-bold text-white shadow-md transition hover:bg-[#001f44]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-[#002c5f] px-5 py-3 text-xs sm:text-sm font-bold text-white shadow-md transition hover:bg-[#001f44]"
           >
             Learn About Free Home Delivery
             <ArrowRight className="h-4 w-4" />
           </Link>
           <a
             href={dealerInfo.phoneHref}
-            className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[#002c5f]/20 bg-white px-6 py-4 text-sm font-bold text-[#002c5f] transition hover:bg-slate-50"
+            className="mt-2.5 inline-flex w-full items-center justify-center gap-2 rounded-md border border-[#002c5f]/20 bg-white px-5 py-3 text-xs sm:text-sm font-bold text-[#002c5f] transition hover:bg-slate-50"
           >
             Request a Shipping Quote
           </a>

@@ -48,7 +48,7 @@ function CarCard({ v }: { v: Vehicle }) {
       style={reduced ? undefined : { rotateX: tiltX, rotateY: tiltY, transformPerspective: 900 }}
       animate={reduced ? undefined : { y: hovered ? -10 : 0 }}
       transition={{ type: "spring", stiffness: 220, damping: 22 }}
-      className={`hm-glass group relative h-full overflow-hidden rounded-[1.75rem] transition-shadow duration-500 ${
+      className={`hm-glass group relative h-full overflow-hidden rounded-lg transition-shadow duration-500 ${
         hovered ? "shadow-[0_44px_110px_-30px_rgba(0,0,0,0.9)]" : ""
       }`}
     >
@@ -167,7 +167,7 @@ export function FeaturedCars() {
         copy="Every car on this lot passed a 172-point inspection before it earned a spot here."
       />
       <Stagger className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" gap={0.09}>
-        {vehicles.map((v) => (
+        {vehicles.slice(0, 6).map((v) => (
           <StaggerItem key={v.id}>
             <CarCard v={v} />
           </StaggerItem>

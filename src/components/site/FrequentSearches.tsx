@@ -125,9 +125,7 @@ const PRICE_TEMPLATES: ((band: string) => string)[] = [
 const CONDITION_LABEL: Record<Vehicle["condition"], string> = {
   New: "New Fords for sale in Jefferson OH",
   "Certified Pre-Owned": "Certified pre-owned Fords near Ashtabula",
-  // Present only to keep this map exhaustive. The lot holds zero used vehicles and the
-  // inventory route drops ?condition=Used, so LINKABLE_CONDITIONS never yields it.
-  Used: "Used Fords",
+  Used: "Used vehicles for sale near Ashtabula",
 };
 
 const CONDITION_ADJECTIVE: Record<Vehicle["condition"], string> = {
@@ -183,13 +181,11 @@ const stockedFuels = (): Vehicle["fuel"][] =>
   );
 
 /**
- * Conditions a link is allowed to filter on: the ones actually on the lot, minus "Used".
- * The inventory route rejects ?condition=Used, and the brief forbids advertising used stock,
- * so a used link would be a dead end even if a used unit ever appeared without its own copy.
+ * Conditions a link is allowed to filter on: the ones actually on the lot.
  */
 const LINKABLE_CONDITIONS: Vehicle["condition"][] = [
   ...new Set(vehicles.map((v) => v.condition)),
-].filter((c) => c !== "Used");
+];
 
 const bandHasStock = (band: PriceBand) =>
   vehicles.some((v) => v.price >= band.priceMin && v.price <= band.priceMax);

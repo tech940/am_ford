@@ -55,12 +55,12 @@ export function Reviews() {
   const currentReview = REVIEWS[index];
 
   return (
-    <section className="py-16 sm:py-24 bg-slate-50 border-b border-slate-200/80 overflow-hidden">
+    <section className="py-8 sm:py-16 bg-slate-50 border-b border-slate-200/80 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
           {/* LEFT CARD: What Our Customers Say */}
           <div
-            className="lg:col-span-5 flex flex-col justify-between rounded-[2.5rem] border border-slate-200/90 bg-white p-7 sm:p-9 shadow-xl relative min-h-[380px]"
+            className="lg:col-span-5 flex flex-col justify-between rounded-lg border border-slate-200/90 bg-white p-5 sm:p-9 shadow-xl relative min-h-[340px] sm:min-h-[380px]"
             onPointerEnter={() => setPaused(true)}
             onPointerLeave={() => setPaused(false)}
           >
@@ -130,7 +130,7 @@ export function Reviews() {
           </div>
 
           {/* RIGHT CARD: Visit Our Dealership */}
-          <div className="lg:col-span-7 rounded-[2.5rem] bg-[#002c5f] text-white shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[380px]">
+          <div className="lg:col-span-7 rounded-lg bg-[#002c5f] text-white shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[340px] sm:min-h-[380px]">
             {/* Info Column */}
             <div className="md:col-span-6 p-7 sm:p-9 flex flex-col justify-between">
               <div>

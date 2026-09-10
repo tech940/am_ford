@@ -1,76 +1,96 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { vehicles } from "@/lib/vehicles";
-import { ResponsiveImage } from "@/components/site/ResponsiveImage";
+import { vehicles, type Vehicle } from "@/lib/vehicles";
 
-const EXTRAORDINARY_COLLECTION = [
-  {
-    tag: "ELECTRIC SUV",
-    title: "2025 Ford Mustang Mach-E Rally",
-    imageName: "car-lightning" as const,
-    vehicle: vehicles[2],
-  },
-  {
-    tag: "FLAGSHIP SUV",
-    title: "2025 Ford Expedition Max Platinum",
-    imageName: "car-explorer" as const,
-    vehicle: vehicles[1],
-  },
-  {
-    tag: "HIGH-PERFORMANCE",
-    title: "2025 Ford Mustang Dark Horse V8",
-    imageName: "car-mustang" as const,
-    vehicle: vehicles[0],
-  },
-  {
-    tag: "RUGGED 4X4",
-    title: "2025 Ford Bronco Raptor 3.0L",
-    imageName: "car-bronco" as const,
-    vehicle: vehicles[3],
-  },
-  {
-    tag: "COMPACT CROSSOVER",
-    title: "2025 Ford Escape ST-Line Hybrid",
-    imageName: "car-escape" as const,
-    vehicle: vehicles[4] || vehicles[0],
-  },
-];
+function getTagForVehicle(v: Vehicle): string {
+  if (v.fuel === "Electric") return "ALL-ELECTRIC";
+  if (v.fuel === "Hybrid") return "HYBRID EFFICIENCY";
+  if (v.model.includes("F-250") || v.model.includes("Super Duty")) return "HEAVY DUTY 4X4";
+  if (v.model.includes("F-150")) return "FULL-SIZE PICKUP";
+  if (v.model.includes("Bronco")) return "RUGGED 4X4";
+  if (v.model.includes("Explorer")) return "PREMIUM 3-ROW SUV";
+  if (v.model.includes("Expedition")) return "FLAGSHIP FULL-SIZE SUV";
+  if (v.model.includes("Mustang")) return "HIGH-PERFORMANCE";
+  if (v.model.includes("Maverick")) return "COMPACT PICKUP";
+  if (v.type === "Truck") return "FORD TOUGH TRUCK";
+  return `${v.condition.toUpperCase()} ARRIVAL`;
+}
+
+function getExtraordinaryCollection(allVehicles: Vehicle[]) {
+  const preferredModels = ["F-150", "Explorer", "Bronco", "F-250", "Expedition", "Maverick", "Escape"];
+  const list: { tag: string; title: string; vehicle: Vehicle }[] = [];
+
+  for (const m of preferredModels) {
+    const v = allVehicles.find(
+      (item) =>
+        item.model.includes(m) &&
+        Array.isArray(item.images) &&
+        item.images.length > 2 &&
+        !list.some((c) => c.vehicle.id === item.id)
+    );
+    if (v) {
+      list.push({
+        tag: getTagForVehicle(v),
+        title: `${v.year} ${v.make} ${v.model} ${v.trim}`.trim(),
+        vehicle: v,
+      });
+    }
+    if (list.length >= 6) break;
+  }
+
+  // Fallback if less than 5 found
+  if (list.length < 5) {
+    for (const v of allVehicles) {
+      if (list.length >= 5) break;
+      if (!list.some((c) => c.vehicle.id === v.id)) {
+        list.push({
+          tag: getTagForVehicle(v),
+          title: `${v.year} ${v.make} ${v.model} ${v.trim}`.trim(),
+          vehicle: v,
+        });
+      }
+    }
+  }
+
+  return list;
+}
 
 export function ExtraordinaryCarousel() {
-  const [activeIndex, setActiveIndex] = useState(2);
+  const collection = useMemo(() => getExtraordinaryCollection(vehicles), []);
+  const [activeIndex, setActiveIndex] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
   const navigate = useNavigate();
 
-  // Automatic 1.5s Carousel Timer
+  // Automatic 4.5s Carousel Timer
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || collection.length === 0) return;
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % EXTRAORDINARY_COLLECTION.length);
-    }, 1500);
+      setActiveIndex((prev) => (prev + 1) % collection.length);
+    }, 4500);
 
     return () => clearInterval(interval);
-  }, [isPaused]);
+  }, [isPaused, collection.length]);
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % EXTRAORDINARY_COLLECTION.length);
+    setActiveIndex((prev) => (prev + 1) % collection.length);
   };
 
   const handlePrev = () => {
-    setActiveIndex(
-      (prev) => (prev - 1 + EXTRAORDINARY_COLLECTION.length) % EXTRAORDINARY_COLLECTION.length,
-    );
+    setActiveIndex((prev) => (prev - 1 + collection.length) % collection.length);
   };
 
   // Calculate offset relative to activeIndex in circular fashion
   const getOffset = (idx: number) => {
-    const total = EXTRAORDINARY_COLLECTION.length;
+    const total = collection.length;
     let diff = idx - activeIndex;
     if (diff > Math.floor(total / 2)) diff -= total;
     if (diff < -Math.floor(total / 2)) diff += total;
     return diff;
   };
+
+  if (collection.length === 0) return null;
 
   return (
     <section className="py-20 sm:py-28 bg-[#f4f7fb] border-b border-slate-200/80 overflow-hidden relative">
@@ -86,18 +106,18 @@ export function ExtraordinaryCarousel() {
         </h2>
 
         <p className="mx-auto mt-4 max-w-xl text-sm font-semibold leading-relaxed text-slate-600 sm:text-base">
-          From high-performance coupes to flagship 4x4 SUVs — discover Northeast Ohio's finest Ford
-          vehicle collection at AM Ford.
+          From high-performance trucks to trail-ready 4x4 SUVs — discover Northeast Ohio's finest Ford
+          vehicle collection standing live on the lot today at AM Ford.
         </p>
 
-        {/* 3D Coverflow Stage (Butter-Smooth 60FPS Hardware Accelerated) */}
+        {/* 3D Coverflow Stage */}
         <div
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           className="mt-12 relative flex items-center justify-center min-h-[460px] overflow-hidden"
         >
           <div className="relative w-full max-w-5xl h-[440px] flex items-center justify-center">
-            {EXTRAORDINARY_COLLECTION.map((item, idx) => {
+            {collection.map((item, idx) => {
               const offset = getOffset(idx);
               const isActive = offset === 0;
               const isNear = Math.abs(offset) === 1;
@@ -107,8 +127,17 @@ export function ExtraordinaryCarousel() {
 
               return (
                 <motion.div
-                  key={item.title}
-                  onClick={() => setActiveIndex(idx)}
+                  key={item.vehicle.id}
+                  onClick={() => {
+                    if (isActive) {
+                      navigate({
+                        to: "/vehicle/$id",
+                        params: { id: item.vehicle.id },
+                      });
+                    } else {
+                      setActiveIndex(idx);
+                    }
+                  }}
                   animate={{
                     x: xTranslate,
                     scale: isActive ? 1.08 : isNear ? 0.9 : 0.78,
@@ -126,34 +155,44 @@ export function ExtraordinaryCarousel() {
                     willChange: "transform, opacity",
                     transformStyle: "preserve-3d",
                   }}
-                  className={`absolute cursor-pointer overflow-hidden rounded-[2.25rem] bg-white transition-all ${
+                  className={`absolute cursor-pointer overflow-hidden rounded-lg bg-slate-900 transition-all ${
                     isActive
-                      ? "w-[280px] sm:w-[330px] shadow-2xl ring-4 ring-[#002c5f]/30 border-2 border-[#002c5f]"
+                      ? "w-[280px] sm:w-[330px] shadow-2xl ring-1 ring-white/20"
                       : isNear
-                        ? "w-[220px] sm:w-[260px] shadow-lg border border-slate-200"
-                        : "hidden md:block w-[180px] sm:w-[220px] shadow-sm border border-slate-200"
+                        ? "w-[220px] sm:w-[260px] shadow-lg"
+                        : "hidden md:block w-[180px] sm:w-[220px] shadow-sm"
                   }`}
                 >
                   {/* Card Image */}
-                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-900">
-                    <ResponsiveImage
-                      name={item.imageName}
+                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-900 group">
+                    <img
+                      src={item.vehicle.image}
                       alt={item.title}
-                      sizes="(max-width: 640px) 100vw, 400px"
-                      className="h-full w-full object-cover object-center"
+                      loading="lazy"
+                      className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-transparent pointer-events-none" />
 
                     {/* Top Tag */}
-                    <div className="absolute left-4 top-4 z-10">
-                      <span className="inline-flex rounded-full bg-white/90 px-3 py-1 text-[9px] font-black uppercase tracking-wider text-slate-900 shadow-md backdrop-blur-sm">
+                    <div className="absolute left-3.5 top-3.5 z-10">
+                      <span className="inline-flex rounded-md bg-[#002c5f] px-2.5 py-1 text-[9px] font-black uppercase tracking-wider text-white shadow-md">
                         {item.tag}
+                      </span>
+                    </div>
+
+                    {/* Top Right Price */}
+                    <div className="absolute right-3.5 top-3.5 z-10">
+                      <span className="inline-flex rounded-md bg-white/95 px-2.5 py-0.5 text-[10px] font-black text-slate-900 shadow-md">
+                        ${item.vehicle.price.toLocaleString()}
                       </span>
                     </div>
 
                     {/* Bottom Content for Active Center Card */}
                     <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-col items-start text-left">
-                      <h3 className="text-base sm:text-lg font-black leading-snug text-white drop-shadow-md">
+                      <div className="text-[11px] font-semibold text-amber-300">
+                        {item.vehicle.year} · {item.vehicle.miles.toLocaleString()} Mi · {item.vehicle.condition}
+                      </div>
+                      <h3 className="text-base sm:text-lg font-black leading-snug text-white drop-shadow-md line-clamp-2 mt-0.5">
                         {item.title}
                       </h3>
 
@@ -169,7 +208,7 @@ export function ExtraordinaryCarousel() {
                               params: { id: item.vehicle.id },
                             });
                           }}
-                          className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-black uppercase tracking-wider text-[#002c5f] shadow-lg hover:bg-slate-100 transition active:scale-95"
+                          className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-white px-4 py-2 text-xs font-black uppercase tracking-wider text-[#002c5f] shadow-lg hover:bg-slate-100 transition active:scale-95 cursor-pointer"
                         >
                           <span>VIEW DETAILS</span>
                           <ArrowRight className="h-3.5 w-3.5" />
@@ -188,15 +227,15 @@ export function ExtraordinaryCarousel() {
           <div className="flex items-center gap-3">
             <button
               onClick={handlePrev}
-              className="grid h-11 w-11 place-items-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-md transition hover:border-[#002c5f] hover:text-[#002c5f] active:scale-90"
+              className="grid h-11 w-11 place-items-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-md transition hover:border-[#002c5f] hover:text-[#002c5f] active:scale-90 cursor-pointer"
               aria-label="Previous Slide"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
 
-            {/* Indicator Dots with 44px x 44px min touch target size */}
+            {/* Indicator Dots */}
             <div className="flex items-center gap-0.5 px-1">
-              {EXTRAORDINARY_COLLECTION.map((_, dotIdx) => (
+              {collection.map((_, dotIdx) => (
                 <button
                   key={dotIdx}
                   onClick={() => setActiveIndex(dotIdx)}
@@ -216,7 +255,7 @@ export function ExtraordinaryCarousel() {
 
             <button
               onClick={handleNext}
-              className="grid h-11 w-11 place-items-center rounded-full bg-[#002c5f] text-white shadow-md transition hover:bg-[#001f44] active:scale-90"
+              className="grid h-11 w-11 place-items-center rounded-full bg-[#002c5f] text-white shadow-md transition hover:bg-[#001f44] active:scale-90 cursor-pointer"
               aria-label="Next Slide"
             >
               <ChevronRight className="h-5 w-5" />
@@ -228,7 +267,7 @@ export function ExtraordinaryCarousel() {
             to="/inventory"
             className="group inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#002c5f] hover:underline pt-2"
           >
-            <span>BROWSE ALL VEHICLES</span>
+            <span>BROWSE ALL {vehicles.length} VEHICLES</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>

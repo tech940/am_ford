@@ -10,12 +10,26 @@ type Band = {
   label: string;
   note: string;
   icon: typeof MapPin;
+  href?: string;
 };
 
 /**
- * The brief's geographic tiers, in order: immediate market, expanded Northeast Ohio,
- * then the wider region. Markets render as plain text pills, not links, because the
- * city landing pages do not exist yet.
+ * Direct internal links to local city landing pages for strong regional SEO link equity.
+ */
+const MARKET_LINKS: Record<string, string> = {
+  Ashtabula: "/ford-dealer/ashtabula-oh",
+  Geneva: "/ford-dealer/geneva-oh",
+  Conneaut: "/ford-dealer/conneaut-oh",
+  Austinburg: "/ford-dealer/austinburg-oh",
+  Madison: "/ford-dealer/madison-oh",
+  Chardon: "/ford-dealer/chardon-oh",
+  Cleveland: "/ford-dealer/cleveland-oh",
+  "Erie, PA": "/ford-dealer/erie-pa",
+};
+
+/**
+ * The brief's geographic tiers: immediate market, expanded Northeast Ohio,
+ * and the wider regional market.
  */
 const BANDS: Band[] = [
   {
@@ -23,18 +37,21 @@ const BANDS: Band[] = [
     label: "Ashtabula County and nearby",
     note: "Our home county, a short run up or down State Route 46.",
     icon: MapPin,
+    href: "/ford-dealer/county/ashtabula-county",
   },
   {
     key: "tier2",
     label: "Northeast Ohio",
     note: "From Lake and Geauga counties through Trumbull and the Mahoning Valley.",
     icon: Navigation,
+    href: "/areas-we-serve",
   },
   {
     key: "tier3",
     label: "Regional and beyond",
     note: "Metro Ohio, Erie and Northwestern Pennsylvania, plus shoppers nationwide.",
     icon: Globe2,
+    href: "/nationwide-vehicle-delivery",
   },
 ];
 
@@ -67,24 +84,45 @@ export function AreasWeServe() {
       <Stagger className="mt-14 grid gap-6 lg:grid-cols-3" gap={0.12}>
         {BANDS.map((band) => (
           <StaggerItem key={band.key}>
-            <article className="hm-glass h-full rounded-[1.75rem] p-6 transition-colors duration-500 hover:border-[#002c5f]/30 sm:p-7">
+            <article className="hm-glass h-full rounded-lg p-6 transition-colors duration-500 hover:border-[#002c5f]/30 sm:p-7">
               <div className="flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#002c5f] text-white shadow-sm">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#002c5f] text-white shadow-sm">
                   <band.icon className="h-5 w-5 text-white" aria-hidden />
                 </span>
                 <div className="min-w-0">
-                  <h3 className="text-[15px] font-bold text-slate-900">{band.label}</h3>
+                  {band.href ? (
+                    <Link to={band.href} className="group/title inline-flex items-center gap-1">
+                      <h3 className="text-[15px] font-bold text-slate-900 group-hover/title:text-[#002c5f]">
+                        {band.label}
+                      </h3>
+                      <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover/title:text-[#002c5f] transition-transform group-hover/title:translate-x-0.5" />
+                    </Link>
+                  ) : (
+                    <h3 className="text-[15px] font-bold text-slate-900">{band.label}</h3>
+                  )}
                   <p className="mt-1 text-sm leading-relaxed text-slate-600">{band.note}</p>
                 </div>
               </div>
               <ul className="mt-5 flex flex-wrap gap-2">
-                {SERVED_MARKETS[band.key].map((market) => (
-                  <li key={market}>
-                    <span className="inline-flex min-h-[40px] items-center rounded-full bg-slate-100 px-3.5 text-[13px] font-medium leading-tight text-[#002c5f]">
-                      {market}
-                    </span>
-                  </li>
-                ))}
+                {SERVED_MARKETS[band.key].map((market) => {
+                  const href = MARKET_LINKS[market];
+                  return (
+                    <li key={market}>
+                      {href ? (
+                        <Link
+                          to={href}
+                          className="inline-flex min-h-[36px] items-center rounded-full bg-slate-100 px-3.5 text-[13px] font-medium leading-tight text-[#002c5f] transition-all hover:bg-[#002c5f] hover:text-white"
+                        >
+                          {market}
+                        </Link>
+                      ) : (
+                        <span className="inline-flex min-h-[36px] items-center rounded-full bg-slate-100/70 px-3.5 text-[13px] font-medium leading-tight text-slate-700">
+                          {market}
+                        </span>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </article>
           </StaggerItem>
@@ -92,7 +130,7 @@ export function AreasWeServe() {
       </Stagger>
 
       <Reveal className="mt-12" delay={0.15}>
-        <div className="hm-glass-strong flex flex-col gap-6 rounded-[1.75rem] p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between">
+        <div className="hm-glass-strong flex flex-col gap-6 rounded-lg p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[#002c5f]">
               One store, one address

@@ -71,12 +71,12 @@ function VehicleSidebarPanel({ carData, step }: { carData: CarData; step: Sideba
   return (
     <div className="otp-sidebar">
       <div className="otp-sidebar-inner">
-        <div style={{ marginBottom: 20, textAlign: "center" }}>
+        <div style={{ marginBottom: 16, textAlign: "center" }}>
           <div
             style={{
               background: "#fff",
-              padding: "10px 20px",
-              borderRadius: 8,
+              padding: "8px 16px",
+              borderRadius: 6,
               display: "inline-block",
               boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
             }}
@@ -85,7 +85,7 @@ function VehicleSidebarPanel({ carData, step }: { carData: CarData; step: Sideba
               src="https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/Am-ford.png"
               alt="AM Ford"
               style={{
-                height: 48,
+                height: 38,
                 width: "auto",
                 objectFit: "contain",
                 display: "block",
@@ -96,52 +96,57 @@ function VehicleSidebarPanel({ carData, step }: { carData: CarData; step: Sideba
 
         <h2
           style={{
-            fontSize: 22,
-            fontWeight: 700,
+            fontSize: 20,
+            fontWeight: 800,
             color: "#fff",
-            marginBottom: 12,
-            fontStyle: "italic",
-            lineHeight: 1.2,
+            marginBottom: 8,
+            lineHeight: 1.25,
+            letterSpacing: "-0.01em",
           }}
         >
-          Unlock Your Instant Price
+          {carData.source?.toLowerCase().includes("discount")
+            ? "Request Extra Discount & Pricing"
+            : "Unlock Your Instant Price"}
         </h2>
 
         <p
           style={{
-            fontSize: 13,
+            fontSize: 12.5,
             color: "#ffffffcc",
             marginBottom: 0,
-            lineHeight: 1.5,
+            lineHeight: 1.45,
           }}
         >
-          Please provide your contact information to reveal this vehicle's Instant Price
+          {carData.source?.toLowerCase().includes("discount")
+            ? "Inquire directly with AM Ford for unadvertised manager incentives, extra discounts, and vehicle availability."
+            : "Please provide your contact information to reveal this vehicle's Instant Price"}
         </p>
 
         {carData.title && (
           <div
             style={{
-              marginTop: 24,
-              padding: 16,
+              marginTop: 16,
+              padding: "12px 14px",
               background: "rgba(255, 255, 255, 0.1)",
-              borderRadius: 8,
-              border: "1px solid rgba(255, 255, 255, 0.2)",
+              borderRadius: 6,
+              border: "1px solid rgba(255, 255, 255, 0.18)",
               color: "#fff",
             }}
           >
             <div
               style={{
-                fontSize: 11,
+                fontSize: 10,
                 textTransform: "uppercase",
-                letterSpacing: "0.05em",
+                letterSpacing: "0.1em",
+                fontWeight: 700,
                 color: "#ffffffaa",
               }}
             >
               Selected Vehicle
             </div>
-            <div style={{ fontSize: 15, fontWeight: 700, marginTop: 4 }}>{carData.title}</div>
+            <div style={{ fontSize: 14, fontWeight: 700, marginTop: 3 }}>{carData.title}</div>
             {carData.price && (
-              <div style={{ fontSize: 18, fontWeight: 800, color: "#ffd633", marginTop: 4 }}>
+              <div style={{ fontSize: 17, fontWeight: 800, color: "#ffd633", marginTop: 3 }}>
                 ${formatListPrice(carData.price)}
               </div>
             )}
@@ -522,7 +527,7 @@ export default function OTPPopup({ onSuccess, onClose, initialCarData }: OTPPopu
                 </div>
               )}
 
-              <div className="sms-consent-group">
+              <div className="sms-consent-group" style={{ marginTop: 16 }}>
                 <label
                   style={{
                     display: "flex",
@@ -530,24 +535,25 @@ export default function OTPPopup({ onSuccess, onClose, initialCarData }: OTPPopu
                     gap: 10,
                     cursor: "pointer",
                     padding: "10px 12px",
-                    borderRadius: 10,
+                    borderRadius: 6,
+                    background: "#f8fafc",
                     border: invalidFields.includes("consent")
-                      ? "1px solid #dc2626"
-                      : "1px solid rgba(255,255,255,0.25)",
+                      ? "1.5px solid #dc2626"
+                      : "1px solid #e2e8f0",
                   }}
                 >
                   <input
                     type="checkbox"
                     checked={smsConsent}
                     onChange={(e) => setSmsConsent(e.target.checked)}
-                    style={{ marginTop: 3, width: 16, height: 16, accentColor: "#ffd633" }}
+                    style={{ marginTop: 2.5, width: 16, height: 16, accentColor: BRAND }}
                   />
                   <span
                     className="sms-consent-copy"
-                    style={{ color: "#d1d5db", textAlign: "left" }}
+                    style={{ color: "#475569", textAlign: "left", fontSize: 11, lineHeight: 1.45 }}
                   >
                     {SMS_CONSENT_DISCLOSURE}{" "}
-                    <a href={TERMS_OF_USE_URL} target="_blank" rel="noopener noreferrer">
+                    <a href={TERMS_OF_USE_URL} target="_blank" rel="noopener noreferrer" style={{ color: BRAND, fontWeight: 600, textDecoration: "underline" }}>
                       Terms of use
                     </a>
                   </span>
@@ -579,7 +585,9 @@ export default function OTPPopup({ onSuccess, onClose, initialCarData }: OTPPopu
                   "Please wait"
                 ) : (
                   <>
-                    Unlock Instant Price
+                    {carData.source?.toLowerCase().includes("discount")
+                      ? "Claim Extra Discount"
+                      : "Unlock Instant Price"}
                     <svg
                       width="18"
                       height="18"
@@ -607,35 +615,37 @@ export default function OTPPopup({ onSuccess, onClose, initialCarData }: OTPPopu
             >
               <div
                 style={{
-                  width: 72,
-                  height: 72,
+                  width: 60,
+                  height: 60,
                   borderRadius: "50%",
                   background: "#f0fdf4",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  margin: "0 auto 24px",
-                  border: "3px solid #bbf7d0",
+                  margin: "0 auto 20px",
+                  border: "1.5px solid #86efac",
                 }}
               >
                 <svg
-                  width="36"
-                  height="36"
+                  width="28"
+                  height="28"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#16a34a"
                   strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <path d="M20 6L9 17l-5-5" />
+                  <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
               <h2
                 style={{
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: 800,
-                  color: "#111827",
-                  marginBottom: 8,
-                  fontStyle: "italic",
+                  color: "#0f172a",
+                  marginBottom: 6,
+                  letterSpacing: "-0.02em",
                 }}
               >
                 Request Received!
@@ -643,70 +653,94 @@ export default function OTPPopup({ onSuccess, onClose, initialCarData }: OTPPopu
               <p
                 style={{
                   fontSize: 14,
-                  color: "#6b7280",
-                  marginBottom: 28,
-                  lineHeight: 1.6,
-                  maxWidth: 420,
+                  color: "#64748b",
+                  marginBottom: 24,
+                  lineHeight: 1.55,
+                  maxWidth: 400,
                   marginLeft: "auto",
                   marginRight: "auto",
                 }}
               >
-                Thanks,{" "}
-                <strong style={{ color: "#111827" }}>{`${firstName} ${lastName}`.trim()}</strong> —
-                a specialist is preparing your price now. Expect a call or text within 15 minutes
-                during business hours.
+                Thanks, <strong style={{ color: "#0f172a" }}>{`${firstName} ${lastName}`.trim()}</strong> — our team is preparing your custom pricing now. Expect a call or text shortly during business hours.
               </p>
+
+              {/* Clean structured inquiry summary (No generic emojis) */}
               <div
                 style={{
-                  background: "#f9fafb",
-                  border: "1px solid #e5e7eb",
-                  borderRadius: 10,
-                  padding: "20px 24px",
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: 12,
+                  padding: "16px 20px",
                   textAlign: "left",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 12,
-                  maxWidth: 420,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gap: "14px 16px",
+                  maxWidth: 400,
                   marginLeft: "auto",
                   marginRight: "auto",
                   width: "100%",
                 }}
               >
-                {[
-                  { icon: "👤", label: "Name", value: `${firstName} ${lastName}`.trim() },
-                  { icon: "📧", label: "Email", value: email },
-                  { icon: "📱", label: "Phone", value: cleanPhone },
-                  { icon: "💬", label: "Preferred", value: preferredContact },
-                ].map(({ icon, label, value }) => (
-                  <div key={label} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <span style={{ fontSize: 18 }}>{icon}</span>
-                    <div>
-                      <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>{label}</div>
-                      <div style={{ fontSize: 14, color: "#111827", fontWeight: 500 }}>{value}</div>
-                    </div>
+                <div>
+                  <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Name
                   </div>
-                ))}
+                  <div style={{ fontSize: 13, color: "#0f172a", fontWeight: 600, marginTop: 2, wordBreak: "break-word" }}>
+                    {`${firstName} ${lastName}`.trim() || "—"}
+                  </div>
+                </div>
+
+                <div>
+                  <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Phone
+                  </div>
+                  <div style={{ fontSize: 13, color: "#0f172a", fontWeight: 600, marginTop: 2 }}>
+                    {cleanPhone || phone || "—"}
+                  </div>
+                </div>
+
+                <div style={{ gridColumn: "span 2" }}>
+                  <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Email
+                  </div>
+                  <div style={{ fontSize: 13, color: "#0f172a", fontWeight: 600, marginTop: 2, wordBreak: "break-all" }}>
+                    {email || "—"}
+                  </div>
+                </div>
+
+                <div style={{ gridColumn: "span 2" }}>
+                  <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Preferred Contact
+                  </div>
+                  <div style={{ fontSize: 13, color: "#0f172a", fontWeight: 600, marginTop: 2 }}>
+                    {preferredContact === "Text" ? "Text Message (SMS)" : preferredContact === "Call" ? "Phone Call" : "Email / Any"}
+                  </div>
+                </div>
               </div>
+
               {onClose && (
                 <button
                   type="button"
                   onClick={onClose}
                   style={{
-                    marginTop: 24,
+                    marginTop: 20,
                     width: "100%",
-                    maxWidth: 420,
+                    maxWidth: 400,
                     marginLeft: "auto",
                     marginRight: "auto",
                     display: "block",
-                    padding: "13px 0",
+                    padding: "12px 0",
                     background: BRAND,
                     color: "#fff",
                     border: "none",
-                    borderRadius: 6,
-                    fontSize: 15,
+                    borderRadius: 10,
+                    fontSize: 14,
                     fontWeight: 700,
                     cursor: "pointer",
+                    transition: "opacity 0.2s ease",
                   }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.opacity = "0.92")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.opacity = "1")}
                 >
                   Done
                 </button>

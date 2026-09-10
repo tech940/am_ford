@@ -1,13 +1,17 @@
 import { lazy, Suspense } from "react";
 import "./home.css";
-import { AmbientBackground } from "./fx/AmbientBackground";
-import { CursorGlow } from "./fx/CursorGlow";
-import { HomeNav } from "./sections/HomeNav";
+import { SiteNav } from "@/components/site/SiteNav";
+import { SiteFooter } from "@/components/site/SiteFooter";
 import { Hero } from "./sections/Hero";
 import { ShopByCategory } from "./sections/ShopByCategory";
-import { HomeFooter } from "./sections/HomeFooter";
 
-// Lazy load below-the-fold home page sections to minimize main thread JS parse/eval work
+// Lazy load non-critical visual fx & below-the-fold sections to minimize critical JS execution
+const AmbientBackground = lazy(() =>
+  import("./fx/AmbientBackground").then((m) => ({ default: m.AmbientBackground })),
+);
+const CursorGlow = lazy(() =>
+  import("./fx/CursorGlow").then((m) => ({ default: m.CursorGlow })),
+);
 const WhatWeSell = lazy(() =>
   import("./sections/WhatWeSell").then((m) => ({ default: m.WhatWeSell })),
 );
@@ -46,39 +50,47 @@ const AreasWeServe = lazy(() =>
 const FinalCTA = lazy(() => import("./sections/FinalCTA").then((m) => ({ default: m.FinalCTA })));
 
 /**
- * The homepage. Critical above-the-fold components (HomeNav, Hero, ShopByCategory)
+ * The homepage. Critical above-the-fold components (SiteNav, Hero, ShopByCategory)
  * load synchronously for fast FCP/LCP. Below-the-fold sections are lazy-loaded to cut
  * main-thread JS execution from 2.5s down to <0.3s.
  */
 export function HomePage() {
   return (
     <div className="relative min-h-screen bg-slate-50 text-slate-900 antialiased selection:bg-[#002c5f] selection:text-white">
-      <AmbientBackground />
-      <CursorGlow />
-      <HomeNav />
+      <Suspense fallback={null}>
+        <AmbientBackground />
+        <CursorGlow />
+      </Suspense>
+      {/* The same nav and footer as every other page. Not SiteShell: its <main> top padding
+          would push the full-bleed hero out from under the fixed nav. */}
+      <SiteNav />
       <main id="content" className="relative">
         <Hero />
         <ShopByCategory />
         <Suspense fallback={null}>
-          {/* Ported from the v2 redesign at the client's request: the full Ford lineup with
-              the official model renders. */}
+          {/* Phase 1: Discovery & Inventory */}
           <WhatWeSell />
           <MostSearchedCars />
+
+          {/* Phase 2: VIP Spotlight & Affordability */}
           <FeaturedSpotlight />
-          <ExtraordinaryCarousel />
-          <FeaturedCars />
+          <Financing />
+
+          {/* Phase 3: Dealership Trust & Reputation */}
+          <WhyChooseUs />
           <DeliveryHighlight />
           <Stats />
-          <WhyChooseUs />
+          <Reviews />
+
+          {/* Phase 4: Ownership, Flagship Showcase & Regional Roots */}
+          <ExtraordinaryCarousel />
           <UnmatchedExcellence />
           <ServiceAndParts />
-          <Reviews />
-          <Financing />
           <AreasWeServe />
           <FinalCTA />
         </Suspense>
       </main>
-      <HomeFooter />
+      <SiteFooter />
     </div>
   );
 }

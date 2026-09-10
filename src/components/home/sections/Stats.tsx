@@ -2,10 +2,10 @@ import { Stagger, StaggerItem, scaleVariants } from "../fx/Reveal";
 import { CountUp } from "../fx/ui";
 
 const STATS = [
-  { value: 2500, suffix: "+", label: "Cars Sold" },
+  { value: 2500, suffix: "+", label: "Vehicles Delivered" },
   { value: 98, suffix: "%", label: "Customer Satisfaction" },
-  { value: 15, suffix: "+", label: "Years Experience" },
-  { value: 1200, suffix: "+", label: "Happy Customers" },
+  { value: 60, suffix: "+", label: "Years in Business" },
+  { value: 1200, suffix: "+", label: "5-Star Reviews" },
 ] as const;
 
 /** Counters rise from zero the moment the band scrolls into view. */
@@ -16,7 +16,7 @@ export function Stats() {
       aria-label="Dealership statistics"
     >
       <Stagger
-        className="hm-glass grid grid-cols-2 gap-y-10 rounded-[2rem] px-6 py-12 sm:px-12 lg:grid-cols-4"
+        className="hm-glass grid grid-cols-2 gap-y-8 sm:gap-y-10 rounded-lg px-5 py-10 sm:px-12 sm:py-12 lg:grid-cols-4"
         gap={0.12}
       >
         {STATS.map((s) => (

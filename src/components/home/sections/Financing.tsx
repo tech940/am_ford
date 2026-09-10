@@ -25,14 +25,14 @@ const POINTS = [
 /** Split layout: an official Ford render on one side, finance value cards sliding in on the other. */
 export function Financing() {
   return (
-    <section className="relative z-10 mx-auto max-w-6xl px-6 py-28 sm:py-36" aria-label="Financing">
-      <div className="grid items-center gap-14 lg:grid-cols-2">
+    <section className="relative z-10 mx-auto max-w-6xl px-6 py-10 sm:py-20" aria-label="Financing">
+      <div className="grid items-center gap-10 sm:gap-14 lg:grid-cols-2">
         {/* Decorative, so it stays off phones, where it would only push the copy down.
             This was a live WebGL alloy rim costing ~930 KB of three.js. The render ships
             as a JPEG on white, so it sits on its own white plate: bare on this slate page
             it would read as a white box, not a photograph. */}
         <Reveal className="relative order-2 hidden lg:order-1 lg:block">
-          <div className="mx-auto w-full max-w-[30rem] rounded-[2rem] border border-slate-200 bg-white px-8 py-12 shadow-xl">
+          <div className="mx-auto w-full max-w-[30rem] rounded-lg border border-slate-200 bg-white px-8 py-12 shadow-xl">
             <ResponsiveImage
               name="model-explorer"
               alt=""
@@ -54,11 +54,11 @@ export function Financing() {
             }
             copy="Financing should feel as considered as the car. Transparent numbers, fast answers, and a payment built around your life."
           />
-          <Stagger className="mt-10 space-y-4" gap={0.12}>
+          <Stagger className="mt-8 sm:mt-10 space-y-3 sm:space-y-4" gap={0.12}>
             {POINTS.map((p) => (
               <StaggerItem key={p.title}>
-                <div className="hm-glass flex items-start gap-4 rounded-3xl p-5 transition-colors duration-500 hover:border-[#002c5f]/20">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#002c5f] text-white shadow-sm">
+                <div className="hm-glass flex items-start gap-4 rounded-lg p-4 sm:p-5 transition-colors duration-500 hover:border-[#002c5f]/20">
+                  <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-md bg-[#002c5f] text-white shadow-sm">
                     <p.icon className="h-5 w-5 text-white" aria-hidden />
                   </div>
                   <div>

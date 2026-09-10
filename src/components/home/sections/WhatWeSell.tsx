@@ -52,21 +52,20 @@ export function WhatWeSell() {
 
   return (
     <section aria-labelledby="lineup-title" className="border-y border-rule bg-white">
-      <div className="mx-auto max-w-6xl px-6 py-14 lg:py-20">
-        <h2 id="lineup-title" className="display text-3xl text-ink sm:text-4xl">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-14 lg:py-20">
+        <h2 id="lineup-title" className="display text-2xl text-ink sm:text-3xl lg:text-4xl">
           What we sell
         </h2>
-        <p className="mt-3 max-w-2xl text-muted-foreground">
+        <p className="mt-2 text-[13px] sm:text-base max-w-2xl text-muted-foreground">
           Every model Ford builds, grouped the way we group them. Counts show what is on the lot
           today.
         </p>
 
-        {/* Filters one grid in place rather than swapping panels, so these are toggle buttons
-            and not a half-implemented tabs pattern. */}
+        {/* Horizontal scrollable single-line options */}
         <div
           role="group"
           aria-label="Filter the lineup by group"
-          className="mt-8 flex flex-wrap items-center gap-1 border-b border-rule"
+          className="mt-5 sm:mt-8 flex items-center gap-1 overflow-x-auto no-scrollbar whitespace-nowrap border-b border-rule pb-0.5"
         >
           {LINEUP.map((g) => {
             const on = g.group === active;
@@ -77,13 +76,13 @@ export function WhatWeSell() {
                 aria-pressed={on}
                 onClick={() => setActive(g.group)}
                 className={cn(
-                  "relative -mb-px min-h-11 border-b-2 px-4 font-sans text-ui font-semibold transition-colors",
+                  "relative -mb-px min-h-10 border-b-2 px-3 sm:px-4 font-sans text-xs sm:text-ui font-semibold transition-colors shrink-0",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand",
                   on ? "border-brand text-ink" : "border-transparent text-ink-3 hover:text-ink",
                 )}
               >
                 {g.group}
-                <span className="ml-1.5 font-normal tabular-nums text-ink-3">
+                <span className="ml-1 font-normal tabular-nums text-ink-3">
                   {g.models.length}
                 </span>
               </button>
@@ -91,23 +90,23 @@ export function WhatWeSell() {
           })}
         </div>
 
-        <ul className="mt-8 grid grid-cols-2 gap-x-5 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
+        <ul className="mt-6 sm:mt-8 grid grid-cols-2 gap-x-4 sm:gap-x-5 gap-y-5 sm:gap-y-8 md:grid-cols-3 lg:grid-cols-4">
           {group.models.map((m) => {
             const count = matchesFor(m.slug).length;
             const inStock = count > 0;
 
             return (
               <li key={`${group.group}-${m.name}`} className="group relative flex flex-col">
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-white">
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-50 border border-slate-100">
                   <ResponsiveImage
                     name={m.image}
                     alt={`Ford ${m.name}`}
                     sizes="(min-width: 1024px) 260px, (min-width: 768px) 30vw, 45vw"
                     aspect={{ width: 4, height: 3 }}
-                    className="h-full w-full object-contain"
+                    className="h-full w-full object-contain p-2"
                   />
                   {inStock && (
-                    <span className="absolute left-2 top-2 inline-flex items-center gap-1.5 rounded-full bg-available/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.07em] text-available">
+                    <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-md bg-available/10 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-available">
                       <span
                         className="h-1.5 w-1.5 shrink-0 rounded-full bg-current"
                         aria-hidden

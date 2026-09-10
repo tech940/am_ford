@@ -1,3 +1,4 @@
+import vehicleInventory from "@/data/vehicle_inventory.json";
 import carMustang from "@/assets/car-mustang.jpg";
 import carExplorer from "@/assets/car-explorer.jpg";
 import carLightning from "@/assets/car-lightning.jpg";
@@ -23,6 +24,7 @@ export type Vehicle = {
   mpg: string;
   horsepower: number;
   image: string;
+  images?: string[];
   badges?: string[];
   features: string[];
   /**
@@ -46,7 +48,7 @@ export type Vehicle = {
   sellerNotes?: string;
 };
 
-export const vehicles: Vehicle[] = [
+export const fallbackVehicles: Vehicle[] = [
   {
     id: "f150-platinum-2025",
     sellerNotes:
@@ -227,27 +229,26 @@ export const vehicles: Vehicle[] = [
 ];
 
 /**
- * Conditions a URL is allowed to filter by, and the single source of truth for that list.
- *
- * Vehicle["condition"] also permits "Used", and its absence here is deliberate: the lot holds
- * zero used units and the brief forbids advertising used stock, so ?condition=Used is dropped
- * by the inventory validator rather than rendering an empty page a crawler could index. Add
- * "Used" here only alongside real used inventory, its own SEO label, and its own landing copy.
- *
- * This lives in the data module, not in the route, because BOTH the route (which gives each
- * of these facets a self-canonical and an indexable title) and scripts/generate-sitemap.ts
- * (which must list exactly the facets the route makes indexable) have to agree on it. They
- * previously kept separate lists and silently drifted: the route made ?condition=... indexable
- * while the sitemap omitted it.
+ * The full active vehicle inventory. Prioritizes the real 233-vehicle inventory extracted
+ * from Supabase `vehicle_inventory`, with instant local fallback.
  */
-export const FILTERABLE_CONDITIONS = ["New", "Certified Pre-Owned"] as const;
+export const vehicles: Vehicle[] =
+  vehicleInventory && Array.isArray(vehicleInventory) && vehicleInventory.length > 0
+    ? (vehicleInventory as unknown as Vehicle[])
+    : fallbackVehicles;
+
+/**
+ * Conditions a URL is allowed to filter by, and the single source of truth for that list.
+ * Includes "New", "Used", and "Certified Pre-Owned" matching real inventory.
+ */
+export const FILTERABLE_CONDITIONS = ["New", "Used", "Certified Pre-Owned"] as const;
 
 export const FILTER_OPTIONS = {
   types: ["All", "Truck", "SUV", "Car", "EV"] as const,
   fuels: ["All", "Gas", "Hybrid", "Electric"] as const,
   drivetrains: ["All", "4WD", "AWD", "RWD", "FWD"] as const,
   transmissions: ["All", "Automatic", "Manual"] as const,
-  years: ["All", 2025, 2024] as const,
+  years: ["All", 2026, 2025, 2024, 2023, 2022, 2021, 2020] as const,
   badges: [
     "New Arrival",
     "Best Seller",
@@ -260,7 +261,25 @@ export const FILTER_OPTIONS = {
   ] as const,
 };
 
-export const getVehicle = (id: string) => vehicles.find((v) => v.id === id);
+export const getVehicle = (id: string): Vehicle | undefined => {
+  if (!id) return undefined;
+  const lower = id.toLowerCase();
+  // 1. Direct match on real inventory by ID, VIN, or Stock Number
+  const found = vehicles.find(
+    (v) =>
+      v.id.toLowerCase() === lower ||
+      (v.vin && v.vin.toLowerCase() === lower) ||
+      (v.stockNumber && v.stockNumber.toLowerCase() === lower),
+  );
+  if (found) return found;
+
+  // 2. Match on legacy mock vehicles (preserves old links & model page previews)
+  return fallbackVehicles.find(
+    (v) =>
+      v.id.toLowerCase() === lower ||
+      (v.vin && v.vin.toLowerCase() === lower),
+  );
+};
 
 /** A price shortcut for the hero search card, ready to drop into /inventory search params. */
 export type PriceBand = { label: string; priceMin: number; priceMax: number };
@@ -274,20 +293,13 @@ const bandMoney = (n: number) => `$${n.toString().replace(/\B(?=(\d{3})+(?!\d))/
 /**
  * Price bands for the hero search card, derived from the live lot instead of guessed, so a
  * band can never advertise a slice of inventory that does not exist.
- *
- * The span is the real price range rounded outward to the nearest $5,000 (today $36,450 to
- * $71,990 becomes $35,000 to $75,000) and then cut into four equal bands. Adjacent bands
- * share an edge, which is the usual convention for a price picker: a vehicle priced exactly
- * on a boundary appears in both neighbours rather than falling through the gap between them.
- *
- * Every value stays inside the window /inventory accepts (its validator drops anything
- * outside $20,000 to $100,000), so these link straight into
- * /inventory?priceMin=...&priceMax=... without being silently discarded.
  */
 export const PRICE_BANDS: PriceBand[] = (() => {
-  const prices = vehicles.map((v) => v.price);
-  const floor = Math.floor(Math.min(...prices) / BAND_STEP) * BAND_STEP;
-  const ceiling = Math.ceil(Math.max(...prices) / BAND_STEP) * BAND_STEP;
+  const prices = vehicles.map((v) => v.price).filter((p) => p > 0);
+  const minPrice = prices.length ? Math.min(...prices) : 20000;
+  const maxPrice = prices.length ? Math.max(...prices) : 100000;
+  const floor = Math.floor(minPrice / BAND_STEP) * BAND_STEP;
+  const ceiling = Math.ceil(maxPrice / BAND_STEP) * BAND_STEP;
   // Math.max keeps the bands from collapsing to zero width if the lot ever holds a single price.
   const width = Math.max(
     BAND_STEP,
@@ -308,6 +320,7 @@ export const PRICE_BANDS: PriceBand[] = (() => {
  */
 export const dealerInfo = {
   name: "AM Ford",
+  legalName: "AM Ford Inc.",
   formerName: "Nassief Ford",
   city: "Jefferson, OH",
   street: "1059 State Route 46 North",

@@ -79,12 +79,14 @@ const RESEARCH_MENU: NavMenu = {
   extraHubs: [{ to: "/compare", label: "All Ford model comparisons" }],
 };
 
-type NavEntry = { kind: "link"; to: string; label: string } | { kind: "menu"; menu: NavMenu };
+type NavEntry =
+  | { kind: "link"; to: string; search?: Record<string, unknown>; label: string }
+  | { kind: "menu"; menu: NavMenu };
 
-/** The six original links, in their original order, with the three menus folded in. */
+/** Primary navigation links including dedicated New and Used vehicle options with the menus folded in. */
 const NAV_ENTRIES: NavEntry[] = [
-  { kind: "link", to: "/", label: "Home" },
-  { kind: "link", to: "/inventory", label: "Inventory" },
+  { kind: "link", to: "/inventory", search: { condition: "New" }, label: "New Vehicles" },
+  { kind: "link", to: "/inventory", search: { condition: "Used" }, label: "Used Vehicles" },
   { kind: "menu", menu: MODELS_MENU },
   { kind: "link", to: "/financing", label: "Financing" },
   { kind: "menu", menu: AREAS_MENU },
@@ -132,10 +134,11 @@ export function SiteNav() {
         >
           <Link to="/" className="inline-flex items-center transition hover:opacity-90">
             <img
-              src="https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/Am-ford.png"
+              src="/am-ford-logo.png"
               alt="AM Ford"
               width={260}
               height={80}
+              decoding="async"
               className="h-8 sm:h-10 w-auto object-contain transition"
             />
           </Link>
@@ -144,8 +147,9 @@ export function SiteNav() {
             {NAV_ENTRIES.map((entry) =>
               entry.kind === "link" ? (
                 <Link
-                  key={entry.to}
+                  key={entry.label}
                   to={entry.to}
+                  search={entry.search}
                   className={DESKTOP_LINK}
                   activeProps={DESKTOP_ACTIVE}
                   activeOptions={{ exact: entry.to === "/" }}
@@ -265,8 +269,9 @@ export function SiteNav() {
             {NAV_ENTRIES.map((entry) =>
               entry.kind === "link" ? (
                 <Link
-                  key={entry.to}
+                  key={entry.label}
                   to={entry.to}
+                  search={entry.search}
                   onClick={close}
                   className={MOBILE_LINK}
                   activeProps={DESKTOP_ACTIVE}

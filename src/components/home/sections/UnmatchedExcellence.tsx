@@ -10,8 +10,8 @@ interface UnmatchedExcellenceProps {
 
 export function UnmatchedExcellence({
   image = "https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/am-ford-banner.webp",
-  title = "Unmatched Excellence",
-  subtitle = "Experience the pinnacle of automotive engineering and customer care with AM Group.",
+  title = "Family-Owned Excellence Since 1964",
+  subtitle = "Sixty years of transparent pricing, factory-certified Ford service, and dedicated ownership care in Jefferson, Ohio.",
 }: UnmatchedExcellenceProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -20,32 +20,36 @@ export function UnmatchedExcellence({
     offset: ["start end", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
 
   return (
     <section
       ref={containerRef}
-      className="relative flex h-[65vh] min-h-[420px] w-full items-center justify-center overflow-hidden"
+      className="relative flex h-[55vh] min-h-[380px] w-full items-center justify-center overflow-hidden"
     >
-      <motion.div style={{ y }} className="absolute inset-0 z-0 h-[140%] w-full">
+      <motion.div style={{ y }} className="absolute inset-0 z-0 h-[130%] w-full">
         <img
           src={image}
           onError={(e) => {
-            // Fallback to local dealership asset if remote URL fails
             (e.currentTarget as HTMLImageElement).src = dealershipImg;
           }}
-          alt="AM Ford Unmatched Excellence Stage"
+          alt="AM Ford Dealership in Jefferson, Ohio"
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-black/45" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/50 to-slate-950/70" />
       </motion.div>
 
       <motion.div style={{ opacity }} className="relative z-10 mx-auto max-w-4xl px-6 text-center">
-        <h2 className="mb-4 text-4xl font-black tracking-tight text-white drop-shadow-2xl sm:text-5xl md:text-6xl">
+        <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1 text-[11px] font-bold uppercase tracking-[0.25em] text-white backdrop-blur-md mb-4 shadow-sm">
+          Jefferson, OH &middot; Ashtabula County
+        </span>
+        <h2 className="mb-4 text-3xl font-black tracking-tight text-white drop-shadow-2xl sm:text-4xl md:text-5xl">
           {title}
         </h2>
-        <p className="mx-auto max-w-2xl text-base font-medium text-white/90 drop-shadow-lg sm:text-lg md:text-xl">
+        <p className="mx-auto max-w-2xl text-sm font-medium text-white/90 drop-shadow-lg sm:text-base md:text-lg leading-relaxed">
           {subtitle}
         </p>
       </motion.div>

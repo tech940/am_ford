@@ -38,6 +38,18 @@ export const Route = createFileRoute("/contact")({
         type: "application/ld+json",
         children: JSON.stringify(breadcrumbSchema(BREADCRUMBS)),
       },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          "@id": "https://amford.com/contact#webpage",
+          url: "https://amford.com/contact",
+          name: `Contact AM Ford in ${dealerInfo.city} | Phone, Hours & Address`,
+          description: `Reach AM Ford at ${dealerInfo.address}. Call ${dealerInfo.phone} or message us to book a test drive.`,
+          mainEntity: { "@id": "https://amford.com/#dealer" },
+        }),
+      },
     ],
   }),
   component: ContactPage,

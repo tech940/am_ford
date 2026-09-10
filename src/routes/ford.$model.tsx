@@ -86,6 +86,7 @@ export const Route = createFileRoute("/ford/$model")({
   },
   head: ({ loaderData }) => {
     const model = loaderData?.model;
+    const inStock = loaderData?.inStock ?? [];
     if (!model) return { meta: [{ title: "Ford Models | AM Ford" }] };
 
     const canonical = `${SITE_ORIGIN}/ford/${model.slug}`;
@@ -108,6 +109,10 @@ export const Route = createFileRoute("/ford/$model")({
       })),
     };
 
+    const ogImage =
+      inStock[0]?.image ??
+      "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80";
+
     return {
       meta: [
         { title },
@@ -125,11 +130,24 @@ export const Route = createFileRoute("/ford/$model")({
             "Ford dealer Jefferson Ohio",
           ].join(", "),
         },
+        // Local geo tags
+        { name: "geo.region", content: "US-OH" },
+        { name: "geo.placename", content: dealerInfo.city },
+        { name: "geo.position", content: "41.7389;-80.7684" },
+        { name: "ICBM", content: "41.7389, -80.7684" },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
         { property: "og:url", content: canonical },
+        { property: "og:image", content: ogImage },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        {
+          property: "og:image:alt",
+          content: `${model.name} lineup at AM Ford in ${dealerInfo.city}, OH`,
+        },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: ogImage },
       ],
       links: [{ rel: "canonical", href: canonical }],
       scripts: [
@@ -155,7 +173,9 @@ function FordModelPage() {
       <Breadcrumbs items={modelCrumbs(model)} />
 
       <section className="relative overflow-hidden border-b border-slate-200 py-14 sm:py-20">
-        <div className="absolute inset-0 bg-gradient-soft" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-amber-50/50 via-slate-50/50 to-white" />
+        <div className="pointer-events-none absolute -top-20 right-10 h-80 w-80 rounded-full bg-amber-200/20 blur-3xl" />
+        <div className="pointer-events-none absolute -top-10 left-10 h-72 w-72 rounded-full bg-blue-100/30 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-6">
           <SectionTag>{model.bodyStyle === "EV" ? "Electric" : model.bodyStyle} Lineup</SectionTag>
           <h1 className="display mt-3 max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">

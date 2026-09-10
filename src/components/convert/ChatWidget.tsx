@@ -446,7 +446,7 @@ export function ChatWidget() {
               )}
               {!typing && chips.kind === "vehicles" && (
                 <div className="flex flex-wrap gap-2 pt-1">
-                  {vehicles.map((v) => (
+                  {vehicles.slice(0, 8).map((v) => (
                     <Chip key={v.id} onClick={() => pickVehicle(chips.flow, v)}>
                       {vehicleName(v)}
                     </Chip>

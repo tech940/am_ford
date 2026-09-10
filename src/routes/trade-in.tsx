@@ -64,6 +64,11 @@ export const Route = createFileRoute("/trade-in")({
         content:
           "trade in my car Jefferson Ohio, value my trade Ashtabula County, Ford trade-in appraisal, sell my car to a dealer Ohio, trade-in value Northeast Ohio, remote trade appraisal, trade in toward a new Ford",
       },
+      // Local geo tags
+      { name: "geo.region", content: "US-OH" },
+      { name: "geo.placename", content: dealerInfo.city },
+      { name: "geo.position", content: "41.7389;-80.7684" },
+      { name: "ICBM", content: "41.7389, -80.7684" },
       { property: "og:title", content: "Value Your Trade-In at AM Ford in Jefferson, Ohio" },
       {
         property: "og:description",
@@ -72,6 +77,23 @@ export const Route = createFileRoute("/trade-in")({
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: CANONICAL },
+      {
+        property: "og:image",
+        content:
+          "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80",
+      },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        property: "og:image:alt",
+        content: `Vehicle Trade-In Valuation at AM Ford in ${dealerInfo.city}, OH`,
+      },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:image",
+        content:
+          "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80",
+      },
     ],
     links: [{ rel: "canonical", href: CANONICAL }],
     scripts: [

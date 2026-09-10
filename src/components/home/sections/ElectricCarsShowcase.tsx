@@ -18,7 +18,7 @@ export function ElectricCarsShowcase() {
   );
 
   return (
-    <section className="py-16 sm:py-24 bg-slate-900 text-white overflow-hidden relative">
+    <section className="py-8 sm:py-16 bg-slate-900 text-white overflow-hidden relative">
       {/* Background Ambient Glow */}
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 h-[25rem] w-[50rem] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-25"
@@ -49,7 +49,7 @@ export function ElectricCarsShowcase() {
           <Link
             to="/inventory"
             search={{ fuel: "Electric" }}
-            className="group inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-3 text-xs font-black uppercase tracking-wider text-slate-900 shadow-xl transition hover:bg-sky-400 hover:text-slate-950 active:scale-95 shrink-0"
+            className="group inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-xs font-black uppercase tracking-wider text-slate-900 shadow-xl transition hover:bg-sky-400 hover:text-slate-950 active:scale-95 shrink-0"
           >
             <span>Explore All EVs</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -65,10 +65,10 @@ export function ElectricCarsShowcase() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="group flex flex-col overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-950/80 p-1.5 shadow-2xl transition-all duration-300 hover:border-sky-500/40 hover:bg-slate-950"
+              className="group flex flex-col overflow-hidden rounded-lg border border-slate-800 bg-slate-950/80 p-1.5 shadow-2xl transition-all duration-300 hover:border-sky-500/40 hover:bg-slate-950"
             >
               {/* Photo & Spec Badge */}
-              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[1.4rem] bg-slate-900">
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-md bg-slate-900">
                 <img
                   src={car.image}
                   alt={`${car.year} ${car.make} ${car.model}`}
@@ -106,7 +106,7 @@ export function ElectricCarsShowcase() {
 
                   <button
                     onClick={() => setOfferModalOpen(true)}
-                    className="w-full rounded-2xl border border-sky-400/40 bg-sky-500/10 py-2.5 text-xs font-black uppercase tracking-wider text-sky-300 transition-all hover:bg-sky-400 hover:text-slate-950 hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-1.5"
+                    className="w-full rounded-md border border-sky-400/40 bg-sky-500/10 py-2.5 text-xs font-black uppercase tracking-wider text-sky-300 transition-all hover:bg-sky-400 hover:text-slate-950 hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-1.5"
                   >
                     <Tag className="h-3.5 w-3.5" />
                     <span>View EV Savings</span>

@@ -18,6 +18,7 @@ import { Route as FinancingRouteImport } from './routes/financing'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CommercialRouteImport } from './routes/commercial'
 import { Route as AreasWeServeRouteImport } from './routes/areas-we-serve'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
@@ -79,6 +80,11 @@ const CommercialRoute = CommercialRouteImport.update({
 const AreasWeServeRoute = AreasWeServeRouteImport.update({
   id: '/areas-we-serve',
   path: '/areas-we-serve',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -170,6 +176,7 @@ const FordDealerCountyCountyRoute = FordDealerCountyCountyRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/areas-we-serve': typeof AreasWeServeRoute
   '/commercial': typeof CommercialRoute
   '/contact': typeof ContactRoute
@@ -197,6 +204,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/areas-we-serve': typeof AreasWeServeRoute
   '/commercial': typeof CommercialRoute
   '/contact': typeof ContactRoute
@@ -225,6 +233,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/areas-we-serve': typeof AreasWeServeRoute
   '/commercial': typeof CommercialRoute
   '/contact': typeof ContactRoute
@@ -254,6 +263,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/areas-we-serve'
     | '/commercial'
     | '/contact'
@@ -281,6 +291,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/admin'
     | '/areas-we-serve'
     | '/commercial'
     | '/contact'
@@ -308,6 +319,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/areas-we-serve'
     | '/commercial'
     | '/contact'
@@ -336,6 +348,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
   AreasWeServeRoute: typeof AreasWeServeRoute
   CommercialRoute: typeof CommercialRoute
   ContactRoute: typeof ContactRoute
@@ -424,6 +437,13 @@ declare module '@tanstack/react-router' {
       path: '/areas-we-serve'
       fullPath: '/areas-we-serve'
       preLoaderRoute: typeof AreasWeServeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -544,6 +564,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRoute,
   AreasWeServeRoute: AreasWeServeRoute,
   CommercialRoute: CommercialRoute,
   ContactRoute: ContactRoute,

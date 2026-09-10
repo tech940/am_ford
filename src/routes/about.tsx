@@ -33,6 +33,18 @@ export const Route = createFileRoute("/about")({
         type: "application/ld+json",
         children: JSON.stringify(breadcrumbSchema(BREADCRUMBS)),
       },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          "@id": "https://amford.com/about#webpage",
+          url: "https://amford.com/about",
+          name: `About AM Ford | Ford Dealer in ${dealerInfo.city}`,
+          description: `AM Ford is a family-owned Ford dealer in ${dealerInfo.city}, serving Ashtabula County with honest pricing, certified Ford service, and no-pressure buying.`,
+          mainEntity: { "@id": "https://amford.com/#dealer" },
+        }),
+      },
     ],
   }),
   component: AboutPage,

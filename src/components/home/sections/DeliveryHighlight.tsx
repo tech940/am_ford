@@ -47,10 +47,10 @@ const ctaGhostOnNavy = cn(
 export function DeliveryHighlight() {
   return (
     <section
-      className="relative z-10 mx-auto max-w-6xl px-6 py-20 sm:py-28"
+      className="relative z-10 mx-auto max-w-6xl px-6 py-10 sm:py-20"
       aria-labelledby="delivery-highlight-title"
     >
-      <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#002c5f] to-[#001f44] px-6 py-12 shadow-[0_30px_80px_-30px_rgba(0,44,95,0.55)] sm:px-10 sm:py-16 lg:px-14">
+      <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-[#002c5f] to-[#001f44] px-5 py-10 shadow-[0_30px_80px_-30px_rgba(0,44,95,0.55)] sm:px-10 sm:py-16 lg:px-14">
         {/* Soft light in the corner so the flat navy reads as a lit surface. */}
         <div className="pointer-events-none absolute inset-0" aria-hidden>
           <div
@@ -111,8 +111,8 @@ export function DeliveryHighlight() {
           <Stagger className="space-y-4" gap={0.12}>
             {POINTS.map((p) => (
               <StaggerItem key={p.title}>
-                <div className="hm-glass flex items-start gap-4 rounded-3xl p-5">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#002c5f] text-white shadow-sm">
+                <div className="hm-glass flex items-start gap-4 rounded-lg p-5">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-[#002c5f] text-white shadow-sm">
                     <p.icon className="h-5 w-5 text-white" aria-hidden />
                   </div>
                   <div className="min-w-0">

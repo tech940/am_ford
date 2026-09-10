@@ -35,6 +35,11 @@ export const Route = createFileRoute("/financing")({
         content:
           "Ford financing Jefferson Ohio, auto loan Jefferson OH, car pre-approval Ashtabula County, Ford lease deals, low APR auto loan, Ford dealer Northeast Ohio, AM Ford finance",
       },
+      // Local geo tags
+      { name: "geo.region", content: "US-OH" },
+      { name: "geo.placename", content: dealerInfo.city },
+      { name: "geo.position", content: "41.7389;-80.7684" },
+      { name: "ICBM", content: "41.7389, -80.7684" },
       {
         property: "og:title",
         content: `Ford Auto Loans & Pre-Approval | AM Ford ${dealerInfo.city}`,
@@ -45,12 +50,46 @@ export const Route = createFileRoute("/financing")({
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://amford.com/financing" },
+      {
+        property: "og:image",
+        content:
+          "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80",
+      },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        property: "og:image:alt",
+        content: `Ford Auto Finance and Loans at AM Ford in ${dealerInfo.city}, OH`,
+      },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:image",
+        content:
+          "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80",
+      },
     ],
     links: [{ rel: "canonical", href: "https://amford.com/financing" }],
     scripts: [
       {
         type: "application/ld+json",
         children: JSON.stringify(breadcrumbSchema(BREADCRUMBS)),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FinancialProduct",
+          "@id": "https://amford.com/financing#auto-financing",
+          name: "Ford Auto Financing & Loans",
+          description: `Ford financing, competitive auto loans, and flexible lease terms at AM Ford in ${dealerInfo.city}, OH. Pre-approval online with no hit to your credit score.`,
+          provider: { "@id": "https://amford.com/#dealer" },
+          url: "https://amford.com/financing",
+          areaServed: [
+            { "@type": "AdministrativeArea", name: "Ashtabula County" },
+            { "@type": "AdministrativeArea", name: "Northeast Ohio" },
+            { "@type": "AdministrativeArea", name: "Northwestern Pennsylvania" },
+          ],
+        }),
       },
     ],
   }),

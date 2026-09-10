@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useMemo, useRef, useState, useEffect } from "react";
+import { useMemo, useRef, useState, useEffect, lazy, Suspense } from "react";
 import { recordRecentlyViewed } from "@/lib/recentlyViewed";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
@@ -39,7 +39,7 @@ import {
 import { breadcrumbSchema, crumbs, type Crumb } from "@/lib/breadcrumbs";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { SiteShell } from "@/components/site/SiteShell";
-import { LeadCaptureModal, type ModalMode } from "@/components/site/LeadCaptureModal";
+import type { ModalMode } from "@/components/site/LeadCaptureModal";
 import {
   getVehicle,
   vehicles,
@@ -51,8 +51,16 @@ import {
 import { FORD_MODELS, getRelatedReading } from "@/lib/fordModels";
 import { SectionTag } from "@/components/site/Home";
 import { VehicleCard } from "@/components/site/VehicleCard";
-import OTPPopup from "@/components/popups/OTPPopup";
-import { QuickEnquiryModal, type QuickEnquiryPreset } from "@/components/convert/QuickEnquiryModal";
+import type { QuickEnquiryPreset } from "@/components/convert/QuickEnquiryModal";
+
+// Lazy-load heavy non-critical modals
+const LeadCaptureModal = lazy(() =>
+  import("@/components/site/LeadCaptureModal").then((m) => ({ default: m.LeadCaptureModal })),
+);
+const OTPPopup = lazy(() => import("@/components/popups/OTPPopup"));
+const QuickEnquiryModal = lazy(() =>
+  import("@/components/convert/QuickEnquiryModal").then((m) => ({ default: m.QuickEnquiryModal })),
+);
 import { RESPONSE_PROMISE, smsLink, submitQuickLead } from "@/lib/leads";
 import { GARAGE_EVENT, isWatched } from "@/lib/garage";
 import { DeliveryBanner } from "@/components/site/DeliveryBanner";
@@ -69,8 +77,12 @@ import { Spin360, preloadSpin } from "@/components/site/Spin360";
  * which is what Google requires before it will render breadcrumbs in the result.
  */
 function buildVehicleBreadcrumbs(v: Vehicle): Crumb[] {
+  const isUsedOrCpo = v.condition === "Used" || v.condition === "Certified Pre-Owned";
   return crumbs(
-    { label: "Inventory", href: "/inventory" },
+    {
+      label: isUsedOrCpo ? "Used Vehicles" : "New Vehicles",
+      href: isUsedOrCpo ? "/inventory?condition=Used" : "/inventory?condition=New",
+    },
     // Last crumb is the current page, so it carries no href.
     { label: `${v.year} ${v.make} ${v.model} ${v.trim}` },
   );
@@ -105,6 +117,7 @@ export const Route = createFileRoute("/vehicle/$id")({
         value: v.miles,
         unitCode: "SMI",
       },
+      ...(v.vin ? { vehicleIdentificationNumber: v.vin } : {}),
       additionalProperty: [
         { "@type": "PropertyValue", name: "Condition", value: v.condition },
         ...(v.vin ? [{ "@type": "PropertyValue", name: "VIN", value: v.vin }] : []),
@@ -117,6 +130,8 @@ export const Route = createFileRoute("/vehicle/$id")({
         price: v.price,
         priceCurrency: "USD",
         availability: "https://schema.org/InStock",
+        url: `https://amford.com/vehicle/${v.id}`,
+        priceValidUntil: "2026-12-31",
         // Condition comes from the data, never inferred from the odometer.
         // schema.org has no CertifiedPreOwnedCondition, so CPO maps to UsedCondition
         // and the real status is preserved in additionalProperty below.
@@ -172,6 +187,11 @@ export const Route = createFileRoute("/vehicle/$id")({
           name: "keywords",
           content: `${v.year} ${v.make} ${v.model} ${dealerInfo.locality} Ohio, Ford dealer ${dealerInfo.locality} Ohio, buy ${v.model} ${v.trim} ${dealerInfo.city}, ${v.condition.toLowerCase()} ${v.model} for sale Ohio, ${v.type.toLowerCase()}s Ashtabula County, Ford dealer Northeast Ohio, test drive ${v.model} near Erie PA`,
         },
+        // Local geo tags for Ashtabula County / Northeast Ohio search intent
+        { name: "geo.region", content: "US-OH" },
+        { name: "geo.placename", content: dealerInfo.city },
+        { name: "geo.position", content: "41.7389;-80.7684" },
+        { name: "ICBM", content: "41.7389, -80.7684" },
         {
           property: "og:title",
           content: `${v.year} ${v.make} ${v.model} ${v.trim} | AM Ford ${dealerInfo.city}`,
@@ -181,6 +201,12 @@ export const Route = createFileRoute("/vehicle/$id")({
           content: `In stock at AM Ford. $${v.price.toLocaleString()} · ${v.miles < 50 ? "New Vehicle" : `${v.miles.toLocaleString()} miles`}. Schedule your test drive in ${dealerInfo.city}.`,
         },
         { property: "og:image", content: v.image },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        {
+          property: "og:image:alt",
+          content: `${v.year} ${v.make} ${v.model} ${v.trim} for sale at AM Ford in ${dealerInfo.city}, OH`,
+        },
         { property: "og:url", content: `https://amford.com/vehicle/${v.id}` },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: v.image },
@@ -349,9 +375,7 @@ const FUEL_ANCHOR: Record<Vehicle["fuel"], string> = {
 const CONDITION_ANCHOR: Record<Vehicle["condition"], string> = {
   New: "new Fords for sale in Jefferson OH",
   "Certified Pre-Owned": "certified pre-owned Fords at AM Ford",
-  // Kept only to hold the map exhaustive. The lot holds zero used vehicles and /inventory
-  // rejects ?condition=Used, so the caller guards on this value before rendering a link.
-  Used: "used Fords",
+  Used: "used vehicles for sale in Jefferson OH",
 };
 
 /** Odometer sentence. "12 miles" and "8,420 miles" do not mean the same thing to a buyer. */
@@ -475,11 +499,13 @@ function VehicleDetail() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<ModalMode>("test_drive");
   const [otpOpen, setOtpOpen] = useState(false);
+  const [otpSource, setOtpSource] = useState<string>("VDP");
   // Interruption popups removed: the sitewide exit-intent offer is the only
   // unsolicited surface. In-page CTAs below do the asking instead.
   const [enquiryPreset, setEnquiryPreset] = useState<QuickEnquiryPreset | null>(null);
   const [financingDetails, setFinancingDetails] = useState<Record<string, unknown> | undefined>();
   const [watching, setWatching] = useState(false);
+  const [showMobileBar, setShowMobileBar] = useState(false);
 
   // 360 spin. getSpin is a build-time module read, so server and client agree on
   // whether this vehicle has frames without any runtime probe. view starts at
@@ -488,11 +514,26 @@ function VehicleDetail() {
   const [view, setView] = useState<"photo" | "spin">("photo");
   const [spinFailed, setSpinFailed] = useState(false);
   const showSpinUi = !!spin && !spinFailed;
+
+  const allPhotos = useMemo(() => {
+    if (Array.isArray(v.images) && v.images.length > 0) return v.images;
+    return [v.image];
+  }, [v.images, v.image]);
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+
   // Frames cost zero bytes until someone reaches for the toggle, so they never
   // compete with the hero image for LCP.
   const prefetchSpin = () => {
     if (spin) preloadSpin(v.id, spin);
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowMobileBar(window.scrollY > 550);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     setWatching(isWatched(v.id));
@@ -514,19 +555,24 @@ function VehicleDetail() {
   const faqs = useMemo(() => buildVehicleFaqs(v), [v]);
 
   return (
-    <SiteShell>
+    <SiteShell hideStickyCTA>
       {/* Hero gallery */}
-      <section ref={heroRef} className="relative overflow-hidden pt-2">
-        <div className="absolute inset-0 bg-gradient-soft" />
-        <div className="absolute inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
+      <section ref={heroRef} className="relative overflow-hidden pt-2 pb-12">
+        {/* Soft soothing ambient background with warm yellow and cool tones */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-amber-50/60 via-slate-50/50 to-white" />
+        <div className="pointer-events-none absolute -top-24 right-1/4 h-[440px] w-[440px] rounded-full bg-amber-200/25 blur-[100px]" />
+        <div className="pointer-events-none absolute -top-10 left-10 h-[380px] w-[380px] rounded-full bg-blue-100/35 blur-[90px]" />
+        <div className="pointer-events-none absolute top-1/2 right-10 h-[320px] w-[320px] rounded-full bg-amber-100/20 blur-[80px]" />
+        <div className="pointer-events-none absolute inset-0 grid-bg opacity-30 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
 
         <div className="relative mx-auto max-w-7xl px-6 pt-6">
           <Breadcrumbs items={breadcrumbs} className="mb-1" />
           <Link
             to="/inventory"
+            search={{ condition: v.condition === "New" ? "New" : "Used" }}
             className="inline-flex items-center gap-2 py-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
           >
-            <ArrowLeft className="h-4 w-4" /> Back to inventory
+            <ArrowLeft className="h-4 w-4" /> Back to {v.condition === "New" ? "new" : "used"} vehicles
           </Link>
         </div>
 
@@ -534,7 +580,7 @@ function VehicleDetail() {
           <div className="lg:col-span-7">
             <motion.div
               style={{ scale }}
-              className="relative overflow-hidden rounded-3xl bg-card shadow-elevated ring-1 ring-border"
+              className="relative overflow-hidden rounded-lg bg-card shadow-elevated ring-1 ring-border"
             >
               {showSpinUi && view === "spin" ? (
                 // Height comes from the same class string as the photo below, written
@@ -547,29 +593,64 @@ function VehicleDetail() {
                   manifest={spin!}
                   poster={v.image}
                   label={`${v.year} ${v.make} ${v.model}`}
-                  className="h-[420px] w-full sm:h-[520px]"
+                  className="h-[340px] w-full sm:h-[520px]"
                   onUnavailable={() => {
                     setSpinFailed(true);
                     setView("photo");
                   }}
                 />
               ) : (
-                <motion.img
-                  style={{ y: yImg }}
-                  src={v.image}
-                  alt={`${v.year} ${v.make} ${v.model} ${v.trim} in ${dealerInfo.city}`}
-                  width={1280}
-                  height={800}
-                  className="h-[420px] w-full object-cover sm:h-[520px]"
-                />
+                <div className="relative h-[340px] w-full sm:h-[520px] bg-slate-950 overflow-hidden">
+                  <motion.img
+                    key={activePhotoIndex}
+                    initial={{ opacity: 0.85 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                    style={{ y: yImg }}
+                    src={allPhotos[activePhotoIndex] || v.image}
+                    alt={`${v.year} ${v.make} ${v.model} ${v.trim} in ${dealerInfo.city} - Photo ${activePhotoIndex + 1}`}
+                    width={1280}
+                    height={800}
+                    className="h-full w-full object-cover"
+                  />
+                  {allPhotos.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        aria-label="Previous photo"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActivePhotoIndex((prev) => (prev > 0 ? prev - 1 : allPhotos.length - 1));
+                        }}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-slate-950/60 p-2 text-white shadow-md backdrop-blur-xs transition hover:bg-slate-950/90 focus:outline-hidden"
+                      >
+                        <ChevronLeft className="h-5 w-5" />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Next photo"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActivePhotoIndex((prev) => (prev < allPhotos.length - 1 ? prev + 1 : 0));
+                        }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-slate-950/60 p-2 text-white shadow-md backdrop-blur-xs transition hover:bg-slate-950/90 focus:outline-hidden"
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </button>
+                      <span className="absolute bottom-3 right-3 rounded-md bg-slate-950/70 px-2 py-0.5 text-xs font-semibold text-white backdrop-blur-xs">
+                        {activePhotoIndex + 1} / {allPhotos.length}
+                      </span>
+                    </>
+                  )}
+                </div>
               )}
               {v.badges && (
                 // pointer-events-none so a drag that starts on a badge still rotates.
-                <div className="pointer-events-none absolute left-4 top-4 z-10 flex gap-2">
+                <div className="pointer-events-none absolute left-3 top-3 z-10 flex gap-2">
                   {v.badges.map((b) => (
                     <span
                       key={b}
-                      className="glass rounded-full px-3 py-1 text-xs font-semibold text-ink"
+                      className="glass rounded-md px-2.5 py-1 text-[11px] font-semibold text-ink"
                     >
                       {b}
                     </span>
@@ -580,14 +661,14 @@ function VehicleDetail() {
                 <div
                   role="group"
                   aria-label="Gallery mode"
-                  className="glass absolute bottom-4 left-4 z-10 flex items-center gap-1 rounded-full p-1"
+                  className="glass absolute bottom-3 left-3 z-10 flex items-center gap-1 rounded-md p-1"
                 >
                   <button
                     type="button"
                     aria-pressed={view === "photo"}
                     onClick={() => setView("photo")}
                     className={cn(
-                      "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition",
+                      "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold transition",
                       view === "photo"
                         ? "bg-primary text-primary-foreground shadow-md"
                         : "text-ink hover:bg-white/60",
@@ -605,7 +686,7 @@ function VehicleDetail() {
                       setView("spin");
                     }}
                     className={cn(
-                      "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition",
+                      "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold transition",
                       view === "spin"
                         ? "bg-primary text-primary-foreground shadow-md"
                         : "text-ink hover:bg-white/60",
@@ -616,50 +697,67 @@ function VehicleDetail() {
                 </div>
               )}
             </motion.div>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {[v.image, v.image, v.image].map((src, i) => (
-                <div
-                  key={i}
-                  className="aspect-[4/3] overflow-hidden rounded-2xl bg-surface-2 ring-1 ring-border"
-                >
-                  <img
-                    src={src}
-                    alt={`${v.model} gallery view ${i + 1}`}
-                    loading="lazy"
-                    className="h-full w-full object-cover opacity-90 transition hover:opacity-100"
-                  />
-                </div>
-              ))}
-            </div>
+            {allPhotos.length > 1 && (
+              <div className="mt-3 flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                {allPhotos.map((photo, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => {
+                      setActivePhotoIndex(i);
+                      setView("photo");
+                    }}
+                    className={cn(
+                      "group relative h-16 w-24 sm:h-20 sm:w-28 shrink-0 overflow-hidden rounded-lg bg-surface-2 ring-1 transition text-left focus:outline-hidden",
+                      view === "photo" && activePhotoIndex === i
+                        ? "ring-2 ring-primary shadow-sm"
+                        : "ring-border hover:ring-primary/40 opacity-75 hover:opacity-100",
+                    )}
+                  >
+                    <img
+                      src={photo}
+                      alt={`${v.year} ${v.make} ${v.model} - Photo ${i + 1}`}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                    />
+                    <span className="absolute bottom-1 left-1 rounded bg-slate-950/70 px-1 py-0.5 text-[9px] font-semibold text-white backdrop-blur-xs">
+                      {i + 1}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Sticky CTA panel */}
           <div className="lg:col-span-5">
             <div className="sticky top-28">
-              <div className="glass-strong rounded-3xl p-7">
-                <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+              <div className="glass-strong rounded-lg p-4 sm:p-7">
+                <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   {v.condition} · In stock in {dealerInfo.locality}
                 </p>
                 {/* Full year + make + model + trim: this is the page's target query. */}
-                <h1 className="display mt-1 text-balance text-4xl text-ink">
+                <h1 className="display mt-1 text-balance text-2xl font-black text-ink sm:text-3xl lg:text-4xl">
                   {v.year} {v.make} {v.model}{" "}
-                  <span className="text-muted-foreground">{v.trim}</span>
+                  <span className="text-muted-foreground font-bold">{v.trim}</span>
                 </h1>
-                <div className="mt-5 flex items-end justify-between">
+                <div className="mt-3 sm:mt-5 flex items-end justify-between">
                   <div>
-                    <p className="display text-4xl text-primary">${v.price.toLocaleString()}</p>
+                    <p className="display text-3xl sm:text-4xl font-black text-primary">
+                      ${v.price.toLocaleString()}
+                    </p>
                     {v.msrp && v.msrp > v.price && (
-                      <p className="text-sm font-semibold text-slate-600 line-through">
+                      <p className="text-xs sm:text-sm font-semibold text-slate-500 line-through">
                         MSRP ${v.msrp.toLocaleString()}
                       </p>
                     )}
                   </div>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                  <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">
                     <Shield className="h-3 w-3" /> Lifetime warranty
                   </span>
                 </div>
 
-                <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+                <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-2 text-xs sm:text-sm">
                   <Spec
                     icon={Gauge}
                     label={v.miles < 50 ? "New" : `${v.miles.toLocaleString()} mi`}
@@ -669,78 +767,132 @@ function VehicleDetail() {
                   <Spec icon={Palette} label={v.exterior} />
                 </div>
 
-                <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />1 in
-                  stock; when it's gone, it's gone
-                </p>
+                {/* Status indicator badge */}
+                <div className="mt-3 sm:mt-5 flex items-center justify-between rounded-md bg-emerald-500/10 px-3 py-1.5 ring-1 ring-emerald-500/20">
+                  <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-950">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                    </span>
+                    1 in stock · Available for delivery
+                  </span>
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-700">
+                    Lot Ready
+                  </span>
+                </div>
 
-                <div className="mt-5 space-y-2">
+                {/* High-converting action hierarchy */}
+                <div className="mt-3.5 sm:mt-5 space-y-2">
+                  {/* "Available for extra discount!" speech bubble pointing to primary CTA */}
+                  <div className="relative mb-1 flex justify-start">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOtpSource("Extra Discount Request");
+                        setOtpOpen(true);
+                      }}
+                      className="group/bubble relative inline-flex items-center gap-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-500 px-3.5 py-1.5 shadow-sm transition-transform hover:scale-[1.02] active:scale-95 text-left cursor-pointer"
+                    >
+                      {/* Shield with % icon */}
+                      <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#D92D20] shadow-sm border border-red-900/40">
+                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none">
+                          <path
+                            d="M12 21s7-3.5 7-9V5l-7-3-7 3v7c0 5.5 7 9 7 9z"
+                            fill="#B42318"
+                            stroke="#7A150D"
+                            strokeWidth="1.5"
+                          />
+                          <path d="M8.5 15.5L15.5 8.5" stroke="#FEF08A" strokeWidth="2.2" strokeLinecap="round" />
+                          <circle cx="8.5" cy="8.5" r="1.5" fill="#FEF08A" />
+                          <circle cx="15.5" cy="15.5" r="1.5" fill="#FEF08A" />
+                        </svg>
+                      </div>
+
+                      {/* Two-line text */}
+                      <div className="flex flex-col pr-1 leading-tight">
+                        <span className="text-[12px] font-extrabold text-[#002c5f] tracking-tight">
+                          Available for
+                        </span>
+                        <span className="text-[12px] font-extrabold text-[#002c5f] tracking-tight">
+                          extra discount!
+                        </span>
+                      </div>
+
+                      {/* Speech bubble pointer beak pointing down to the CTA */}
+                      <div className="absolute -bottom-1 left-7 h-2.5 w-2.5 rotate-45 bg-emerald-500" />
+                    </button>
+                  </div>
+
+                  {/* Primary Green CTA - Unlocks today's best price & VIP E-Quote */}
                   <button
-                    onClick={() => setEnquiryPreset("availability")}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3.5 text-sm font-bold text-primary-foreground transition hover:opacity-90 shadow-md"
+                    onClick={() => {
+                      setOtpSource("Extra Discount Request");
+                      setOtpOpen(true);
+                    }}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-sm font-bold text-white transition hover:bg-emerald-500 shadow-md active:scale-[0.99]"
                   >
-                    <MessageSquare className="h-4 w-4" /> Is this still available?
+                    <Tag className="h-4 w-4" /> Get Today&apos;s Best Price & E-Quote
                   </button>
-                  <button
-                    onClick={() => setOtpOpen(true)}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-amber-500 py-3.5 text-sm font-bold text-slate-950 transition hover:bg-amber-400 shadow-md"
-                  >
-                    <Tag className="h-4 w-4" /> Get Price
-                  </button>
+
+                  {/* Secondary Navy CTA - Test Drive Booking */}
                   <button
                     onClick={() => {
                       setModalMode("test_drive");
                       setModalOpen(true);
                     }}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 shadow-sm"
+                    className="flex w-full items-center justify-center gap-2 rounded-md bg-primary py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-primary-foreground transition hover:opacity-90 shadow-sm active:scale-[0.99]"
                   >
-                    <Calendar className="h-4 w-4" /> Book test drive
+                    <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Book Test Drive in {dealerInfo.locality}
                   </button>
-                  <button
-                    onClick={() => {
-                      setModalMode("quote_request");
-                      setModalOpen(true);
-                    }}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-white/80 py-3.5 text-sm font-semibold text-ink ring-1 ring-border transition hover:bg-white"
-                  >
-                    <DollarSign className="h-4 w-4 text-primary" /> Request E-Price Quote
-                  </button>
-                  <div className="grid grid-cols-2 gap-2">
-                    <a
-                      href={smsLink(v)}
-                      className="flex items-center justify-center gap-2 rounded-2xl bg-surface-2 py-3 text-xs font-semibold text-muted-foreground transition hover:text-ink"
-                    >
-                      <MessageSquare className="h-3.5 w-3.5" /> Text us
-                    </a>
-                    <a
-                      href={dealerInfo.phoneHref}
-                      className="flex items-center justify-center gap-2 rounded-2xl bg-surface-2 py-3 text-xs font-semibold text-muted-foreground transition hover:text-ink"
-                    >
-                      <Phone className="h-3.5 w-3.5" /> Call us
-                    </a>
-                  </div>
+
+                  {/* High-intent inquiry split row */}
                   <div className="grid grid-cols-2 gap-2">
                     <button
-                      onClick={() => setEnquiryPreset("video_tour")}
-                      className="flex items-center justify-center gap-2 rounded-2xl bg-surface-2 py-3 text-xs font-semibold text-muted-foreground transition hover:text-ink"
+                      onClick={() => setEnquiryPreset("availability")}
+                      className="flex items-center justify-center gap-1.5 rounded-md border border-border bg-card/90 py-2 text-[11px] sm:text-xs font-semibold text-ink transition hover:border-primary/40 hover:bg-white shadow-2xs"
                     >
-                      <Video className="h-3.5 w-3.5" /> Video tour
+                      <MessageSquare className="h-3.5 w-3.5 text-primary" /> Check Availability
                     </button>
+                    <button
+                      onClick={() => {
+                        setModalMode("quote_request");
+                        setModalOpen(true);
+                      }}
+                      className="flex items-center justify-center gap-1.5 rounded-md border border-border bg-card/90 py-2 text-[11px] sm:text-xs font-semibold text-ink transition hover:border-primary/40 hover:bg-white shadow-2xs"
+                    >
+                      <DollarSign className="h-3.5 w-3.5 text-emerald-600" /> Custom Quote
+                    </button>
+                  </div>
+
+                  {/* Direct Contact & Watch utility row */}
+                  <div className="grid grid-cols-3 gap-1.5 pt-0.5">
+                    <a
+                      href={dealerInfo.phoneHref}
+                      className="flex items-center justify-center gap-1.5 rounded-md bg-surface-2 py-1.5 text-[11px] font-semibold text-muted-foreground transition hover:text-ink hover:bg-surface-3"
+                    >
+                      <Phone className="h-3 w-3" /> Call
+                    </a>
+                    <a
+                      href={smsLink(v)}
+                      className="flex items-center justify-center gap-1.5 rounded-md bg-surface-2 py-1.5 text-[11px] font-semibold text-muted-foreground transition hover:text-ink hover:bg-surface-3"
+                    >
+                      <MessageSquare className="h-3 w-3" /> Text
+                    </a>
                     <button
                       onClick={() => setEnquiryPreset("price_watch")}
                       className={cn(
-                        "flex items-center justify-center gap-2 rounded-2xl py-3 text-xs font-semibold transition",
+                        "flex items-center justify-center gap-1.5 rounded-md py-1.5 text-[11px] font-semibold transition",
                         watching
-                          ? "bg-primary/10 text-primary"
-                          : "bg-surface-2 text-muted-foreground hover:text-ink",
+                          ? "bg-primary/10 text-primary font-bold"
+                          : "bg-surface-2 text-muted-foreground hover:text-ink hover:bg-surface-3",
                       )}
                     >
-                      <Bell className={cn("h-3.5 w-3.5", watching && "fill-current")} />
-                      {watching ? "Watching" : "Watch price"}
+                      <Bell className={cn("h-3 w-3", watching && "fill-current")} />
+                      {watching ? "Watching" : "Watch"}
                     </button>
                   </div>
                 </div>
-                <p className="mt-4 text-center text-xs text-muted-foreground">
+                <p className="mt-3 text-center text-[11px] text-muted-foreground">
                   In stock today at {dealerInfo.address}
                 </p>
               </div>
@@ -750,21 +902,21 @@ function VehicleDetail() {
       </section>
 
       {/* Specs Section */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid gap-12 lg:grid-cols-12">
+      <section className="py-8 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
             <div className="lg:col-span-4">
               <SectionTag>Vehicle Overview & Specs</SectionTag>
-              <h2 className="display mt-3 text-balance text-4xl">
+              <h2 className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
                 Built for performance & comfort.
               </h2>
-              <p className="mt-4 text-muted-foreground">
+              <p className="mt-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 Every spec on this {v.year} {v.make} {v.model} has been optioned, inspected, and
                 verified by certified technicians at AM Ford in {dealerInfo.locality}.
               </p>
             </div>
             <div className="lg:col-span-8">
-              <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-border sm:grid-cols-3">
+              <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-border sm:grid-cols-3">
                 {[
                   ["Year", v.year],
                   ["Body Style", v.type],
@@ -776,21 +928,21 @@ function VehicleDetail() {
                   ["Interior Trim", v.interior],
                   ["MPG / Range", v.mpg],
                 ].map(([k, val]) => (
-                  <div key={k as string} className="bg-card p-5">
-                    <dt className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  <div key={k as string} className="bg-card p-3.5 sm:p-5">
+                    <dt className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       {k}
                     </dt>
-                    <dd className="display mt-1 text-lg text-ink">{val}</dd>
+                    <dd className="display mt-0.5 text-base sm:text-lg text-ink font-bold">{val}</dd>
                   </div>
                 ))}
               </dl>
 
-              <div className="mt-8 rounded-3xl bg-card p-7 ring-1 ring-border">
-                <h3 className="display text-xl">Standout Features & Options</h3>
-                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+              <div className="mt-6 rounded-lg bg-card p-4 sm:p-7 ring-1 ring-border">
+                <h3 className="display text-lg sm:text-xl font-bold">Standout Features & Options</h3>
+                <ul className="mt-3 grid gap-2 sm:grid-cols-2">
                   {v.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-ink">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> {f}
+                    <li key={f} className="flex items-start gap-2 text-xs sm:text-sm text-ink">
+                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" /> {f}
                     </li>
                   ))}
                 </ul>
@@ -800,6 +952,19 @@ function VehicleDetail() {
         </div>
       </section>
 
+      {/* Financing calculator — placed early so shoppers immediately know monthly affordability */}
+      <PaymentCalculator
+        price={v.price}
+        onPreApprove={(details) => {
+          setFinancingDetails({ ...details, vehicleId: v.id });
+          setModalMode("financing_preapproval");
+          setModalOpen(true);
+        }}
+      />
+
+      {/* Inspection report unlock — builds trust directly following pricing */}
+      <InspectionUnlock vehicle={v} />
+
       {/*
         Seller's notes. Written per unit in src/lib/vehicles.ts, so this is the one place on
         the page where the dealership speaks in its own voice rather than the template's.
@@ -807,31 +972,31 @@ function VehicleDetail() {
         reads worse than no section at all.
       */}
       {v.sellerNotes && (
-        <section className="border-t border-border py-20" aria-labelledby="seller-notes">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="grid gap-12 lg:grid-cols-12">
+        <section className="border-t border-border py-8 sm:py-16" aria-labelledby="seller-notes">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
               <div className="lg:col-span-4">
                 <SectionTag>Seller&apos;s Notes</SectionTag>
-                <h2 id="seller-notes" className="display mt-3 text-balance text-4xl">
+                <h2 id="seller-notes" className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
                   What we would tell you about it.
                 </h2>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-muted-foreground">
                   Written by the team at AM Ford about this specific {v.year} {v.model}, not the
                   model in general.
                 </p>
               </div>
               <div className="lg:col-span-8">
-                <div className="rounded-3xl bg-card p-7 ring-1 ring-border sm:p-9">
-                  <p className="text-base leading-relaxed text-ink sm:text-lg">{v.sellerNotes}</p>
-                  <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-border pt-5">
-                    <span className="text-sm text-muted-foreground">
+                <div className="rounded-lg bg-card p-5 ring-1 ring-border sm:p-8">
+                  <p className="text-sm sm:text-base leading-relaxed text-ink">{v.sellerNotes}</p>
+                  <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-border pt-4">
+                    <span className="text-xs sm:text-sm text-muted-foreground">
                       Anything here you want to check in person?
                     </span>
                     <a
                       href={dealerInfo.phoneHref}
-                      className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-white transition-colors hover:bg-ink/90"
+                      className="inline-flex min-h-[40px] items-center gap-2 rounded-md bg-ink px-4 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-ink/90"
                     >
-                      <Phone className="h-4 w-4" aria-hidden />
+                      <Phone className="h-3.5 w-3.5" aria-hidden />
                       Call {dealerInfo.phone}
                     </a>
                   </div>
@@ -843,29 +1008,29 @@ function VehicleDetail() {
       )}
 
       {/* About this vehicle — data-driven prose unique to each car */}
-      <section className="border-t border-border py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid gap-12 lg:grid-cols-12">
+      <section className="border-t border-border py-8 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
             <div className="lg:col-span-4">
               <SectionTag>About This {v.model}</SectionTag>
-              <h2 className="display mt-3 text-balance text-4xl">
+              <h2 className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
                 What it's like to own this {typeLabel(v.type)}.
               </h2>
 
               {/* Good-to-know fact strip */}
-              <div className="mt-8 space-y-3">
+              <div className="mt-5 sm:mt-8 space-y-2.5">
                 {v.msrp && v.msrp > v.price && (
-                  <div className="flex items-center gap-3 rounded-2xl bg-primary/5 p-4 ring-1 ring-primary/15">
-                    <DollarSign className="h-5 w-5 shrink-0 text-primary" />
-                    <p className="text-sm text-ink">
+                  <div className="flex items-center gap-3 rounded-lg bg-primary/5 p-3.5 ring-1 ring-primary/15">
+                    <DollarSign className="h-4 w-4 shrink-0 text-primary" />
+                    <p className="text-xs sm:text-sm text-ink">
                       Priced{" "}
                       <strong>${(v.msrp - v.price).toLocaleString()} below original MSRP</strong>
                     </p>
                   </div>
                 )}
-                <div className="flex items-center gap-3 rounded-2xl bg-primary/5 p-4 ring-1 ring-primary/15">
-                  <Gauge className="h-5 w-5 shrink-0 text-primary" />
-                  <p className="text-sm text-ink">
+                <div className="flex items-center gap-3 rounded-lg bg-primary/5 p-3.5 ring-1 ring-primary/15">
+                  <Gauge className="h-4 w-4 shrink-0 text-primary" />
+                  <p className="text-xs sm:text-sm text-ink">
                     {v.miles < 100 ? (
                       <>
                         <strong>Delivery miles only</strong>, effectively factory-new
@@ -879,9 +1044,9 @@ function VehicleDetail() {
                   </p>
                 </div>
                 {v.badges?.includes("Certified Pre-Owned") && (
-                  <div className="flex items-center gap-3 rounded-2xl bg-primary/5 p-4 ring-1 ring-primary/15">
-                    <ShieldCheck className="h-5 w-5 shrink-0 text-primary" />
-                    <p className="text-sm text-ink">
+                  <div className="flex items-center gap-3 rounded-lg bg-primary/5 p-3.5 ring-1 ring-primary/15">
+                    <ShieldCheck className="h-4 w-4 shrink-0 text-primary" />
+                    <p className="text-xs sm:text-sm text-ink">
                       <strong>Certified Pre-Owned</strong>: 172-point inspection passed
                     </p>
                   </div>
@@ -889,7 +1054,7 @@ function VehicleDetail() {
               </div>
             </div>
             <div className="lg:col-span-8">
-              <div className="space-y-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
+              <div className="space-y-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
                 {buildVehicleStory(v).map((paragraph, i) => (
                   <p key={i}>{paragraph}</p>
                 ))}
@@ -902,18 +1067,17 @@ function VehicleDetail() {
       {/* The record read back plainly, plus what this configuration asks of an owner */}
       <ListingDetail v={v} />
 
-      {/* Contextual routes out of this page: model, filters, research, money, distance */}
-      <VehicleInterlinks v={v} />
+      <DeliveryBanner />
 
       {/* Rich SEO Buying Guide Content Section for Vehicle Detail */}
-      <section className="border-t border-border bg-surface-2/60 py-20">
-        <div className="mx-auto max-w-7xl px-6 space-y-16">
+      <section className="border-t border-border bg-surface-2/60 py-8 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-10 sm:space-y-16">
           <div className="max-w-4xl">
             <SectionTag>Vehicle Buying Guide</SectionTag>
-            <h2 className="display mt-3 text-3xl font-bold text-ink sm:text-4xl">
+            <h2 className="display mt-2 text-2xl font-bold text-ink sm:text-3xl lg:text-4xl">
               Why Buy the {v.year} {v.make} {v.model} {v.trim} at AM Ford in {dealerInfo.city}?
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
               Are you searching for a reliable{" "}
               <strong className="text-ink">
                 {v.year} {v.make} {v.model} {v.trim} for sale in {dealerInfo.city}
@@ -926,52 +1090,53 @@ function VehicleDetail() {
             </p>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-3">
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <ShieldCheck className="h-6 w-6" />
+          <div className="grid gap-4 sm:gap-6 sm:grid-cols-3">
+            <div className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border shadow-xs">
+              <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-md bg-primary/10 text-primary">
+                <ShieldCheck className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
-              <h3 className="display mt-5 text-lg font-bold text-ink">
-                Certified Mechanical Inspection
+              <h3 className="display mt-4 text-base sm:text-lg font-bold text-ink">
+                {v.condition === "New" ? "Factory Pre-Delivery Inspection" : "Multi-Point Safety Inspection"}
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                This {v.model} has undergone a full multi-point safety inspection covering brakes,
-                engine performance, tire wear, and fluid levels by factory-trained technicians.
+              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                {v.condition === "New"
+                  ? `This new ${v.model} has undergone rigorous factory pre-delivery inspection, verifying zero-defect assembly, latest calibration, and fresh fluids.`
+                  : `This ${v.model} has undergone a comprehensive multi-point safety and mechanical inspection covering brakes, powertrain, tires, and electrical systems by certified technicians.`}
               </p>
             </div>
 
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <DollarSign className="h-6 w-6" />
+            <div className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border shadow-xs">
+              <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-md bg-primary/10 text-primary">
+                <DollarSign className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
-              <h3 className="display mt-5 text-lg font-bold text-ink">
+              <h3 className="display mt-4 text-base sm:text-lg font-bold text-ink">
                 Transparent Pricing & Low APR
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                No hidden dealer markup. Take advantage of custom financing terms, flexible trade-in
-                valuation, and low monthly rates tailored to your budget.
+              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                No hidden dealer markups or surprise fees. Take advantage of competitive {v.condition.toLowerCase()} vehicle financing terms, flexible trade-in valuation, and low monthly rates.
               </p>
             </div>
 
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <Award className="h-6 w-6" />
+            <div className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border shadow-xs">
+              <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-md bg-primary/10 text-primary">
+                <Award className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
-              <h3 className="display mt-5 text-lg font-bold text-ink">
-                Lifetime Powertrain Warranty
+              <h3 className="display mt-4 text-base sm:text-lg font-bold text-ink">
+                {v.condition === "New" ? "Ford Factory Warranty & Coverage" : "Certified History & Warranty"}
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                Drive with peace of mind. Eligible vehicles at AM Ford include lifetime powertrain
-                protection to keep you covered on Ohio highways.
+              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                {v.condition === "New"
+                  ? `Full new vehicle bumper-to-bumper and powertrain manufacturer warranty, plus 24/7 Ford Roadside Assistance across Ohio and North America.`
+                  : `Drive with complete confidence. Enjoy verified vehicle history documentation, available extended protection plans, and powertrain coverage options.`}
               </p>
             </div>
           </div>
 
           {/* Vehicle FAQ Section */}
-          <div className="max-w-4xl space-y-6">
+          <div className="w-full space-y-4 sm:space-y-6">
             <div>
               <SectionTag>Questions About This Vehicle?</SectionTag>
-              <h3 className="display mt-2 text-2xl font-bold text-ink sm:text-3xl">
+              <h3 className="display mt-2 text-xl font-bold text-ink sm:text-2xl lg:text-3xl">
                 {v.year} {v.make} {v.model} Frequently Asked Questions
               </h3>
             </div>
@@ -985,15 +1150,15 @@ function VehicleDetail() {
               string is rendered as a single interpolation so the visible text matches the
               structured data character for character.
             */}
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {faqs.map((faq, idx) => (
                 <details
                   key={faq.q}
                   open={idx === 0}
-                  className="group overflow-hidden rounded-2xl border border-border bg-card"
+                  className="group overflow-hidden rounded-lg border border-border bg-card"
                 >
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-5 text-left font-semibold text-ink transition hover:text-primary [&::-webkit-details-marker]:hidden">
-                    <span className="flex items-start gap-3 text-sm sm:text-base">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 sm:p-5 text-left font-semibold text-ink transition hover:text-primary [&::-webkit-details-marker]:hidden">
+                    <span className="flex items-start gap-2.5 text-xs sm:text-sm">
                       <HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
                       <span>{faq.q}</span>
                     </span>
@@ -1002,7 +1167,7 @@ function VehicleDetail() {
                       className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180 group-open:text-primary"
                     />
                   </summary>
-                  <div className="border-t border-border/60 bg-surface/40 px-5 py-4 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                  <div className="border-t border-border/60 bg-surface/40 px-4 sm:px-5 py-3.5 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                     {faq.a}
                   </div>
                 </details>
@@ -1012,40 +1177,26 @@ function VehicleDetail() {
         </div>
       </section>
 
-      <DeliveryBanner />
-
-      {/* Inspection report unlock — real document, fair gate */}
-      <InspectionUnlock vehicle={v} />
-
-      {/* Financing calculator */}
-      <PaymentCalculator
-        price={v.price}
-        onPreApprove={(details) => {
-          setFinancingDetails({ ...details, vehicleId: v.id });
-          setModalMode("financing_preapproval");
-          setModalOpen(true);
-        }}
-      />
-
       {/* Related */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-10 flex items-end justify-between">
-            <h2 className="display text-3xl sm:text-4xl">You might also like</h2>
-            <div className="flex items-center gap-4">
+      <section className="py-8 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="mb-6 sm:mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <h2 className="display text-2xl sm:text-3xl lg:text-4xl font-black">You might also like</h2>
+            <div className="flex items-center gap-3 text-xs sm:text-sm">
               <Link
                 to="/inventory"
                 search={{ type: v.type }}
-                className="text-sm font-semibold text-primary"
+                className="font-semibold text-primary"
               >
                 More {v.type}s →
               </Link>
-              <Link to="/inventory" className="text-sm font-semibold text-muted-foreground">
+              <span className="text-muted-foreground">·</span>
+              <Link to="/inventory" className="font-semibold text-muted-foreground hover:text-ink">
                 All inventory →
               </Link>
             </div>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((r, i) => (
               <VehicleCard
                 key={r.id}
@@ -1063,6 +1214,9 @@ function VehicleDetail() {
       {/* Prev/next through the lot, in the stable declaration order of `vehicles` */}
       <VehiclePager v={v} />
 
+      {/* Contextual routes out of this page: model, filters, research, money, distance */}
+      <VehicleInterlinks v={v} />
+
       {/*
         Groups chosen for a vehicle detail page specifically. Someone here is cross shopping,
         so the model range and the research pages lead, and body style and price follow because
@@ -1074,33 +1228,74 @@ function VehicleDetail() {
         groups={["models", "research", "bodyStyle", "price", "condition", "nearby"]}
       />
 
-      <LeadCaptureModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        vehicle={v}
-        initialMode={modalMode}
-        financingDetails={financingDetails}
-      />
-
-      {otpOpen && (
-        <OTPPopup
-          onClose={() => setOtpOpen(false)}
-          initialCarData={{
-            title: `${v.year} ${v.make} ${v.model} ${v.trim}`,
-            price: String(v.price),
-            stock: v.id,
-            source: "VDP",
-          }}
-        />
-      )}
-
-      {enquiryPreset && (
-        <QuickEnquiryModal
+      <Suspense fallback={null}>
+        <LeadCaptureModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
           vehicle={v}
-          preset={enquiryPreset}
-          onClose={() => setEnquiryPreset(null)}
+          initialMode={modalMode}
+          financingDetails={financingDetails}
         />
-      )}
+
+        {otpOpen && (
+          <OTPPopup
+            onClose={() => setOtpOpen(false)}
+            initialCarData={{
+              title: `${v.year} ${v.make} ${v.model} ${v.trim}`,
+              price: String(v.price),
+              stock: v.id,
+              source: otpSource,
+            }}
+          />
+        )}
+
+        {enquiryPreset && (
+          <QuickEnquiryModal
+            vehicle={v}
+            preset={enquiryPreset}
+            onClose={() => setEnquiryPreset(null)}
+          />
+        )}
+      </Suspense>
+
+      {/* Mobile Sticky Bottom Conversion Bar */}
+      <motion.div
+        initial={false}
+        animate={{ y: showMobileBar ? 0 : 100, opacity: showMobileBar ? 1 : 0 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/80 bg-background/95 p-2.5 backdrop-blur-md shadow-2xl sm:hidden"
+        style={{ paddingBottom: "max(0.625rem, env(safe-area-inset-bottom))" }}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-bold text-ink">
+              {v.year} {v.make} {v.model}
+            </p>
+            <p className="text-sm font-extrabold text-primary">
+              ${v.price.toLocaleString()}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <a
+              href={dealerInfo.phoneHref}
+              aria-label="Call dealership"
+              className="flex h-9 w-9 items-center justify-center rounded-md bg-surface-2 text-ink ring-1 ring-border active:scale-95"
+            >
+              <Phone className="h-4 w-4" />
+            </a>
+            <button
+              onClick={() => {
+                setOtpSource("Extra Discount Request");
+                setOtpOpen(true);
+              }}
+              className="flex items-center gap-1.5 rounded-md bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-500 active:scale-95"
+            >
+              <Tag className="h-3.5 w-3.5" />
+              <span>Get Best Price</span>
+            </button>
+          </div>
+        </div>
+      </motion.div>
     </SiteShell>
   );
 }
@@ -1117,50 +1312,50 @@ function ListingDetail({ v }: { v: Vehicle }) {
   const considerations = buildConsiderations(v);
 
   return (
-    <section className="border-t border-border py-20" aria-labelledby="listing-detail">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 lg:grid-cols-12">
+    <section className="border-t border-border py-8 sm:py-16" aria-labelledby="listing-detail">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <SectionTag>The Detail Behind This Listing</SectionTag>
-            <h2 id="listing-detail" className="display mt-3 text-balance text-4xl">
+            <h2 id="listing-detail" className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
               What the record actually says.
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-3 text-xs sm:text-sm leading-relaxed text-muted-foreground">
               Price, odometer, condition, and equipment, straight off this vehicle&apos;s own
               record. If a number matters to your decision, it should come from here rather than
               from a brochure for the {v.model} range.
             </p>
             <a
               href={dealerInfo.phoneHref}
-              className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-white transition-colors hover:bg-ink/90"
+              className="mt-5 inline-flex min-h-10 items-center gap-2 rounded-md bg-ink px-4 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-ink/90"
             >
-              <Phone className="h-4 w-4" aria-hidden />
+              <Phone className="h-3.5 w-3.5" aria-hidden />
               Ask about this {v.model} on {dealerInfo.phone}
             </a>
           </div>
 
           <div className="lg:col-span-8">
-            <div className="space-y-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <div className="space-y-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
               {buildListingDetail(v).map((paragraph) => (
                 <p key={paragraph.slice(0, 48)}>{paragraph}</p>
               ))}
             </div>
 
-            <div className="mt-8 rounded-3xl bg-card p-7 ring-1 ring-border">
-              <h3 className="display flex items-center gap-2 text-xl">
-                <ListChecks className="h-5 w-5 shrink-0 text-primary" aria-hidden />
+            <div className="mt-6 rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border">
+              <h3 className="display flex items-center gap-2 text-base sm:text-lg font-bold">
+                <ListChecks className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-primary" aria-hidden />
                 What to weigh on this one
               </h3>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground">
                 Three things this specific configuration asks of an owner in Northeast Ohio. None of
                 them is a reason not to buy it; all of them are easier to settle before you sign
                 than afterwards.
               </p>
-              <ul className="mt-5 space-y-4">
+              <ul className="mt-4 space-y-3">
                 {considerations.map((note) => (
-                  <li key={note.slice(0, 48)} className="flex items-start gap-3">
-                    <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden />
-                    <span className="text-sm leading-relaxed text-ink">{note}</span>
+                  <li key={note.slice(0, 48)} className="flex items-start gap-2.5">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
+                    <span className="text-xs sm:text-sm leading-relaxed text-ink">{note}</span>
                   </li>
                 ))}
               </ul>
@@ -1186,9 +1381,7 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
   const model = modelPageFor(v);
   const band = priceBandFor(v);
   const reading = model ? getRelatedReading(model.slug) : [];
-  // Zero used vehicles on the lot, and /inventory drops ?condition=Used, so the condition link
-  // is only ever offered for a value the listing can actually answer.
-  const conditionLinkable = v.condition !== "Used";
+  const conditionLinkable = true;
   // Trucks and the electric truck are the two records a commercial buyer lands on.
   const workVehicle = v.type === "Truck" || v.type === "EV";
 
@@ -1196,27 +1389,27 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
     "font-semibold text-primary underline decoration-primary/30 underline-offset-4 transition hover:decoration-primary";
 
   return (
-    <section className="border-t border-border bg-surface py-20" aria-labelledby="next-steps">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 lg:grid-cols-12">
+    <section className="border-t border-border bg-surface py-8 sm:py-16" aria-labelledby="next-steps">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <SectionTag>Where To Go From Here</SectionTag>
-            <h2 id="next-steps" className="display mt-3 text-balance text-4xl">
+            <h2 id="next-steps" className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
               The rest of the decision.
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-3 text-xs sm:text-sm leading-relaxed text-muted-foreground">
               Every page linked below is on this site, and every filtered search runs against the
               Ford stock standing in {dealerInfo.locality} today.
             </p>
           </div>
 
-          <div className="space-y-8 lg:col-span-8">
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border">
-              <h3 className="display flex items-center gap-2 text-xl">
-                <Tag className="h-5 w-5 shrink-0 text-primary" aria-hidden />
+          <div className="space-y-4 sm:space-y-6 lg:col-span-8">
+            <div className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border">
+              <h3 className="display flex items-center gap-2 text-base sm:text-lg font-bold">
+                <Tag className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-primary" aria-hidden />
                 Still cross shopping
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+              <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">
                 {model && (
                   <>
                     Our{" "}
@@ -1261,24 +1454,22 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
             </div>
 
             {reading.length > 0 && (
-              <div className="rounded-3xl bg-card p-7 ring-1 ring-border">
-                <h3 className="display flex items-center gap-2 text-xl">
-                  <BookOpen className="h-5 w-5 shrink-0 text-primary" aria-hidden />
+              <div className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border">
+                <h3 className="display flex items-center gap-2 text-base sm:text-lg font-bold">
+                  <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-primary" aria-hidden />
                   Read before you decide
                 </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {/* "the" rather than "a": the article would have to agree with model names
-                      that start with a vowel sound, and "a F-150 Lightning" is what that costs. */}
+                <p className="mt-1.5 text-xs text-muted-foreground">
                   The comparisons and guides we have written that bear on the {v.model}{" "}
                   specifically.
                 </p>
-                <ul className="mt-5 space-y-4">
+                <ul className="mt-4 space-y-3">
                   {reading.map((item) => (
                     <li key={item.to}>
                       <Link to={item.to} className={linkCls}>
                         {item.label}
                       </Link>
-                      <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                      <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
                         {item.why}
                       </span>
                     </li>
@@ -1287,12 +1478,12 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
               </div>
             )}
 
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border">
-              <h3 className="display flex items-center gap-2 text-xl">
-                <CreditCard className="h-5 w-5 shrink-0 text-primary" aria-hidden />
+            <div className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border">
+              <h3 className="display flex items-center gap-2 text-base sm:text-lg font-bold">
+                <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-primary" aria-hidden />
                 Paperwork and your trade
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+              <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">
                 You can{" "}
                 <Link to="/financing" className={linkCls}>
                   send a finance application to AM Ford
@@ -1320,12 +1511,12 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
               </p>
             </div>
 
-            <div className="rounded-3xl bg-card p-7 ring-1 ring-border">
-              <h3 className="display flex items-center gap-2 text-xl">
-                <Truck className="h-5 w-5 shrink-0 text-primary" aria-hidden />
+            <div className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border">
+              <h3 className="display flex items-center gap-2 text-base sm:text-lg font-bold">
+                <Truck className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-primary" aria-hidden />
                 Buying from outside Ashtabula County
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+              <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">
                 {DELIVERY_CLAIM} If the drive is the only thing standing between you and this{" "}
                 {v.model}, start with{" "}
                 <Link to="/nationwide-vehicle-delivery" className={linkCls}>
@@ -1353,8 +1544,8 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
                 </Link>
                 .
               </p>
-              <p className="mt-4 flex flex-wrap items-center gap-x-1 text-base leading-relaxed text-muted-foreground">
-                <Wrench className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+              <p className="mt-3 flex flex-wrap items-center gap-x-1 text-xs sm:text-sm leading-relaxed text-muted-foreground">
+                <Wrench className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden />
                 <span>
                   Once it is yours,{" "}
                   <Link to="/service" className={linkCls}>
@@ -1390,28 +1581,28 @@ function VehiclePager({ v }: { v: Vehicle }) {
   if (!previous || !next) return null;
 
   const cardCls =
-    "group flex items-center gap-3 rounded-2xl bg-card p-4 ring-1 ring-border transition hover:ring-primary/40 sm:p-5";
+    "group flex items-center gap-3 rounded-lg bg-card p-3.5 ring-1 ring-border transition hover:ring-primary/40 sm:p-5";
 
   return (
     <nav
       aria-label="Browse the rest of the inventory"
-      className="border-t border-border bg-surface-2/50 py-12"
+      className="border-t border-border bg-surface-2/50 py-6 sm:py-12"
     >
-      <div className="mx-auto max-w-7xl px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid gap-3 sm:grid-cols-2">
           <Link to="/vehicle/$id" params={{ id: previous.id }} rel="prev" className={cardCls}>
             <ChevronLeft
               aria-hidden
-              className="h-5 w-5 shrink-0 text-primary transition-transform group-hover:-translate-x-0.5"
+              className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-primary transition-transform group-hover:-translate-x-0.5"
             />
             <span className="min-w-0">
-              <span className="block text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                 Previous vehicle
               </span>
-              <span className="mt-0.5 block truncate text-sm font-bold text-ink sm:text-base">
+              <span className="mt-0.5 block truncate text-xs font-bold text-ink sm:text-base">
                 {previous.year} {previous.make} {previous.model} {previous.trim}
               </span>
-              <span className="block truncate text-xs text-muted-foreground">
+              <span className="block truncate text-[11px] sm:text-xs text-muted-foreground">
                 ${previous.price.toLocaleString()} · {previous.condition}
               </span>
             </span>
@@ -1425,23 +1616,23 @@ function VehiclePager({ v }: { v: Vehicle }) {
           >
             <ChevronRight
               aria-hidden
-              className="h-5 w-5 shrink-0 text-primary transition-transform group-hover:translate-x-0.5"
+              className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-primary transition-transform group-hover:translate-x-0.5"
             />
             <span className="min-w-0">
-              <span className="block text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                 Next vehicle
               </span>
-              <span className="mt-0.5 block truncate text-sm font-bold text-ink sm:text-base">
+              <span className="mt-0.5 block truncate text-xs font-bold text-ink sm:text-base">
                 {next.year} {next.make} {next.model} {next.trim}
               </span>
-              <span className="block truncate text-xs text-muted-foreground">
+              <span className="block truncate text-[11px] sm:text-xs text-muted-foreground">
                 ${next.price.toLocaleString()} · {next.condition}
               </span>
             </span>
           </Link>
         </div>
 
-        <p className="mt-5 text-center text-xs text-muted-foreground">
+        <p className="mt-4 text-center text-xs text-muted-foreground">
           Vehicle {position} of {total} at AM Ford.{" "}
           <Link
             to="/inventory"
@@ -1474,15 +1665,15 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
   const [error, setError] = useState<string | null>(null);
 
   return (
-    <section className="border-t border-border py-20">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 lg:grid-cols-12">
+    <section className="border-t border-border py-8 sm:py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <SectionTag>Inspection Report</SectionTag>
-            <h2 className="display mt-3 text-balance text-4xl">
+            <h2 className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
               See exactly what our technicians checked.
             </h2>
-            <p className="mt-4 text-muted-foreground">
+            <p className="mt-3 text-xs sm:text-sm leading-relaxed text-muted-foreground">
               Every vehicle at AM Ford passes a 172-point inspection before sale. Unlock the
               category summary for this {vehicle.model}. The full written report is waiting for you
               at the dealership.
@@ -1490,16 +1681,16 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
           </div>
           <div className="lg:col-span-8">
             {status === "unlocked" ? (
-              <div className="rounded-3xl bg-card p-7 ring-1 ring-border">
+              <div className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border">
                 <div className="flex items-center gap-2">
                   <ClipboardCheck className="h-5 w-5 text-emerald-600" />
-                  <h3 className="display text-xl">172-point inspection: all categories passed</h3>
+                  <h3 className="display text-base sm:text-lg font-bold">172-point inspection: all categories passed</h3>
                 </div>
-                <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+                <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
                   {INSPECTION_AREAS.map((item) => (
                     <li
                       key={item.area}
-                      className="flex items-center justify-between rounded-2xl bg-surface-2 px-4 py-3 text-sm"
+                      className="flex items-center justify-between rounded-md bg-surface-2 px-3.5 py-2.5 text-xs sm:text-sm"
                     >
                       <span className="flex items-center gap-2 text-ink">
                         <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
@@ -1511,68 +1702,68 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-5 text-xs text-muted-foreground">
+                <p className="mt-4 text-xs text-muted-foreground">
                   A copy is on its way to your email. {RESPONSE_PROMISE}
                 </p>
               </div>
             ) : (
-              <div className="relative overflow-hidden rounded-3xl bg-card p-7 ring-1 ring-border">
+              <div className="relative overflow-hidden rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border">
                 {/* Blurred teaser behind the gate */}
                 <ul
                   aria-hidden
-                  className="pointer-events-none grid gap-3 opacity-60 blur-[6px] sm:grid-cols-2 select-none"
+                  className="pointer-events-none grid gap-2.5 opacity-60 blur-[6px] sm:grid-cols-2 select-none"
                 >
                   {INSPECTION_AREAS.slice(0, 4).map((item) => (
                     <li
                       key={item.area}
-                      className="flex items-center justify-between rounded-2xl bg-surface-2 px-4 py-3 text-sm"
+                      className="flex items-center justify-between rounded-md bg-surface-2 px-3.5 py-2.5 text-xs sm:text-sm"
                     >
                       <span className="text-ink">{item.area}</span>
                       <span className="text-xs text-muted-foreground">{item.checks} checks</span>
                     </li>
                   ))}
                 </ul>
-                <div className="relative -mt-16 rounded-3xl bg-background/95 p-6 ring-1 ring-border backdrop-blur">
-                  <h3 className="display text-xl">Unlock the inspection summary</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
+                <div className="relative -mt-16 rounded-lg bg-background/95 p-5 sm:p-6 ring-1 ring-border backdrop-blur">
+                  <h3 className="display text-lg sm:text-xl font-bold">Unlock the inspection summary</h3>
+                  <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
                     Free, and we'll also email you a copy for your records.
                   </p>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     <label className="relative block">
-                      <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <input
                         type="email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
-                        className="w-full rounded-2xl border border-border bg-background py-3 pl-11 pr-4 text-sm outline-none transition focus:border-primary"
+                        className="w-full rounded-md border border-border bg-background py-2.5 pl-10 pr-3.5 text-xs sm:text-sm outline-none transition focus:border-primary"
                       />
                     </label>
                     <label className="relative block">
-                      <Phone className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Phone className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <input
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="Phone (optional)"
-                        className="w-full rounded-2xl border border-border bg-background py-3 pl-11 pr-4 text-sm outline-none transition focus:border-primary"
+                        className="w-full rounded-md border border-border bg-background py-2.5 pl-10 pr-3.5 text-xs sm:text-sm outline-none transition focus:border-primary"
                       />
                     </label>
                   </div>
-                  <label className="mt-4 flex items-start gap-2.5">
+                  <label className="mt-3.5 flex items-start gap-2.5">
                     <input
                       type="checkbox"
                       checked={consent}
                       onChange={(e) => setConsent(e.target.checked)}
-                      className="mt-0.5 h-6 w-6 shrink-0 accent-[#002c5f]"
+                      className="mt-0.5 h-4 w-4 shrink-0 accent-[#002c5f]"
                     />
-                    <span className="text-xs leading-relaxed text-muted-foreground">
+                    <span className="text-[11px] leading-relaxed text-muted-foreground">
                       I agree AM Ford may email me this report and follow up about this vehicle (and
                       text/call if I provided a number). Reply STOP to opt out.
                     </span>
                   </label>
-                  {error && <p className="mt-3 text-sm font-medium text-red-600">{error}</p>}
+                  {error && <p className="mt-2.5 text-xs font-medium text-red-600">{error}</p>}
                   <button
                     onClick={async () => {
                       if (!/.+@.+\..+/.test(email)) {
@@ -1598,7 +1789,7 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
                       }
                     }}
                     disabled={status === "sending"}
-                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+                    className="mt-4 inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-xs sm:text-sm font-semibold text-primary-foreground disabled:opacity-60"
                   >
                     {status === "sending" ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -1644,21 +1835,21 @@ function PaymentCalculator({
   }, [price, down, term, apr]);
 
   return (
-    <section className="bg-surface py-20">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-12">
+    <section className="bg-surface py-8 sm:py-16">
+      <div className="mx-auto grid max-w-7xl gap-6 sm:gap-10 px-4 sm:px-6 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <SectionTag>Estimate your payment</SectionTag>
-          <h2 className="display mt-3 text-4xl">Numbers that feel honest.</h2>
-          <p className="mt-4 text-muted-foreground">
+          <h2 className="display mt-2 text-2xl sm:text-3xl lg:text-4xl">Numbers that feel honest.</h2>
+          <p className="mt-3 text-xs sm:text-sm text-muted-foreground">
             A quick estimate based on your inputs. Final terms depend on credit and lender.
           </p>
-          <div className="mt-8 rounded-3xl bg-gradient-navy p-8 text-white shadow-glow">
-            <p className="text-sm uppercase tracking-widest text-white/70">Estimated monthly</p>
-            <p className="display mt-2 text-6xl">
+          <div className="mt-5 sm:mt-8 rounded-lg bg-gradient-navy p-5 sm:p-8 text-white shadow-glow">
+            <p className="text-xs uppercase tracking-wider text-white/70">Estimated monthly</p>
+            <p className="display mt-2 text-4xl sm:text-6xl font-black">
               ${Math.round(monthly).toLocaleString()}
-              <span className="text-lg text-white/60">/mo</span>
+              <span className="text-base sm:text-lg text-white/60 font-normal">/mo</span>
             </p>
-            <p className="mt-3 text-sm text-white/70">
+            <p className="mt-2.5 text-xs sm:text-sm text-white/70">
               {term} months · {apr.toFixed(1)}% APR · ${down.toLocaleString()} down
             </p>
             {onPreApprove ? (
@@ -1668,14 +1859,14 @@ function PaymentCalculator({
                     calculator: { price, down, term, apr, estimatedMonthly: Math.round(monthly) },
                   })
                 }
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-primary transition hover:opacity-90"
+                className="mt-5 inline-flex items-center gap-2 rounded-md bg-white px-4 py-2.5 text-xs sm:text-sm font-semibold text-primary transition hover:opacity-90"
               >
                 <Calculator className="h-4 w-4" /> Get pre-approved for this payment
               </button>
             ) : (
               <Link
                 to="/financing"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-primary"
+                className="mt-5 inline-flex items-center gap-2 rounded-md bg-white px-4 py-2.5 text-xs sm:text-sm font-semibold text-primary"
               >
                 <Calculator className="h-4 w-4" /> Get pre-approved
               </Link>
@@ -1683,7 +1874,7 @@ function PaymentCalculator({
           </div>
         </div>
 
-        <div className="rounded-3xl bg-card p-7 ring-1 ring-border lg:col-span-7">
+        <div className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border lg:col-span-7">
           <Slider
             label="Down payment"
             min={0}
@@ -1693,8 +1884,8 @@ function PaymentCalculator({
             onChange={setDown}
             format={(n) => `$${n.toLocaleString()}`}
           />
-          <div className="mt-8">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          <div className="mt-6">
+            <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Term
             </p>
             <div className="flex flex-wrap gap-2">
@@ -1703,9 +1894,9 @@ function PaymentCalculator({
                   key={t}
                   onClick={() => setTerm(t as typeof term)}
                   className={cn(
-                    "rounded-full px-4 py-2 text-sm font-medium transition",
+                    "rounded-md px-3.5 py-1.5 text-xs sm:text-sm font-medium transition",
                     term === t
-                      ? "bg-primary text-primary-foreground"
+                      ? "bg-primary text-primary-foreground font-bold shadow-xs"
                       : "bg-surface-2 text-ink hover:bg-surface",
                   )}
                 >
@@ -1714,7 +1905,7 @@ function PaymentCalculator({
               ))}
             </div>
           </div>
-          <div className="mt-8">
+          <div className="mt-6">
             <Slider
               label="APR"
               min={2.9}

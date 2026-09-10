@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState, useEffect, type ReactNode } from "react";
+import { useMemo, useState, useEffect, useRef, lazy, Suspense, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -17,6 +17,7 @@ import {
   HelpCircle,
   ChevronDown,
   DollarSign,
+  Phone,
 } from "lucide-react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 import { getRecentlyViewed } from "@/lib/recentlyViewed";
@@ -27,7 +28,6 @@ import { DeliveryBanner } from "@/components/site/DeliveryBanner";
 import { InventoryInterlinks } from "@/components/site/InventoryInterlinks";
 import { FrequentSearches } from "@/components/site/FrequentSearches";
 import { SiteShell } from "@/components/site/SiteShell";
-import { LeadCaptureModal } from "@/components/site/LeadCaptureModal";
 import { VehicleCard } from "@/components/site/VehicleCard";
 import {
   vehicles,
@@ -38,10 +38,17 @@ import {
   type Vehicle,
 } from "@/lib/vehicles";
 import { SectionTag } from "@/components/site/Home";
-import OfferPopup from "@/components/popups/OfferPopup";
-import { TradeValuatorModal } from "@/components/convert/TradeValuatorModal";
-import OTPPopup from "@/components/popups/OTPPopup";
 import { cn } from "@/lib/utils";
+
+// Lazy-load heavy non-critical conversion modals
+const LeadCaptureModal = lazy(() =>
+  import("@/components/site/LeadCaptureModal").then((m) => ({ default: m.LeadCaptureModal })),
+);
+const OfferPopup = lazy(() => import("@/components/popups/OfferPopup"));
+const TradeValuatorModal = lazy(() =>
+  import("@/components/convert/TradeValuatorModal").then((m) => ({ default: m.TradeValuatorModal })),
+);
+const OTPPopup = lazy(() => import("@/components/popups/OTPPopup"));
 
 /**
  * Single source for the FAQ, consumed by BOTH the FAQPage JSON-LD in head() and the
@@ -115,17 +122,17 @@ const SORT_OPTIONS = [
 type SortCode = (typeof SORT_OPTIONS)[number]["code"];
 
 
-const PRICE_FLOOR = 20000;
-const PRICE_CAP = 100000;
+const PRICE_FLOOR = 5000;
+const PRICE_CAP = 120000;
 const MILES_FLOOR = 0;
-const MILES_CAP = 50000;
+const MILES_CAP = 300000;
 /**
  * Vehicles per page. At 9, today's 6-vehicle lot is a single page, so the pager below does
  * not render at all, which is deliberate rather than a bug. Everything downstream (the "Showing"
  * counter, the pager, and the ItemList slice in head()) reads this constant and derives
  * totalPages from it, so nothing has to be touched when the lot outgrows one page.
  */
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 15;
 const COMPARE_MAX = 3;
 
 /**
@@ -300,6 +307,7 @@ const FUEL_SEO_LABEL: Record<Vehicle["fuel"], string> = {
  */
 const CONDITION_SEO_LABEL: Record<FilterableCondition, string> = {
   New: "New Fords",
+  Used: "Used Vehicles",
   "Certified Pre-Owned": "Certified Pre-Owned Fords",
 };
 
@@ -418,6 +426,13 @@ const LANDING_CONTENT: Record<string, { heading: string; body: string[] }> = {
       `Every new Ford here is prepped and inspected by factory-trained technicians before it reaches the front line, and the price on the listing is the price we quote you, with no hidden dealer fees attached at the desk. ${DELIVERY_CLAIM} If you would rather look first and decide later, we are at ${dealerInfo.address}, and ${dealerInfo.phone} reaches the sales team directly.`,
     ],
   },
+  "condition:Used": {
+    heading: `Used Vehicles for Sale in ${dealerInfo.locality}, Ohio`,
+    body: [
+      `AM Ford carries a dependable selection of pre-owned cars, trucks, and SUVs from Ford and other leading automakers at our showroom in ${dealerInfo.locality}. Every vehicle passes a multi-point safety and mechanical inspection before it is offered for front-line sale.`,
+      `Whether you need an affordable commuter car, a tough work truck, or a family SUV, browse our live used inventory above. We offer fair, transparent market pricing, competitive trade-in valuations, and straightforward financing options for all credit profiles.`,
+    ],
+  },
   "condition:Certified Pre-Owned": {
     heading: `Certified Pre-Owned Fords for Sale in ${dealerInfo.locality}, Ohio`,
     body: [
@@ -429,41 +444,31 @@ const LANDING_CONTENT: Record<string, { heading: string; body: string[] }> = {
 
 /**
  * How the vehicles on a landing page should be described in its meta description.
- *
- * Derived from the vehicles the URL actually resolves to rather than hardcoded, so the
- * description can never claim a condition the page does not show: today ?type=Truck is
- * "new" (one New F-150) while ?type=SUV is "new and certified pre-owned" (two New plus the
- * CPO Escape), and both stay correct if the lot changes.
- *
- * Only the type and fuel descriptions use this. The ?condition= pages state their condition
- * in the label already, so running it through here would produce "new New Fords".
  */
 function conditionPhrase(list: Vehicle[]): string {
   const hasNew = list.some((v) => v.condition === "New");
+  const hasUsed = list.some((v) => v.condition === "Used");
   const hasCertified = list.some((v) => v.condition === "Certified Pre-Owned");
+  if (hasNew && hasUsed && hasCertified) return "new, used, and certified";
+  if (hasNew && hasUsed) return "new and used";
   if (hasNew && hasCertified) return "new and certified pre-owned";
+  if (hasUsed && hasCertified) return "used and certified pre-owned";
+  if (hasUsed) return "used";
   if (hasCertified) return "certified pre-owned";
   return "new";
 }
 
 /**
- * Title and description for the two condition landing pages.
- *
- * Written per page rather than templated. The shared type/fuel template would produce
- * "Shop new New Fords" for ?condition=New, because conditionPhrase() and the label describe
- * the same axis there, and "Certified Pre-Owned Fords for Sale in Jefferson, OH | AM Ford"
- * is 61 characters, one over budget. Both strings below are measured: title <= 60,
- * description <= 155.
- *
- * Certified Pre-Owned is the page buyers actually search for, so it says what certification
- * means and stops there. No inspection point count, no warranty length, no coverage
- * specifics: those are unapproved claims, and the honest version is that the terms are
- * documented per vehicle.
+ * Title and description for the condition landing pages.
  */
 const CONDITION_SEO: Record<FilterableCondition, { title: string; description: string }> = {
   New: {
     title: `New Fords for Sale in ${dealerInfo.city} | AM Ford`,
     description: `Browse new Ford trucks, SUVs, cars, and EVs at AM Ford in ${dealerInfo.city}, serving Ashtabula County and Northeast Ohio. Compare pricing and specs.`,
+  },
+  Used: {
+    title: `Used Cars & Trucks in ${dealerInfo.city} | AM Ford`,
+    description: `Shop quality used cars, trucks, and SUVs for sale at AM Ford in ${dealerInfo.city}, OH. Inspected pre-owned vehicles with competitive financing.`,
   },
   "Certified Pre-Owned": {
     title: `Certified Pre-Owned Fords in ${dealerInfo.city} | AM Ford`,
@@ -752,7 +757,19 @@ export const Route = createFileRoute("/inventory")({
         { property: "og:type", content: "website" },
         // Must match the <link rel="canonical"> below EXACTLY; both read the same value.
         { property: "og:url", content: seo.canonical },
+        { property: "og:image", content: `${SITE_ORIGIN}/am-ford-lot-banner.webp` },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { property: "og:image:alt", content: `AM Ford Dealership in ${dealerInfo.city}` },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: seo.title },
+        { name: "twitter:description", content: seo.description },
+        { name: "twitter:image", content: `${SITE_ORIGIN}/am-ford-lot-banner.webp` },
+        // Local geo tags for Ashtabula County / Jefferson, OH dealership
+        { name: "geo.region", content: "US-OH" },
+        { name: "geo.placename", content: dealerInfo.locality },
+        { name: "geo.position", content: "41.7456;-80.7676" },
+        { name: "ICBM", content: "41.7456, -80.7676" },
       ],
       links: [{ rel: "canonical", href: seo.canonical }],
       scripts: [
@@ -846,7 +863,16 @@ export function InventoryPage() {
     );
   const setSort = (code: SortCode) =>
     updateFilters({ sort: code === "featured" ? undefined : code });
-  const setPage = (p: number) => updateFilters({ page: p <= 1 ? undefined : p });
+  const setPage = (p: number) => {
+    updateFilters({ page: p <= 1 ? undefined : p });
+    // Scroll back to top of inventory grid when page changes
+    const gridEl = document.getElementById("inventory-grid");
+    if (gridEl) {
+      gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   const toggleCompare = (v: Vehicle) => {
     const next = compareIds.includes(v.id)
@@ -883,6 +909,7 @@ export function InventoryPage() {
   const [tradeOpen, setTradeOpen] = useState(false);
   const [otpOpen, setOtpOpen] = useState(false);
   const [selectedVehicleForOtp, setSelectedVehicleForOtp] = useState<Vehicle | null>(null);
+  const [otpSource, setOtpSource] = useState<string>("SRP");
 
   // Hero offer-ticket state
 
@@ -909,6 +936,21 @@ export function InventoryPage() {
       document.body.style.overflow = "";
     };
   }, [drawerOpen]);
+
+  // When changing pages (e.g. from 1 to 2 or 3), scroll back to the top of the inventory grid smoothly
+  const prevPageRef = useRef(page);
+  useEffect(() => {
+    if (prevPageRef.current !== page) {
+      prevPageRef.current = page;
+      // Scroll to the inventory grid or top of page
+      const gridEl = document.getElementById("inventory-grid");
+      if (gridEl) {
+        gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+  }, [page]);
 
   // Effective filters snapshot: one object the grid, facet counts, and
   // empty-state suggestions all evaluate against.
@@ -1061,47 +1103,54 @@ export function InventoryPage() {
 
   return (
     <SiteShell>
-      <Breadcrumbs items={breadcrumbs} />
+      {/* Page Header with soothing soft ambient gradient */}
+      <section className="relative overflow-hidden border-b border-slate-200/80 bg-gradient-to-b from-slate-50/90 via-blue-50/30 to-white">
+        {/* Subtle ambient light radial bloom */}
+        <div
+          className="pointer-events-none absolute -top-24 left-1/4 h-80 w-96 rounded-full bg-blue-100/40 blur-3xl"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute top-0 right-10 h-72 w-80 rounded-full bg-amber-100/20 blur-3xl"
+          aria-hidden="true"
+        />
 
-      {/*
-       * Page header. Replaces the old full-bleed hero: a studio photo of a vehicle we do not
-       * stock, a "$500 Trade-In Bonus" card whose Name and Phone inputs had no value, onChange,
-       * name, or ref and therefore captured nothing, a "30-sec response / No credit impact"
-       * trust row, a hardcoded "Verified Pre-Owned Stock" badge, and a vehicle-count chip read
-       * from the placeholder feed. None of those claims had a source, so the replacement
-       * carries only what is true: the H1 the landing pages need, one sentence of copy, and
-       * the dealership phone line. Leads still have the card CTAs, the chat widget, and the
-       * toolbar's trade-in link.
-       * NOTE kept from the deleted offer block: the client brief forbids publishing APR
-       * figures or monthly payments. Do not reintroduce a rate or a dollar-amount offer here
-       * without written approval from the dealership.
-       */}
-      <section className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-x-10 gap-y-5 px-6 pb-9 pt-4 sm:pb-11 sm:pt-5">
+        <div className="relative mx-auto max-w-7xl px-6 pt-3">
+          <Breadcrumbs items={breadcrumbs} className="px-0 pb-1" />
+        </div>
+
+        <div className="relative mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-x-10 gap-y-5 px-6 pb-8 pt-3 sm:pb-10 sm:pt-4">
           <div className="max-w-2xl">
-            <h1 className="display text-balance text-[32px] text-slate-900 sm:text-4xl lg:text-[2.75rem]">
+            <h1 className="display text-balance text-[32px] font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-[2.75rem]">
               {landingLabel(search) ?? "Vehicles"} for sale in {dealerInfo.city}
             </h1>
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-600">
-              Browse the current lot at AM Ford, serving Ashtabula County and Northeast Ohio.
-              Compare pricing, check specs, and schedule a test drive.
+              {search.condition === "New"
+                ? `Explore brand-new Ford trucks, SUVs, cars, and EVs with delivery miles, full factory warranty, and transparent pricing in ${dealerInfo.city}.`
+                : search.condition === "Used"
+                ? `Browse inspected, high-quality pre-owned vehicles with competitive financing and complete peace of mind at AM Ford in ${dealerInfo.city}.`
+                : search.condition === "Certified Pre-Owned"
+                ? `Browse manufacturer-backed Certified Pre-Owned Fords with multi-point inspection and warranty coverage at AM Ford in ${dealerInfo.city}.`
+                : `Browse the current lot at AM Ford, serving Ashtabula County and Northeast Ohio. Compare pricing, check specs, and schedule a test drive.`}
             </p>
           </div>
-          <p className="pb-1 text-sm font-medium text-slate-500">
-            Questions before you visit?{" "}
-            <a
-              href={dealerInfo.phoneHref}
-              className="font-bold text-[#002c5f] underline-offset-4 hover:underline"
-            >
-              Call {dealerInfo.phone}
-            </a>
-          </p>
+          <div className="rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-2.5 shadow-2xs backdrop-blur-sm">
+            <p className="text-xs sm:text-sm font-medium text-slate-600">
+              Questions before you visit?{" "}
+              <a
+                href={dealerInfo.phoneHref}
+                className="font-bold text-[#002c5f] underline-offset-4 hover:underline"
+              >
+                Call {dealerInfo.phone}
+              </a>
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Main Sticky Control Toolbar */}
-      <section className="sticky top-16 z-30 border-b border-slate-200 bg-white/90 backdrop-blur-xl sm:top-20">
-        <div className="mx-auto flex max-w-7xl items-center gap-2 px-3 py-3 sm:px-6 sm:py-4 flex-nowrap overflow-hidden">
+      <section className="sticky top-16 z-30 border-b border-slate-200/90 bg-white/95 backdrop-blur-xl sm:top-20">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-3 py-2 sm:px-6 sm:py-3 flex-nowrap overflow-hidden">
           {/* Search bar — flex-1 min-w-0 */}
           <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -1109,12 +1158,13 @@ export function InventoryPage() {
               value={qInput}
               onChange={(e) => setQInput(e.target.value)}
               placeholder="Search model (F-150, Bronco)..."
-              className="w-full truncate rounded-full border border-slate-200 bg-white py-2 pl-9 pr-3 text-xs font-medium text-slate-900 outline-none transition focus:border-[#002c5f] focus:ring-2 focus:ring-[#002c5f]/20 shadow-sm sm:py-2.5 sm:pl-10 sm:pr-4 sm:text-sm"
+              className="w-full truncate rounded-full border border-slate-200 bg-white py-1.5 pl-9 pr-8 text-xs font-medium text-slate-900 outline-none transition focus:border-[#002c5f] focus:ring-2 focus:ring-[#002c5f]/20 shadow-xs sm:py-2 sm:pl-10 sm:pr-9 sm:text-sm"
             />
             {qInput && (
               <button
                 onClick={() => setQInput("")}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:text-slate-900"
+                aria-label="Clear search text"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -1128,9 +1178,9 @@ export function InventoryPage() {
                 key={t}
                 onClick={() => setType(t)}
                 className={cn(
-                  "rounded-full px-3.5 py-1.5 text-xs font-bold transition-all",
+                  "rounded-full px-3 py-1 text-xs font-bold transition-all",
                   type === t
-                    ? "bg-[#002c5f] text-white shadow-sm"
+                    ? "bg-[#002c5f] text-white shadow-xs"
                     : "bg-slate-100 text-slate-700 hover:bg-slate-200",
                 )}
               >
@@ -1152,7 +1202,7 @@ export function InventoryPage() {
               aria-label="Sort inventory"
               value={sort}
               onChange={(e) => setSort(e.target.value as SortCode)}
-              className="rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-bold text-slate-800 outline-none transition focus:border-[#002c5f] shadow-sm sm:px-3.5 sm:py-2.5"
+              className="rounded-full border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-800 outline-none transition focus:border-[#002c5f] shadow-xs sm:px-3 sm:py-2"
             >
               {SORT_OPTIONS.map((s) => (
                 <option key={s.code} value={s.code}>
@@ -1166,17 +1216,17 @@ export function InventoryPage() {
           <button
             onClick={() => setDrawerOpen(true)}
             className={cn(
-              "relative shrink-0 inline-flex items-center justify-center gap-1.5 rounded-full p-2.5 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-bold transition-all shadow-md active:scale-95",
+              "relative shrink-0 inline-flex items-center justify-center gap-1.5 rounded-full px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs sm:text-sm font-bold transition-all shadow-xs active:scale-95",
               activeFilterCount > 0
                 ? "bg-[#002c5f] text-white ring-2 ring-[#002c5f]/30"
                 : "bg-[#002c5f] text-white hover:bg-[#001f44]",
             )}
             aria-label="Filter vehicles"
           >
-            <SlidersHorizontal className="h-4 w-4 shrink-0" />
+            <SlidersHorizontal className="h-3.5 w-3.5 shrink-0" />
             <span className="hidden sm:inline">Filters</span>
             {activeFilterCount > 0 && (
-              <span className="flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-white text-[10px] sm:text-xs font-bold text-[#002c5f]">
+              <span className="flex h-4 w-4 sm:h-4.5 sm:w-4.5 items-center justify-center rounded-full bg-white text-[10px] sm:text-[11px] font-bold text-[#002c5f]">
                 {activeFilterCount}
               </span>
             )}
@@ -1190,10 +1240,10 @@ export function InventoryPage() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="border-t border-border/50 bg-surface/50"
+              className="border-t border-slate-200/80 bg-slate-50/80 backdrop-blur-sm"
             >
-              <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-6 py-2 text-xs">
-                <span className="font-semibold text-muted-foreground">Active filters:</span>
+              <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-1.5 px-3 py-1.5 text-xs sm:px-6">
+                <span className="font-semibold text-slate-500 text-[11px] uppercase tracking-wider">Active:</span>
 
                 {type !== "All" && (
                   <ActivePill label={`Body: ${type}`} onRemove={() => setType("All")} />
@@ -1240,7 +1290,7 @@ export function InventoryPage() {
 
                 <button
                   onClick={resetFilters}
-                  className="ml-auto inline-flex items-center gap-1 font-semibold text-primary hover:underline"
+                  className="ml-auto inline-flex items-center gap-1 text-[11px] font-bold text-[#002c5f] hover:underline"
                 >
                   <RotateCcw className="h-3 w-3" /> Clear all
                 </button>
@@ -1250,49 +1300,55 @@ export function InventoryPage() {
         </AnimatePresence>
       </section>
 
-      {/* Main Vehicle Grid */}
-      <section className="py-8">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-6 flex flex-col gap-3 border-b border-slate-200/80 pb-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs sm:text-sm font-medium text-slate-600">
-              {totalPages > 1 ? (
-                <>
-                  Showing{" "}
-                  <span className="font-bold text-slate-900">
-                    {(currentPage - 1) * PAGE_SIZE + 1}–
-                    {Math.min(currentPage * PAGE_SIZE, filteredVehicles.length)}
-                  </span>{" "}
-                  of {filteredVehicles.length} vehicles
-                </>
-              ) : (
-                <>
-                  Showing{" "}
-                  <span className="font-bold text-slate-900">{filteredVehicles.length}</span> of{" "}
-                  {vehicles.length} vehicles
-                </>
-              )}
-            </p>
-            <div className="flex flex-nowrap items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 sm:gap-2.5">
+      {/* Main Vehicle Grid Section */}
+      <section id="inventory-grid" className="py-6 sm:py-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          {/* Header Row: Vehicle Count & Branded Dealership Value Strip */}
+          <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-slate-50/50 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <p className="text-xs sm:text-sm font-semibold text-slate-700">
+                {totalPages > 1 ? (
+                  <>
+                    Showing{" "}
+                    <span className="font-bold text-slate-900">
+                      {(currentPage - 1) * PAGE_SIZE + 1}–
+                      {Math.min(currentPage * PAGE_SIZE, filteredVehicles.length)}
+                    </span>{" "}
+                    of {filteredVehicles.length} vehicles
+                  </>
+                ) : (
+                  <>
+                    Showing{" "}
+                    <span className="font-bold text-slate-900">{filteredVehicles.length}</span> of{" "}
+                    {vehicles.length} vehicles
+                  </>
+                )}
+              </p>
+            </div>
+            
+            {/* Dealer Utility & Buyer Programs */}
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => setOfferOpen(true)}
-                className="inline-flex shrink-0 whitespace-nowrap items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-[11px] font-bold text-amber-800 shadow-sm transition hover:bg-amber-100 active:scale-95 sm:px-3 sm:py-1.5 sm:text-xs"
+                className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-900 transition hover:bg-amber-100 active:scale-95 shadow-2xs"
               >
-                <Tag className="h-3 w-3 shrink-0 text-amber-600 sm:h-3.5 sm:w-3.5" />
-                <span>Claim $500 OFF</span>
+                <Tag className="h-3 w-3 text-amber-700" />
+                <span>$500 Bonus Voucher</span>
               </button>
               <button
                 onClick={() => setTradeOpen(true)}
-                className="inline-flex shrink-0 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2 py-1 text-[11px] font-bold text-[#002c5f] shadow-sm transition hover:bg-slate-200 active:scale-95 sm:px-3 sm:py-1.5 sm:text-xs"
+                className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700 transition hover:border-[#002c5f]/30 hover:text-[#002c5f] active:scale-95 shadow-2xs"
               >
-                <DollarSign className="h-3 w-3 shrink-0 text-[#002c5f] sm:h-3.5 sm:w-3.5" />
-                <span>Value Your Trade</span>
+                <DollarSign className="h-3 w-3 text-[#002c5f]" />
+                <span>Trade-In Appraisal</span>
               </button>
               <button
                 onClick={() => setSpecialOrderOpen(true)}
-                className="inline-flex shrink-0 whitespace-nowrap items-center gap-0.5 px-1.5 py-1 text-[11px] font-bold text-[#002c5f] hover:underline sm:px-2 sm:text-xs"
+                className="inline-flex items-center gap-0.5 rounded-full px-2 py-1 text-[11px] font-bold text-[#002c5f] hover:underline"
               >
                 <span>Special Order</span>
-                <ChevronRight className="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
+                <ChevronRight className="h-3 w-3" />
               </button>
             </div>
           </div>
@@ -1301,15 +1357,15 @@ export function InventoryPage() {
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-3xl border border-dashed border-border bg-card p-16 text-center"
+              className="rounded-3xl border border-slate-200 bg-white p-12 sm:p-16 text-center shadow-sm"
             >
-              <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-surface-2 text-muted-foreground">
+              <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#002c5f]/10 text-[#002c5f]">
                 <Filter className="h-6 w-6" />
               </div>
-              <h3 className="display mt-4 text-2xl text-ink">No matching vehicles</h3>
-              <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-                We couldn't find any vehicles matching all selected filters.
-                {relaxSuggestions.length > 0 && " Removing one of these gets you back on the road:"}
+              <h3 className="mt-4 text-2xl font-bold text-slate-900">No matching vehicles found</h3>
+              <p className="mx-auto mt-2 max-w-md text-sm text-slate-600">
+                We couldn't find any vehicles matching your selected criteria.
+                {relaxSuggestions.length > 0 && " Removing one of these will restore vehicles to your search:"}
               </p>
               {relaxSuggestions.length > 0 && (
                 <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
@@ -1320,19 +1376,19 @@ export function InventoryPage() {
                         if ("q" in s.patch) setQInput("");
                         updateFilters(s.patch);
                       }}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-[#002c5f]/25 bg-white px-4 py-2 text-xs font-bold text-[#002c5f] shadow-sm transition hover:bg-[#002c5f] hover:text-white"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-[#002c5f]/20 bg-slate-50 px-3.5 py-1.5 text-xs font-bold text-[#002c5f] shadow-2xs transition hover:bg-[#002c5f] hover:text-white"
                     >
                       <X className="h-3 w-3" /> Remove {s.label}
-                      <span className="opacity-70">({s.count} matches)</span>
+                      <span className="opacity-70 font-medium">({s.count} in stock)</span>
                     </button>
                   ))}
                 </div>
               )}
               <button
                 onClick={resetFilters}
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md hover:opacity-90"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#002c5f] px-6 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#001f44] active:scale-95"
               >
-                <RotateCcw className="h-4 w-4" /> Reset All Filters
+                <RotateCcw className="h-3.5 w-3.5" /> Reset All Filters
               </button>
             </motion.div>
           ) : (
@@ -1346,6 +1402,12 @@ export function InventoryPage() {
                   onToggleCompare={toggleCompare}
                   onGetPrice={(selectedCar) => {
                     setSelectedVehicleForOtp(selectedCar);
+                    setOtpSource("SRP Instant Price");
+                    setOtpOpen(true);
+                  }}
+                  onExtraDiscount={(selectedCar) => {
+                    setSelectedVehicleForOtp(selectedCar);
+                    setOtpSource("Extra Discount Request");
                     setOtpOpen(true);
                   }}
                 />
@@ -1443,7 +1505,9 @@ export function InventoryPage() {
               Your {dealerInfo.locality}, Ohio Ford Dealership
             </p>
             <h2 className="mt-3 text-3xl font-extrabold text-slate-900 sm:text-4xl lg:text-5xl tracking-tight">
-              Shop Ford Trucks, SUVs & Cars for Sale in {dealerInfo.locality}, Ohio
+              {landingLabel(search)
+                ? `Explore ${landingLabel(search)} at AM Ford in ${dealerInfo.locality}, Ohio`
+                : `Shop Ford Trucks, SUVs & Cars for Sale in ${dealerInfo.locality}, Ohio`}
             </h2>
             <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
               Welcome to <strong>AM Ford</strong>, your local source for{" "}
@@ -1612,7 +1676,7 @@ export function InventoryPage() {
           </div>
 
           {/* Frequently Asked Questions Accordion (Structured for Google Rank #1 Rich FAQ Snippets) */}
-          <div className="max-w-4xl space-y-6">
+          <div className="w-full space-y-6">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
                 Got Questions?
@@ -1694,7 +1758,7 @@ export function InventoryPage() {
       {/* Right Slide-Out Sidebar Filter Drawer */}
       <AnimatePresence>
         {drawerOpen && (
-          <div className="fixed inset-0 z-50 overflow-hidden">
+          <div className="fixed inset-0 z-[80] overflow-hidden">
             {/* Backdrop Blur Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -1751,18 +1815,13 @@ export function InventoryPage() {
                             : "bg-slate-100 text-slate-700 hover:bg-slate-200",
                         )}
                       >
-                        {t}{" "}
-                        <span className="font-semibold opacity-60">
-                          ({facetCount({ type: t })})
-                        </span>
+                        {t}
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Condition Filter — New vs Certified Pre-Owned. "Used" is absent on purpose:
-                    see FILTERABLE_CONDITIONS. Same pill treatment as Body Style above so the
-                    drawer keeps one visual language. */}
+                {/* Condition Filter */}
                 <div>
                   <label className="mb-3 block text-xs font-bold uppercase tracking-widest text-slate-500">
                     Condition
@@ -1780,7 +1839,7 @@ export function InventoryPage() {
                         )}
                       >
                         {c}{" "}
-                        <span className="font-semibold opacity-60">
+                        <span className="opacity-60">
                           ({facetCount({ condition: c })})
                         </span>
                       </button>
@@ -1788,62 +1847,63 @@ export function InventoryPage() {
                   </div>
                 </div>
 
-                {/* Fuel Type Filter */}
+                {/* Powertrain / Fuel */}
                 <div>
                   <label className="mb-3 block text-xs font-bold uppercase tracking-widest text-slate-500">
                     Powertrain / Fuel
                   </label>
                   <div className="grid grid-cols-2 gap-2">
-                    {FILTER_OPTIONS.fuels.map((f) => (
-                      <button
-                        key={f}
-                        onClick={() => setFuel(f)}
-                        className={cn(
-                          "flex items-center justify-between rounded-xl px-4 py-2.5 text-xs font-semibold border transition-all",
-                          fuel === f
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border bg-card text-ink hover:bg-surface-2",
-                        )}
-                      >
-                        <span>
-                          {f}{" "}
-                          <span className="font-medium opacity-60">
-                            ({facetCount({ fuel: f })})
+                    {FILTER_OPTIONS.fuels.map((f) => {
+                      const count = facetCount({ fuel: f });
+                      const isSelected = fuel === f;
+                      return (
+                        <button
+                          key={f}
+                          onClick={() => setFuel(f)}
+                          className={cn(
+                            "flex items-center justify-between rounded-2xl border px-3.5 py-2.5 text-xs font-bold transition-all",
+                            isSelected
+                              ? "border-[#002c5f] bg-[#002c5f]/5 text-[#002c5f] ring-1 ring-[#002c5f]"
+                              : "border-slate-200 bg-white text-slate-700 hover:border-slate-300",
+                          )}
+                        >
+                          <span>
+                            {f} <span className="opacity-50">({count})</span>
                           </span>
-                        </span>
-                        {fuel === f && <Check className="h-3.5 w-3.5" />}
-                      </button>
-                    ))}
+                          {isSelected && <Check className="h-3.5 w-3.5 text-[#002c5f]" />}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
-                {/* Price Range (min + max) */}
+                {/* Price Range Slider */}
                 <div>
                   <div className="mb-3 flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    <label className="text-xs font-bold uppercase tracking-widest text-slate-500">
                       Price Range
                     </label>
-                    <span className="display text-base font-bold text-primary">
+                    <span className="text-sm font-bold text-[#002c5f]">
                       ${priceRange[0].toLocaleString()} – ${priceRange[1].toLocaleString()}
                     </span>
                   </div>
                   <RangeSlider
                     min={PRICE_FLOOR}
                     max={PRICE_CAP}
-                    step={2500}
+                    step={1000}
                     value={priceRange}
-                    onValueChange={setPriceRange}
+                    onValueChange={(val) => setPriceRange([val[0], val[1]])}
                     ariaLabels={["Minimum price", "Maximum price"]}
                   />
-                  <div className="mt-2 flex justify-between text-xs text-muted-foreground">
-                    <span>$20,000</span>
-                    <span>$100,000</span>
+                  <div className="mt-2 flex justify-between text-xs font-medium text-slate-400">
+                    <span>${PRICE_FLOOR.toLocaleString()}</span>
+                    <span>${PRICE_CAP.toLocaleString()}</span>
                   </div>
                 </div>
 
-                {/* Drivetrain Filter */}
+                {/* Drivetrain */}
                 <div>
-                  <label className="mb-3 block text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                  <label className="mb-3 block text-xs font-bold uppercase tracking-widest text-slate-500">
                     Drivetrain
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -1852,100 +1912,95 @@ export function InventoryPage() {
                         key={d}
                         onClick={() => setDrivetrain(d)}
                         className={cn(
-                          "rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all border",
+                          "rounded-full px-3.5 py-1.5 text-xs font-bold transition-all",
                           drivetrain === d
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-border bg-card text-ink hover:bg-surface-2",
+                            ? "bg-[#002c5f] text-white shadow-sm"
+                            : "border border-slate-200 bg-white text-slate-700 hover:border-slate-300",
                         )}
                       >
-                        {d}{" "}
-                        <span className="font-medium opacity-60">
-                          ({facetCount({ drivetrain: d })})
-                        </span>
+                        {d} <span className="opacity-60">({facetCount({ drivetrain: d })})</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Transmission Filter */}
+                {/* Transmission */}
                 <div>
-                  <label className="mb-3 block text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                  <label className="mb-3 block text-xs font-bold uppercase tracking-widest text-slate-500">
                     Transmission
                   </label>
                   <div className="flex flex-wrap gap-2">
-                    {FILTER_OPTIONS.transmissions.map((t) => (
+                    {FILTER_OPTIONS.transmissions.map((tr) => (
                       <button
-                        key={t}
-                        onClick={() => setTransmission(t)}
+                        key={tr}
+                        onClick={() => setTransmission(tr)}
                         className={cn(
-                          "rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all border",
-                          transmission === t
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-border bg-card text-ink hover:bg-surface-2",
+                          "rounded-full px-3.5 py-1.5 text-xs font-bold transition-all",
+                          transmission === tr
+                            ? "bg-[#002c5f] text-white shadow-sm"
+                            : "border border-slate-200 bg-white text-slate-700 hover:border-slate-300",
                         )}
                       >
-                        {t}{" "}
-                        <span className="font-medium opacity-60">
-                          ({facetCount({ transmission: t })})
-                        </span>
+                        {tr}{" "}
+                        <span className="opacity-60">({facetCount({ transmission: tr })})</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Model Year Filter */}
+                {/* Year Filter */}
                 <div>
-                  <label className="mb-3 block text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                  <label className="mb-3 block text-xs font-bold uppercase tracking-widest text-slate-500">
                     Model Year
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {FILTER_OPTIONS.years.map((y) => (
                       <button
-                        key={String(y)}
+                        key={y}
                         onClick={() => setYear(y)}
                         className={cn(
-                          "flex-1 rounded-xl py-2 text-xs font-semibold border transition-all text-center",
-                          String(year) === String(y)
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border bg-card text-ink hover:bg-surface-2",
+                          "rounded-full px-3.5 py-2 text-xs font-bold transition-all",
+                          year === y
+                            ? "border-[#002c5f] bg-[#002c5f]/10 text-[#002c5f] ring-1 ring-[#002c5f]"
+                            : "border border-slate-200 bg-white text-slate-700 hover:border-slate-300",
                         )}
                       >
                         {y === "All" ? "All Years" : y}{" "}
-                        <span className="font-medium opacity-60">({facetCount({ year: y })})</span>
+                        <span className="opacity-60">({facetCount({ year: y })})</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Mileage Range (min + max) */}
+                {/* Mileage Range Slider */}
                 <div>
                   <div className="mb-3 flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    <label className="text-xs font-bold uppercase tracking-widest text-slate-500">
                       Mileage Range
                     </label>
-                    <span className="display text-base font-bold text-primary">
-                      {milesRange[0] <= MILES_FLOOR && milesRange[1] >= MILES_CAP
+                    <span className="text-sm font-bold text-[#002c5f]">
+                      {milesRange[1] >= MILES_CAP
                         ? "Any Mileage"
-                        : `${milesRange[0].toLocaleString()} – ${milesRange[1].toLocaleString()} mi`}
+                        : `Under ${milesRange[1].toLocaleString()} mi`}
                     </span>
                   </div>
                   <RangeSlider
                     min={MILES_FLOOR}
                     max={MILES_CAP}
-                    step={1000}
+                    step={2500}
                     value={milesRange}
-                    onValueChange={setMilesRange}
+                    onValueChange={(val) => setMilesRange([val[0], val[1]])}
                     ariaLabels={["Minimum mileage", "Maximum mileage"]}
                   />
-                  <div className="mt-2 flex justify-between text-xs text-muted-foreground">
+                  <div className="mt-2 flex justify-between text-xs font-medium text-slate-400">
                     <span>New (0 mi)</span>
                     <span>50,000+ mi</span>
                   </div>
                 </div>
 
-                {/* Special Tags & Features */}
+                {/* Special Badges & Packages */}
                 <div>
-                  <label className="mb-3 block text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                  <label className="mb-3 block text-xs font-bold uppercase tracking-widest text-slate-500">
                     Special Badges & Packages
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -1956,10 +2011,10 @@ export function InventoryPage() {
                           key={badge}
                           onClick={() => toggleBadge(badge)}
                           className={cn(
-                            "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium border transition-all",
+                            "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-all",
                             isSelected
-                              ? "border-primary bg-primary/15 text-primary font-semibold"
-                              : "border-border bg-surface-2 text-muted-foreground hover:bg-surface hover:text-ink",
+                              ? "border-[#002c5f] bg-[#002c5f]/10 text-[#002c5f] ring-1 ring-[#002c5f]"
+                              : "border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900",
                           )}
                         >
                           <Tag className="h-3 w-3" />
@@ -1975,18 +2030,18 @@ export function InventoryPage() {
                 </div>
               </div>
 
-              {/* Drawer Footer Actions */}
-              <div className="border-t border-border bg-surface/80 p-5 backdrop-blur-md">
+              {/* Drawer Footer Actions with Safe Padding */}
+              <div className="border-t border-slate-200 bg-white/95 p-4 sm:p-5 backdrop-blur-md">
                 <div className="flex gap-3">
                   <button
                     onClick={resetFilters}
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-card py-3 text-sm font-semibold text-ink transition hover:bg-surface-2"
+                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-white py-3 text-xs font-bold text-slate-700 shadow-2xs transition hover:bg-slate-50 hover:text-slate-900 active:scale-95"
                   >
-                    <RotateCcw className="h-4 w-4" /> Reset
+                    <RotateCcw className="h-3.5 w-3.5" /> Reset
                   </button>
                   <button
                     onClick={() => setDrawerOpen(false)}
-                    className="flex-[2] rounded-full bg-primary py-3 text-center text-sm font-semibold text-primary-foreground shadow-md transition hover:opacity-90"
+                    className="flex-[2] rounded-full bg-[#002c5f] py-3 text-center text-xs sm:text-sm font-bold text-white shadow-md transition hover:bg-[#001f44] active:scale-95"
                   >
                     Show {filteredVehicles.length} Vehicles
                   </button>
@@ -2046,44 +2101,54 @@ export function InventoryPage() {
       </AnimatePresence>
 
       {compareOpen && compareVehicles.length >= 2 && (
-        <CompareModal vehicles={compareVehicles} onClose={() => setCompareOpen(false)} />
-      )}
-
-      <LeadCaptureModal
-        isOpen={specialOrderOpen}
-        onClose={() => setSpecialOrderOpen(false)}
-        initialMode="special_order"
-      />
-
-      {offerOpen && <OfferPopup onClose={() => setOfferOpen(false)} pageSource="SRP" />}
-      {tradeOpen && <TradeValuatorModal onClose={() => setTradeOpen(false)} />}
-      {otpOpen && (
-        <OTPPopup
-          onClose={() => setOtpOpen(false)}
-          initialCarData={
-            selectedVehicleForOtp
-              ? {
-                  title: `${selectedVehicleForOtp.year} ${selectedVehicleForOtp.make} ${selectedVehicleForOtp.model} ${selectedVehicleForOtp.trim}`,
-                  price: String(selectedVehicleForOtp.price),
-                  stock: selectedVehicleForOtp.id,
-                  vin: `1FT${selectedVehicleForOtp.id.toUpperCase()}2025`,
-                  source: "SRP",
-                }
-              : undefined
-          }
+        <CompareModal
+          vehicles={compareVehicles}
+          onClose={() => setCompareOpen(false)}
+          onBookTestDrive={(v) => {
+            setSelectedVehicleForOtp(v);
+            setCompareOpen(false);
+            setOtpOpen(true);
+          }}
         />
       )}
+
+      <Suspense fallback={null}>
+        <LeadCaptureModal
+          isOpen={specialOrderOpen}
+          onClose={() => setSpecialOrderOpen(false)}
+          initialMode="special_order"
+        />
+
+        {offerOpen && <OfferPopup onClose={() => setOfferOpen(false)} pageSource="SRP" />}
+        {tradeOpen && <TradeValuatorModal onClose={() => setTradeOpen(false)} />}
+        {otpOpen && (
+          <OTPPopup
+            onClose={() => setOtpOpen(false)}
+            initialCarData={
+              selectedVehicleForOtp
+                ? {
+                    title: `${selectedVehicleForOtp.year} ${selectedVehicleForOtp.make} ${selectedVehicleForOtp.model} ${selectedVehicleForOtp.trim}`,
+                    price: String(selectedVehicleForOtp.price),
+                    stock: selectedVehicleForOtp.id,
+                    vin: `1FT${selectedVehicleForOtp.id.toUpperCase()}2025`,
+                    source: otpSource,
+                  }
+                : undefined
+            }
+          />
+        )}
+      </Suspense>
     </SiteShell>
   );
 }
 
 function ActivePill({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 font-semibold text-primary">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#002c5f]/15 bg-white px-2.5 py-0.5 text-[11px] font-semibold text-slate-800 shadow-2xs">
       <span>{label}</span>
       <button
         onClick={onRemove}
-        className="rounded-full p-0.5 hover:bg-primary/20"
+        className="rounded-full p-0.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-900"
         aria-label={`Remove filter ${label}`}
       >
         <X className="h-3 w-3" />
@@ -2132,21 +2197,209 @@ function RangeSlider({
   );
 }
 
-const COMPARE_ROWS: { label: string; render: (v: Vehicle) => string }[] = [
-  { label: "Price", render: (v) => `$${v.price.toLocaleString()}` },
-  { label: "MSRP", render: (v) => (v.msrp ? `$${v.msrp.toLocaleString()}` : "Not listed") },
-  { label: "Mileage", render: (v) => (v.miles < 50 ? "New" : `${v.miles.toLocaleString()} mi`) },
-  { label: "MPG / Range", render: (v) => v.mpg },
-  { label: "Horsepower", render: (v) => `${v.horsepower} hp` },
-  { label: "Drivetrain", render: (v) => v.drivetrain },
+function parseMpgVal(mpgStr: string): number {
+  if (!mpgStr) return 0;
+  const match = mpgStr.match(/\/(\d+)/) || mpgStr.match(/(\d+)\s*(?:mpg|mpge|mi)/i) || mpgStr.match(/(\d+)/);
+  return match ? parseInt(match[1], 10) : 0;
+}
+
+function getVehiclePersona(v: Vehicle, allVehicles: Vehicle[]) {
+  const minPrice = Math.min(...allVehicles.map((x) => x.price));
+  const maxPrice = Math.max(...allVehicles.map((x) => x.price));
+  const priceDiff = maxPrice - minPrice;
+
+  const maxHp = Math.max(...allVehicles.map((x) => x.horsepower));
+  const minHp = Math.min(...allVehicles.map((x) => x.horsepower));
+  const hpDiff = maxHp - minHp;
+
+  const mpgValues = allVehicles.map((x) => ({
+    id: x.id,
+    val: x.fuel === "Electric" ? 120 : parseMpgVal(x.mpg),
+  }));
+  const maxMpg = Math.max(...mpgValues.map((m) => m.val));
+  const isBestMpg = (v.fuel === "Electric" ? 120 : parseMpgVal(v.mpg)) === maxMpg;
+
+  const isLowestPrice = v.price === minPrice && priceDiff > 0;
+  const isMostPowerful = v.horsepower === maxHp && hpDiff > 0;
+
+  const isTruck = v.type === "Truck" || /f-?150|f-?250|super duty|maverick|ranger/i.test(v.model);
+  const isThreeRow = /explorer|expedition/i.test(v.model);
+  const isOffRoad = /tremor|raptor|bronco|badlands|timberline/i.test(`${v.model} ${v.trim}`);
+  const isCompact = /escape|maverick|bronco sport/i.test(v.model);
+  const isEv = v.fuel === "Electric" || /mach-e|lightning/i.test(v.model);
+
+  let role = "All-Round Balance";
+  let whoShouldBuy = `Choose the ${v.model} ${v.trim} for a dependable balance of modern features, comfort, and proven Ford build quality.`;
+  const bullets: string[] = [];
+
+  if (isEv) {
+    role = "Electric & Zero Emissions";
+    whoShouldBuy = `Choose the ${v.model} for instant electric response, home charging convenience, and the lowest per-mile operating cost.`;
+    bullets.push("Zero gas expenses and home charging", `${v.horsepower} hp instant electric response`, "Advanced digital cockpit and connectivity");
+  } else if (isTruck) {
+    role = "Heavy-Duty Towing & Work";
+    whoShouldBuy = `Choose the ${v.model} for commercial pulling power, high payload bed capacity, and heavy-duty chassis durability.`;
+    bullets.push(`${v.horsepower} hp high-torque powertrain`, "Heavy-duty truck bed and frame", "Engineered for maximum towing and payload");
+  } else if (isThreeRow) {
+    role = "Family 3-Row Seating";
+    whoShouldBuy = `Choose the ${v.model} if you regularly transport passengers, need flexible cargo space, and want all-weather traction.`;
+    bullets.push("Spacious 3-row passenger seating", "All-weather traction in snow and rain", `${v.horsepower} hp highway passing power`);
+  } else if (isCompact || isLowestPrice) {
+    role = "Daily Commute & Value";
+    whoShouldBuy = `Choose the ${v.model} for the lowest purchase price, lower monthly payments, and class-leading fuel economy.`;
+    if (priceDiff > 0) {
+      bullets.push(`Saves $${priceDiff.toLocaleString()} compared to highest option`);
+    } else {
+      bullets.push(`Affordable $${v.price.toLocaleString()} entry price point`);
+    }
+    bullets.push(`Class-leading efficiency: ${v.mpg}`, "Easy city parking and lower insurance rates");
+  } else if (isOffRoad) {
+    role = "All-Terrain & Adventure";
+    whoShouldBuy = `Choose the ${v.model} for rough road and trail travel, elevated ground clearance, and rugged 4x4 engineering.`;
+    bullets.push("Specialized terrain suspension", "Trail-tested 4x4 traction system", `${v.horsepower} hp responsive performance`);
+  }
+
+  // Fallback to ensure 3 strong bullets
+  if (bullets.length < 3) {
+    if (v.drivetrain === "4WD" || v.drivetrain === "AWD") bullets.push(`${v.drivetrain} all-weather traction`);
+    bullets.push(`${v.horsepower} hp engine performance`);
+    bullets.push(`${v.condition} with factory warranty coverage`);
+  }
+
+  return {
+    role,
+    whoShouldBuy,
+    bullets: bullets.slice(0, 3),
+    isLowestPrice,
+    isMostPowerful,
+    isBestMpg,
+    isTruck,
+    isThreeRow,
+    isOffRoad,
+    isEv,
+  };
+}
+
+const COMPARE_ROWS: {
+  label: string;
+  render: (v: Vehicle, all: Vehicle[]) => ReactNode;
+}[] = [
+  {
+    label: "Price",
+    render: (v, all) => {
+      const minPrice = Math.min(...all.map((x) => x.price));
+      const maxPrice = Math.max(...all.map((x) => x.price));
+      const isLowest = v.price === minPrice && minPrice < maxPrice;
+      return (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="font-bold text-slate-900">${v.price.toLocaleString()}</span>
+          {isLowest && (
+            <span className="inline-flex items-center rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-800">
+              Lowest price (save ${(maxPrice - minPrice).toLocaleString()})
+            </span>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    label: "MSRP",
+    render: (v) => (
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span>{v.msrp ? `$${v.msrp.toLocaleString()}` : "Not listed"}</span>
+        {v.msrp && v.msrp > v.price && (
+          <span className="inline-flex items-center rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-700">
+            Save ${(v.msrp - v.price).toLocaleString()} vs MSRP
+          </span>
+        )}
+      </div>
+    ),
+  },
+  {
+    label: "Mileage",
+    render: (v) => (
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span>{v.miles < 50 ? "New" : `${v.miles.toLocaleString()} mi`}</span>
+        {v.miles < 50 && (
+          <span className="inline-flex items-center rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-700">
+            Delivery miles
+          </span>
+        )}
+      </div>
+    ),
+  },
+  {
+    label: "MPG / Range",
+    render: (v, all) => {
+      const mpgValues = all.map((x) => ({
+        id: x.id,
+        val: x.fuel === "Electric" ? 120 : parseMpgVal(x.mpg),
+      }));
+      const maxMpg = Math.max(...mpgValues.map((m) => m.val));
+      const isBest = (v.fuel === "Electric" ? 120 : parseMpgVal(v.mpg)) === maxMpg;
+      return (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span>{v.mpg}</span>
+          {isBest && all.length > 1 && (
+            <span className="inline-flex items-center rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-800">
+              Top efficiency
+            </span>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    label: "Horsepower",
+    render: (v, all) => {
+      const maxHp = Math.max(...all.map((x) => x.horsepower));
+      const minHp = Math.min(...all.map((x) => x.horsepower));
+      const isMax = v.horsepower === maxHp && maxHp > minHp;
+      return (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span>{v.horsepower} hp</span>
+          {isMax && (
+            <span className="inline-flex items-center rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-800">
+              Highest output (+{maxHp - minHp} hp)
+            </span>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    label: "Drivetrain",
+    render: (v) => (
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span>{v.drivetrain}</span>
+        {(v.drivetrain === "4WD" || v.drivetrain === "AWD") && (
+          <span className="inline-flex items-center rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-700">
+            4WD / AWD
+          </span>
+        )}
+      </div>
+    ),
+  },
   { label: "Fuel", render: (v) => v.fuel },
   { label: "Transmission", render: (v) => v.transmission },
   { label: "Exterior", render: (v) => v.exterior },
   { label: "Interior", render: (v) => v.interior },
 ];
 
-/** Side-by-side spec comparison for the vehicles picked in the compare tray. */
-function CompareModal({ vehicles: list, onClose }: { vehicles: Vehicle[]; onClose: () => void }) {
+type PriorityTab = "all" | "budget" | "commute" | "power" | "family";
+
+/** Side-by-side spec comparison and verdict analysis for the vehicles picked in the compare tray. */
+function CompareModal({
+  vehicles: list,
+  onClose,
+  onBookTestDrive,
+}: {
+  vehicles: Vehicle[];
+  onClose: () => void;
+  onBookTestDrive?: (v: Vehicle) => void;
+}) {
+  const [priorityTab, setPriorityTab] = useState<PriorityTab>("all");
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
@@ -2157,8 +2410,44 @@ function CompareModal({ vehicles: list, onClose }: { vehicles: Vehicle[]; onClos
     };
   }, [onClose]);
 
+  // Derived metrics for summary verdict
+  const minPrice = Math.min(...list.map((x) => x.price));
+  const maxPrice = Math.max(...list.map((x) => x.price));
+  const priceDiff = maxPrice - minPrice;
+
+  const maxHp = Math.max(...list.map((x) => x.horsepower));
+  const minHp = Math.min(...list.map((x) => x.horsepower));
+  const hpDiff = maxHp - minHp;
+
+  const mpgValues = list.map((x) => ({
+    id: x.id,
+    val: x.fuel === "Electric" ? 120 : parseMpgVal(x.mpg),
+  }));
+  const maxMpg = Math.max(...mpgValues.map((m) => m.val));
+
+  const budgetLeader = list.find((v) => v.price === minPrice) || list[0];
+  const powerLeader = list.find((v) => v.horsepower === maxHp) || list[0];
+  const mpgLeader =
+    list.find((v) => (v.fuel === "Electric" ? 120 : parseMpgVal(v.mpg)) === maxMpg) || list[0];
+  const familyLeader =
+    list.find((v) => /explorer|expedition/i.test(v.model)) ||
+    list.find((v) => v.type === "SUV") ||
+    list[0];
+
+  // Identify matching vehicle for active priority
+  const activeWinnerId =
+    priorityTab === "budget"
+      ? budgetLeader.id
+      : priorityTab === "commute"
+        ? mpgLeader.id
+        : priorityTab === "power"
+          ? powerLeader.id
+          : priorityTab === "family"
+            ? familyLeader.id
+            : null;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -2168,76 +2457,269 @@ function CompareModal({ vehicles: list, onClose }: { vehicles: Vehicle[]; onClos
       <motion.div
         role="dialog"
         aria-modal="true"
-        aria-label="Vehicle comparison"
+        aria-label="Vehicle comparison and verdict"
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: "spring", stiffness: 240, damping: 26 }}
-        className="relative max-h-[88vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-8"
+        className="relative max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl sm:p-8"
       >
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">
-            Compare vehicles
-          </h2>
+        {/* Header */}
+        <div className="mb-6 flex items-start justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-[#002c5f]">
+              Dealership Comparison
+            </p>
+            <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+              Compare & Decision Verdict
+            </h2>
+            <p className="mt-1 text-xs text-slate-600 sm:text-sm">
+              Side-by-side analysis to help you decide which vehicle best matches your budget, lifestyle, and driving demands.
+            </p>
+          </div>
           <button
             onClick={onClose}
             aria-label="Close comparison"
-            className="grid h-9 w-9 place-items-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-700 transition hover:bg-slate-200"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[560px] border-collapse text-sm">
-            <thead>
-              <tr>
-                <th className="w-32 p-2" />
-                {list.map((v) => (
-                  <th key={v.id} className="p-2 text-left align-bottom">
+        {/* The AM Ford Conclusion & Verdict Banner */}
+        <div className="mb-8 rounded-2xl border border-slate-200 bg-slate-50/90 p-5 sm:p-6 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-4">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                The Verdict
+              </span>
+              <h3 className="text-base font-bold text-slate-900 sm:text-lg">
+                Which one is better for you?
+              </h3>
+            </div>
+
+            {/* Interactive Priority Switcher */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-xs font-semibold text-slate-500 mr-1 hidden md:inline">
+                Priority:
+              </span>
+              {(
+                [
+                  { id: "all", label: "Overview" },
+                  { id: "budget", label: "Lowest Price" },
+                  { id: "commute", label: "Fuel Economy" },
+                  { id: "power", label: "Towing & Power" },
+                  { id: "family", label: "Family Seating" },
+                ] as const
+              ).map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setPriorityTab(tab.id)}
+                  className={`rounded-full px-3.5 py-1 text-xs font-medium transition ${
+                    priorityTab === tab.id
+                      ? "bg-[#002c5f] text-white shadow-sm"
+                      : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Dynamic Verdict Text */}
+          <div className="mt-4 text-sm leading-relaxed text-slate-700">
+            {priorityTab === "all" && (
+              <p>
+                <strong>Summary Verdict:</strong> No single vehicle is universally better—each is built for a different buyer. If your priority is the lowest purchase price and best fuel economy, the <strong>{budgetLeader.year} {budgetLeader.model}</strong> is the clear value leader{priceDiff > 0 ? ` (saving you $${priceDiff.toLocaleString()} upfront)` : ""}. If you need raw capability for towing and heavy cargo, the <strong>{powerLeader.year} {powerLeader.model} ({powerLeader.horsepower} hp)</strong> is unmatched. For family comfort and multi-row seating, the <strong>{familyLeader.year} {familyLeader.model}</strong> provides the most versatile passenger cabin.
+              </p>
+            )}
+            {priorityTab === "budget" && (
+              <p>
+                <strong>Winner for Budget:</strong> The <strong>{budgetLeader.year} {budgetLeader.make} {budgetLeader.model} {budgetLeader.trim}</strong> is priced at <strong>${budgetLeader.price.toLocaleString()}</strong>.
+                {priceDiff > 0 ? (
+                  <> It saves you <strong>${priceDiff.toLocaleString()}</strong> upfront compared to the most expensive option in this comparison, giving you substantially lower monthly payments and more manageable insurance costs.</>
+                ) : (
+                  <> It represents an exceptional entry price for a modern Ford vehicle with full factory backing.</>
+                )}
+              </p>
+            )}
+            {priorityTab === "commute" && (
+              <p>
+                <strong>Winner for Daily Driving & Efficiency:</strong> The <strong>{mpgLeader.year} {mpgLeader.model} {mpgLeader.trim}</strong> delivers <strong>{mpgLeader.mpg}</strong>. It minimizes your monthly fuel bill and is engineered for effortless everyday highway and city commuting.
+              </p>
+            )}
+            {priorityTab === "power" && (
+              <p>
+                <strong>Winner for Capability & Towing:</strong> The <strong>{powerLeader.year} {powerLeader.model} {powerLeader.trim}</strong> leads with <strong>{powerLeader.horsepower} HP</strong>
+                {hpDiff > 0 ? ` (+${hpDiff} hp over other choices)` : ""}. It provides maximum torque, commercial-grade pulling power, and commanding confidence under heavy loads.
+              </p>
+            )}
+            {priorityTab === "family" && (
+              <p>
+                <strong>Winner for Family Space:</strong> The <strong>{familyLeader.year} {familyLeader.model} {familyLeader.trim}</strong> offers the most comfortable multi-passenger cabin, generous cargo capacity for road trips, and all-weather stability.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Side-by-Side Recommendation Cards Grid */}
+        <div className="mb-8">
+          <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+            At-a-Glance Takeaway
+          </h3>
+          <div
+            className={`grid gap-4 ${
+              list.length === 2
+                ? "grid-cols-1 md:grid-cols-2"
+                : list.length === 3
+                  ? "grid-cols-1 md:grid-cols-3"
+                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+            }`}
+          >
+            {list.map((v) => {
+              const persona = getVehiclePersona(v, list);
+              const isPriorityWinner = activeWinnerId === v.id;
+
+              return (
+                <div
+                  key={v.id}
+                  className={`relative flex flex-col justify-between rounded-2xl border p-4 transition ${
+                    isPriorityWinner
+                      ? "border-[#002c5f] bg-[#002c5f]/[0.02] shadow-md ring-2 ring-[#002c5f]/30"
+                      : "border-slate-200 bg-white hover:border-slate-300"
+                  }`}
+                >
+                  {isPriorityWinner && (
+                    <div className="absolute -top-2.5 left-4 rounded bg-[#002c5f] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
+                      Top Match
+                    </div>
+                  )}
+
+                  <div>
                     <img
                       src={v.image}
                       alt={`${v.year} ${v.make} ${v.model}`}
-                      className="aspect-[4/3] w-full rounded-2xl object-cover"
+                      className="aspect-[4/3] w-full rounded-xl object-cover"
                     />
-                    <p className="mt-3 text-xs font-bold uppercase tracking-widest text-[#002c5f]">
-                      {v.year} · {v.make}
-                    </p>
-                    <p className="text-base font-bold leading-tight text-slate-900">
-                      {v.model} <span className="font-normal text-slate-500">{v.trim}</span>
-                    </p>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {COMPARE_ROWS.map((row) => (
-                <tr key={row.label} className="border-t border-slate-100">
-                  <th className="p-2 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                    {row.label}
-                  </th>
-                  {list.map((v) => (
-                    <td key={v.id} className="p-2 font-semibold text-slate-800">
-                      {row.render(v)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-              <tr className="border-t border-slate-100">
-                <th className="p-2" />
-                {list.map((v) => (
-                  <td key={v.id} className="p-2">
+
+                    <div className="mt-3">
+                      <span className="inline-block rounded border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-700 tracking-wide">
+                        {persona.role}
+                      </span>
+                      <p className="mt-1.5 text-xs font-bold uppercase tracking-widest text-[#002c5f]">
+                        {v.year} · {v.make}
+                      </p>
+                      <h4 className="text-base font-bold text-slate-900 leading-snug">
+                        {v.model} <span className="font-normal text-slate-500">{v.trim}</span>
+                      </h4>
+                      <p className="mt-1 text-lg font-extrabold text-slate-900">
+                        ${v.price.toLocaleString()}
+                      </p>
+                    </div>
+
+                    {/* Highlights bullets */}
+                    <ul className="mt-3 space-y-1.5 border-t border-slate-100 pt-3 text-xs text-slate-600">
+                      {persona.bullets.map((b, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Verdict description */}
+                    <div className="mt-3 rounded-lg border border-slate-100 bg-slate-50/70 p-2.5 text-xs text-slate-600 leading-relaxed">
+                      <span className="font-semibold text-slate-800">Recommendation: </span>
+                      {persona.whoShouldBuy}
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="mt-4 flex flex-col gap-2 pt-2">
+                    {onBookTestDrive ? (
+                      <button
+                        onClick={() => onBookTestDrive(v)}
+                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#002c5f] py-2 px-3 text-xs font-bold text-white shadow transition hover:bg-[#001f44]"
+                      >
+                        Schedule Test Drive <ChevronRight className="h-3.5 w-3.5" />
+                      </button>
+                    ) : null}
                     <Link
                       to="/vehicle/$id"
                       params={{ id: v.id }}
-                      className="inline-flex items-center gap-1 rounded-full bg-[#002c5f] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#001f44]"
+                      className="inline-flex w-full items-center justify-center gap-1 rounded-xl border border-slate-200 bg-white py-1.5 px-3 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
                     >
-                      View details <ChevronRight className="h-3.5 w-3.5" />
+                      View vehicle page
                     </Link>
-                  </td>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Detailed Side-by-Side Spec Table */}
+        <div className="mb-8">
+          <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+            Detailed Specification Breakdown
+          </h3>
+          <div className="overflow-x-auto rounded-2xl border border-slate-200">
+            <table className="w-full min-w-[560px] border-collapse text-sm">
+              <thead>
+                <tr className="bg-slate-50 text-left">
+                  <th className="w-36 p-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Feature / Spec
+                  </th>
+                  {list.map((v) => (
+                    <th key={v.id} className="p-3 text-left">
+                      <p className="text-xs font-bold uppercase tracking-widest text-[#002c5f]">
+                        {v.year} {v.make}
+                      </p>
+                      <p className="text-sm font-bold text-slate-900">
+                        {v.model} <span className="font-normal text-slate-500">{v.trim}</span>
+                      </p>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {COMPARE_ROWS.map((row) => (
+                  <tr key={row.label} className="hover:bg-slate-50/60 transition-colors">
+                    <th className="p-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                      {row.label}
+                    </th>
+                    {list.map((v) => (
+                      <td key={v.id} className="p-3 font-semibold text-slate-800">
+                        {row.render(v, list)}
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Consultation & Dual Test Drive Banner */}
+        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h4 className="text-sm font-bold text-slate-900">
+                Back-to-Back Test Drive Option
+              </h4>
+              <p className="mt-1 text-xs text-slate-600 sm:max-w-xl">
+                Undecided between two models? AM Ford will prepare both vehicles side-by-side for you to drive consecutively on the same Cranbrook route.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <a
+                href="tel:2504266211"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50"
+              >
+                <Phone className="h-3.5 w-3.5 text-[#002c5f]" /> (250) 426-6211
+              </a>
+            </div>
+          </div>
         </div>
       </motion.div>
     </div>

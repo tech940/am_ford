@@ -176,38 +176,51 @@ export const Route = createRootRoute({
     links: [
       {
         rel: "icon",
-        type: "image/png",
-        href: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQliImsHZ3as1_rCrG6O6KHQSFLPgBkVthMNugVUvEw4Wf65GWivtz41Hg&s=10",
-      },
-      {
-        rel: "shortcut icon",
-        href: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQliImsHZ3as1_rCrG6O6KHQSFLPgBkVthMNugVUvEw4Wf65GWivtz41Hg&s=10",
+        type: "image/svg+xml",
+        href: "/favicon.svg",
       },
       {
         rel: "apple-touch-icon",
-        href: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQliImsHZ3as1_rCrG6O6KHQSFLPgBkVthMNugVUvEw4Wf65GWivtz41Hg&s=10",
+        href: "/favicon.svg",
+      },
+      // Responsive preload for Hero LCP: mobile loads compact 640w variant (~14KB), desktop loads 1280w variant
+      {
+        rel: "preload",
+        as: "image",
+        href: IMAGES["hero-truck"]?.variants[1]?.avif || "",
+        type: "image/avif",
+        media: "(max-width: 640px)",
+        fetchPriority: "high",
       },
       {
         rel: "preload",
         as: "image",
         href: IMAGES["hero-truck"]?.variants[3]?.avif || "",
         type: "image/avif",
+        media: "(min-width: 641px)",
         fetchPriority: "high",
       },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      // Non-render-blocking font loading: preload font stylesheet
       {
         rel: "preload",
         as: "style",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
       },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
-      },
     ],
     scripts: [
+      {
+        children: `
+          (function() {
+            var f = document.createElement('link');
+            f.rel = 'stylesheet';
+            f.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap';
+            document.head.appendChild(f);
+          })();
+        `,
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify(autoDealerSchema),
