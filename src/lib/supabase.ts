@@ -149,7 +149,9 @@ export async function fetchVehicles(): Promise<Vehicle[]> {
       return vehicles;
     }
 
-    return data.map(mapInventoryRowToVehicle);
+    return data
+      .map(mapInventoryRowToVehicle)
+      .filter((v) => (v.make || "").toLowerCase() === "ford");
   } catch (err) {
     console.error("Failed to fetch vehicles from Supabase:", err);
     return vehicles;

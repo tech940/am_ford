@@ -302,7 +302,7 @@ export function deriveVehicleBadges(v: Partial<Vehicle>): string[] {
  */
 export const vehicles: Vehicle[] = (
   vehicleInventory && Array.isArray(vehicleInventory) && vehicleInventory.length > 0
-    ? (vehicleInventory as unknown as Vehicle[])
+    ? (vehicleInventory as unknown as Vehicle[]).filter((v) => (v.make || "").toLowerCase() === "ford")
     : fallbackVehicles
 ).map((v) => {
   const imagesList = (
