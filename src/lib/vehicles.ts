@@ -304,11 +304,30 @@ export const vehicles: Vehicle[] = (
   vehicleInventory && Array.isArray(vehicleInventory) && vehicleInventory.length > 0
     ? (vehicleInventory as unknown as Vehicle[])
     : fallbackVehicles
-).map((v) => ({
-  ...v,
-  inTransit: isInTransit(v),
-  badges: deriveVehicleBadges(v),
-}));
+).map((v) => {
+  const imagesList = (
+    Array.isArray(v.images) && v.images.length > 0
+      ? v.images
+      : typeof v.image === "string"
+        ? v.image.split(",")
+        : []
+  )
+    .map((s) => (typeof s === "string" ? s.trim() : ""))
+    .filter((s) => s.startsWith("http") || s.startsWith("/"));
+
+  const primaryImage =
+    typeof v.image === "string" && v.image.includes(",")
+      ? v.image.split(",")[0].trim()
+      : v.image || imagesList[0] || "";
+
+  return {
+    ...v,
+    image: primaryImage,
+    images: imagesList.length > 0 ? imagesList : primaryImage ? [primaryImage] : [],
+    inTransit: isInTransit(v),
+    badges: deriveVehicleBadges(v),
+  };
+});
 
 /**
  * Conditions a URL is allowed to filter by, and the single source of truth for that list.
