@@ -69,16 +69,6 @@ function AdminPage() {
     setMounted(true);
   }, []);
 
-  // Prevent SSR from rendering the full admin UI (avoids hydration mismatch
-  // that causes broken vehicle thumbnails to flash on the leads tab)
-  if (!mounted) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-900">
-        <div className="text-sm font-semibold text-slate-400">Loading admin…</div>
-      </div>
-    );
-  }
-
   // Fetch leads on authenticated load
   const loadLeads = async () => {
     setLoading(true);
@@ -199,6 +189,15 @@ function AdminPage() {
   const newLeadsCount = useMemo(() => leads.filter((l) => l.status === "New").length, [leads]);
   const contactedCount = useMemo(() => leads.filter((l) => l.status === "Contacted").length, [leads]);
   const scheduledCount = useMemo(() => leads.filter((l) => l.status === "Scheduled").length, [leads]);
+
+  // Prevent SSR from rendering the full admin UI before mounting
+  if (!mounted) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-900">
+        <div className="text-sm font-semibold text-slate-400">Loading admin…</div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
