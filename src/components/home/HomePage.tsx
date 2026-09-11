@@ -48,8 +48,6 @@ const CursorGlow = lazy(() =>
  * off-screen images without removing them from the HTML document.
  */
 export function HomePage() {
-  const [offerOpen, setOfferOpen] = useState(false);
-
   return (
     <div className="relative min-h-screen bg-slate-50 text-slate-900 antialiased selection:bg-[#002c5f] selection:text-white">
       <Suspense fallback={null}>
