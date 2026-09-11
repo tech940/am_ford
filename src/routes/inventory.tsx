@@ -152,12 +152,10 @@ const PRICE_CAP = 120000;
 const MILES_FLOOR = 0;
 const MILES_CAP = 300000;
 /**
- * Vehicles per page. At 9, today's 6-vehicle lot is a single page, so the pager below does
- * not render at all, which is deliberate rather than a bug. Everything downstream (the "Showing"
- * counter, the pager, and the ItemList slice in head()) reads this constant and derives
- * totalPages from it, so nothing has to be touched when the lot outgrows one page.
+ * Vehicles per page. Set to 12 so that 2-column (sm), 3-column (lg/xl), and 4-column grids
+ * are always perfectly balanced without orphan/dangling cards on full pages.
  */
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 12;
 const COMPARE_MAX = 3;
 
 /**
