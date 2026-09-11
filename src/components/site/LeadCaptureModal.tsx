@@ -124,7 +124,7 @@ export function LeadCaptureModal({
           initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
-          className="relative z-10 w-full max-w-xl overflow-hidden rounded-3xl bg-card shadow-2xl ring-1 ring-border my-8"
+          className="relative z-10 w-full max-w-xl max-h-[calc(100dvh-1.5rem)] overflow-y-auto rounded-3xl bg-card shadow-2xl ring-1 ring-border my-auto"
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border bg-surface/80 px-6 py-5">

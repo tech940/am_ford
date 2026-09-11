@@ -143,7 +143,7 @@ export function QuickEnquiryModal({
         initial={{ opacity: 0, y: 28, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: "spring", stiffness: 340, damping: 28 }}
-        className="relative z-10 my-8 w-full max-w-md rounded-3xl bg-white shadow-2xl ring-1 ring-slate-200"
+        className="relative z-10 my-auto w-full max-w-md max-h-[calc(100dvh-1.5rem)] overflow-y-auto rounded-3xl bg-white shadow-2xl ring-1 ring-slate-200"
       >
         {/* Header */}
         <div className="flex items-start justify-between gap-3 px-5 pb-0 pt-5 sm:px-6">

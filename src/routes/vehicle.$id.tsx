@@ -51,6 +51,7 @@ import {
   DELIVERY_CLAIM,
   PRICE_BANDS,
   vehicleSlug,
+  isInTransit,
   type Vehicle,
 } from "@/lib/vehicles";
 import { FORD_MODELS, getRelatedReading } from "@/lib/fordModels";
@@ -883,7 +884,7 @@ function VehicleDetail() {
           <div className="lg:col-span-5 min-w-0 flex flex-col h-full">
             <div className="rounded-lg bg-white p-4 sm:p-6 w-full max-w-full overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between h-full">
                 <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  {v.condition} · In Stock &amp; Lot Ready
+                  {v.condition} · {isInTransit(v) ? "In Transit (Expected Soon)" : "In Stock & Lot Ready"}
                 </p>
                 {/* Full year + make + model + trim: this is the page's target query. */}
                 <h1 className="display mt-1 text-balance text-xl sm:text-2xl lg:text-3xl font-black text-ink leading-tight">
@@ -909,7 +910,7 @@ function VehicleDetail() {
                 <div className="mt-3.5 sm:mt-5 grid grid-cols-2 gap-1.5 sm:gap-2 text-xs sm:text-sm">
                   <Spec
                     icon={Gauge}
-                    label={v.miles < 50 ? "New" : `${v.miles.toLocaleString()} mi`}
+                    label={v.miles < 50 ? "Delivery miles" : `${v.miles.toLocaleString()} mi`}
                   />
                   <Spec icon={Fuel} label={v.fuel} />
                   <Spec icon={Cog} label={v.drivetrain} />
@@ -917,18 +918,30 @@ function VehicleDetail() {
                 </div>
 
                 {/* Status indicator badge */}
-                <div className="mt-3 sm:mt-4 flex items-center justify-between rounded-lg bg-emerald-500/10 px-2.5 py-1.5 ring-1 ring-emerald-500/20">
-                  <span className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-semibold text-emerald-950">
-                    <span className="relative flex h-2 w-2">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                {isInTransit(v) ? (
+                  <div className="mt-3 sm:mt-4 flex items-center justify-between rounded-lg bg-amber-500/10 px-2.5 py-2 ring-1 ring-amber-500/30">
+                    <span className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-amber-950">
+                      <Truck className="h-4 w-4 text-amber-600 animate-pulse" />
+                      In Transit · Factory Scheduled Delivery
                     </span>
-                    1 in stock · Available for delivery
-                  </span>
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-700">
-                    Lot Ready
-                  </span>
-                </div>
+                    <span className="rounded bg-amber-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-slate-950 shadow-xs">
+                      Reserve Today
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-3 sm:mt-4 flex items-center justify-between rounded-lg bg-emerald-500/10 px-2.5 py-1.5 ring-1 ring-emerald-500/20">
+                    <span className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-semibold text-emerald-950">
+                      <span className="relative flex h-2 w-2">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                      </span>
+                      1 in stock · Available for delivery
+                    </span>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-700">
+                      Lot Ready
+                    </span>
+                  </div>
+                )}
 
                 {/* High-converting action hierarchy */}
                 <div className="mt-3.5 sm:mt-4 space-y-2">

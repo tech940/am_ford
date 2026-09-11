@@ -246,8 +246,7 @@ export function TradeValuatorModal(props: {
         initial={{ opacity: 0, scale: 0.92, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 320, damping: 28 }}
-        className="relative z-10 my-8 w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl
-          ring-1 ring-slate-200"
+        className="relative z-10 my-auto w-full max-w-md max-h-[calc(100dvh-1.5rem)] overflow-y-auto rounded-3xl bg-white shadow-2xl ring-1 ring-slate-200"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">

@@ -13,7 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { type Vehicle, vehicleSlug } from "@/lib/vehicles";
+import { type Vehicle, vehicleSlug, isInTransit } from "@/lib/vehicles";
 import { estMonthlyPayment } from "@/lib/leads";
 import { GARAGE_EVENT, isSaved, toggleSaved } from "@/lib/garage";
 
@@ -91,8 +91,13 @@ export function VehicleCard({
             />
           </Link>
 
-          {/* Condition & Type Badge (6px radius) */}
-          <div className="absolute left-2.5 top-2.5 flex items-center gap-1.5 z-10 pointer-events-none">
+          {/* Condition, In Transit & Type Badge (6px radius) */}
+          <div className="absolute left-2.5 top-2.5 flex flex-wrap items-center gap-1.5 z-10 pointer-events-none">
+            {isInTransit(v) && (
+              <span className="rounded-md bg-amber-500 px-2 py-0.5 text-[10.5px] font-black uppercase tracking-wider text-slate-950 shadow-xs">
+                In Transit
+              </span>
+            )}
             <span className="rounded-md bg-[#002c5f] px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wider text-white shadow-xs">
               {v.condition}
             </span>

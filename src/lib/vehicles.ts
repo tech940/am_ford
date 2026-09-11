@@ -27,6 +27,7 @@ export type Vehicle = {
   images?: string[];
   badges?: string[];
   features: string[];
+  inTransit?: boolean;
   /**
    * Required on every vehicle detail page per the SEO brief (§16 Inventory Pages).
    * Leave undefined until the real value is known: the UI shows "Contact us for the VIN"
@@ -229,11 +230,29 @@ export const fallbackVehicles: Vehicle[] = [
 ];
 
 /**
+ * Determines whether a vehicle is currently in transit to the dealership lot.
+ */
+export function isInTransit(v: Partial<Vehicle>): boolean {
+  if (v.inTransit === true) return true;
+  if (v.badges && v.badges.includes("In Transit")) return true;
+  if (v.sellerNotes && /\b(in transit|in-transit|factory order|scheduled for delivery|on order)\b/i.test(v.sellerNotes)) {
+    return true;
+  }
+  if (v.year && v.year >= 2026 && v.miles != null && v.miles <= 5 && v.condition === "New") {
+    return true;
+  }
+  return false;
+}
+
+/**
  * Automatically derives relevant badges based on vehicle attributes, trim, powertrain, and equipment.
  */
 export function deriveVehicleBadges(v: Partial<Vehicle>): string[] {
   const badges = new Set<string>(v.badges || []);
 
+  if (isInTransit(v)) {
+    badges.add("In Transit");
+  }
   if (v.year && v.year >= 2026 && v.condition === "New") {
     badges.add("New Arrival");
   }
@@ -287,6 +306,7 @@ export const vehicles: Vehicle[] = (
     : fallbackVehicles
 ).map((v) => ({
   ...v,
+  inTransit: isInTransit(v),
   badges: deriveVehicleBadges(v),
 }));
 
@@ -303,6 +323,7 @@ export const FILTER_OPTIONS = {
   transmissions: ["All", "Automatic", "Manual"] as const,
   years: ["All", 2026, 2025, 2024, 2023, 2022, 2021, 2020] as const,
   badges: [
+    "In Transit",
     "New Arrival",
     "Best Seller",
     "Performance",
