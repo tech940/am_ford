@@ -2,6 +2,7 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 
 import { IMAGES } from "@/assets/images.gen";
 import appCss from "../styles.css?url";
+import { FloatingOfferButton } from "@/components/popups/FloatingOfferButton";
 
 function NotFoundComponent() {
   return (
@@ -255,5 +256,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <FloatingOfferButton />
+    </>
+  );
 }

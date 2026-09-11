@@ -119,7 +119,7 @@ export function mapInventoryRowToVehicle(r: InventoryRawRow): Vehicle {
     horsepower: type === "Truck" ? 400 : 300,
     image:
       photos[0] ||
-      "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80",
+      "https://assets.cai-media-management.com/resize/1024x1024/common-vehicle-media/303504c6-8b4d-463b-9327-a47a0c975418.jpg",
     images: photos,
     features: Array.isArray(d.Features) ? d.Features : [],
     vin: r.vin || d.VIN,

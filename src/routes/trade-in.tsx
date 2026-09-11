@@ -80,7 +80,7 @@ export const Route = createFileRoute("/trade-in")({
       {
         property: "og:image",
         content:
-          "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80",
+          "https://assets.cai-media-management.com/resize/1024x1024/common-vehicle-media/303504c6-8b4d-463b-9327-a47a0c975418.jpg",
       },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
@@ -92,7 +92,7 @@ export const Route = createFileRoute("/trade-in")({
       {
         name: "twitter:image",
         content:
-          "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80",
+          "https://assets.cai-media-management.com/resize/1024x1024/common-vehicle-media/303504c6-8b4d-463b-9327-a47a0c975418.jpg",
       },
     ],
     links: [{ rel: "canonical", href: CANONICAL }],

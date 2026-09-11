@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
       url: CANONICAL,
       logo: "https://amford.com/am-ford-logo.png",
       image:
-        "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80",
+        "https://assets.cai-media-management.com/resize/1024x1024/common-vehicle-media/303504c6-8b4d-463b-9327-a47a0c975418.jpg",
       description: `New and certified Ford dealership in Ashtabula County, OH serving Ashtabula, Geneva, Conneaut, and Northeast Ohio.`,
       telephone: "+14405537072",
       email: "sales@amford.com",
@@ -59,7 +59,7 @@ export const Route = createFileRoute("/")({
     };
 
     const ogImage =
-      "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80";
+      "https://assets.cai-media-management.com/resize/1024x1024/common-vehicle-media/303504c6-8b4d-463b-9327-a47a0c975418.jpg";
 
     return {
       meta: [
