@@ -223,30 +223,30 @@ export function ExtraordinaryCarousel() {
         </div>
 
         {/* Carousel Navigation & Dots */}
-        <div className="mt-8 flex flex-col items-center gap-4">
-          <div className="flex items-center gap-3">
+        <div className="mt-6 sm:mt-8 flex flex-col items-center gap-3 sm:gap-4 px-4 w-full">
+          <div className="flex items-center justify-center gap-2 sm:gap-3.5 max-w-full">
             <button
               onClick={handlePrev}
-              className="grid h-11 w-11 place-items-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-md transition hover:border-[#002c5f] hover:text-[#002c5f] active:scale-90 cursor-pointer"
+              className="grid h-9 w-9 sm:h-10 sm:w-10 shrink-0 place-items-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-md transition hover:border-[#002c5f] hover:text-[#002c5f] active:scale-90 cursor-pointer"
               aria-label="Previous Slide"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
 
-            {/* Indicator Dots */}
-            <div className="flex items-center gap-0.5 px-1">
+            {/* Compact Indicator Dots */}
+            <div className="flex items-center gap-1 sm:gap-1.5 px-1 overflow-x-hidden">
               {collection.map((_, dotIdx) => (
                 <button
                   key={dotIdx}
                   onClick={() => setActiveIndex(dotIdx)}
-                  className="flex h-11 w-11 items-center justify-center rounded-full p-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#002c5f]/30"
+                  className="flex h-7 w-5 sm:h-8 sm:w-6 items-center justify-center rounded-full p-0.5 cursor-pointer focus:outline-none"
                   aria-label={`Go to slide ${dotIdx + 1}`}
                 >
                   <span
-                    className={`block h-2.5 rounded-full transition-all ${
+                    className={`block h-2 sm:h-2.5 rounded-full transition-all duration-300 ${
                       activeIndex === dotIdx
-                        ? "w-8 bg-[#002c5f]"
-                        : "w-2.5 bg-slate-400 hover:bg-slate-600"
+                        ? "w-5 sm:w-7 bg-[#002c5f]"
+                        : "w-2 sm:w-2.5 bg-slate-300 hover:bg-slate-400"
                     }`}
                   />
                 </button>
@@ -255,10 +255,10 @@ export function ExtraordinaryCarousel() {
 
             <button
               onClick={handleNext}
-              className="grid h-11 w-11 place-items-center rounded-full bg-[#002c5f] text-white shadow-md transition hover:bg-[#001f44] active:scale-90 cursor-pointer"
+              className="grid h-9 w-9 sm:h-10 sm:w-10 shrink-0 place-items-center rounded-full bg-[#002c5f] text-white shadow-md transition hover:bg-[#001f44] active:scale-90 cursor-pointer"
               aria-label="Next Slide"
             >
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
           </div>
 

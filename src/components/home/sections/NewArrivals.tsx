@@ -118,7 +118,7 @@ export function NewArrivals() {
             <button
               onClick={() => scroll("left")}
               aria-label="Previous vehicles"
-              className="absolute -left-3 sm:-left-5 top-[38%] z-20 grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-full border border-slate-300 bg-white/95 text-slate-700 shadow-lg backdrop-blur-sm transition hover:bg-white hover:border-[#002c5f] hover:text-[#002c5f] active:scale-90 cursor-pointer"
+              className="absolute left-1 sm:-left-5 top-[38%] z-20 grid h-9 w-9 sm:h-11 sm:w-11 place-items-center rounded-full border border-slate-300 bg-white/95 text-slate-700 shadow-lg backdrop-blur-sm transition hover:bg-white hover:border-[#002c5f] hover:text-[#002c5f] active:scale-90 cursor-pointer"
             >
               <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
@@ -129,7 +129,7 @@ export function NewArrivals() {
             <button
               onClick={() => scroll("right")}
               aria-label="Next vehicles"
-              className="absolute -right-3 sm:-right-5 top-[38%] z-20 grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-full border border-slate-300 bg-white/95 text-slate-700 shadow-lg backdrop-blur-sm transition hover:bg-white hover:border-[#002c5f] hover:text-[#002c5f] active:scale-90 cursor-pointer"
+              className="absolute right-1 sm:-right-5 top-[38%] z-20 grid h-9 w-9 sm:h-11 sm:w-11 place-items-center rounded-full border border-slate-300 bg-white/95 text-slate-700 shadow-lg backdrop-blur-sm transition hover:bg-white hover:border-[#002c5f] hover:text-[#002c5f] active:scale-90 cursor-pointer"
             >
               <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
