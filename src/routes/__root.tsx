@@ -95,7 +95,7 @@ const organizationSchema = {
   name: "AM Ford",
   alternateName: "Nassief Ford",
   url: "https://amford.com",
-  logo: "https://amford.com/og-default.jpg",
+  logo: "https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/Am-ford.png",
   telephone: "+14405537072",
   address: {
     "@type": "PostalAddress",
@@ -164,7 +164,11 @@ export const Route = createRootRoute({
       // Site-wide social card. Routes with a better image (vehicle pages) override
       // it; without this every other page shared to Facebook or LinkedIn renders
       // as a bare text link, which measurably suppresses click-through.
-      { property: "og:image", content: "https://amford.com/og-default.jpg" },
+      {
+        property: "og:image",
+        content:
+          "https://assets.cai-media-management.com/resize/1200x630/common-vehicle-media/303504c6-8b4d-463b-9327-a47a0c975418.jpg",
+      },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       {
@@ -172,7 +176,11 @@ export const Route = createRootRoute({
         content: "AM Ford dealership in Jefferson, Ohio",
       },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://amford.com/og-default.jpg" },
+      {
+        name: "twitter:image",
+        content:
+          "https://assets.cai-media-management.com/resize/1200x630/common-vehicle-media/303504c6-8b4d-463b-9327-a47a0c975418.jpg",
+      },
     ],
     links: [
       {
