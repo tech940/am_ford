@@ -16,8 +16,8 @@ export const Route = createFileRoute("/")({
       logo: "https://amford.com/am-ford-logo.png",
       image:
         "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80",
-      description: `New and certified Ford dealership in ${dealerInfo.city}, OH serving Ashtabula County, Geneva, Conneaut, and Northeast Ohio.`,
-      telephone: "+14409982151",
+      description: `New and certified Ford dealership in Ashtabula County, OH serving Ashtabula, Geneva, Conneaut, and Northeast Ohio.`,
+      telephone: "+14405537072",
       email: "sales@amford.com",
       address: {
         "@type": "PostalAddress",
@@ -48,8 +48,8 @@ export const Route = createFileRoute("/")({
       ],
       priceRange: "$$$$",
       areaServed: [
-        "Jefferson, OH",
         "Ashtabula County, OH",
+        "Ashtabula, OH",
         "Geneva, OH",
         "Conneaut, OH",
         "Austinburg, OH",
@@ -63,28 +63,28 @@ export const Route = createFileRoute("/")({
 
     return {
       meta: [
-        { title: `New and Certified Ford Dealer in ${dealerInfo.city} | AM Ford` },
+        { title: `Ford Dealer in Ashtabula County, OH | AM Ford` },
         {
           name: "description",
-          content: `Shop new and certified Ford trucks, SUVs, and EVs at AM Ford in ${dealerInfo.city}. Browse inventory, financing, and service for Ashtabula County drivers.`,
+          content: `Shop new and certified Ford trucks, SUVs, and EVs at AM Ford, your dedicated Ford dealer in Ashtabula County, OH. Browse inventory, financing, and certified Ford service.`,
         },
         {
           name: "keywords",
           content:
-            "AM Ford, Ford dealer Jefferson Ohio, Ford dealership Jefferson OH, certified pre-owned Ford Jefferson Ohio, Ford dealer Ashtabula County, Ford dealer Northeast Ohio, new Ford F-150, Ford Mustang, Ford Bronco, Ford Explorer",
+            "Ford dealer Ashtabula County, Ford dealership Ashtabula County OH, AM Ford, certified pre-owned Ford Ashtabula County, used trucks Ashtabula County, Ford dealer Northeast Ohio, new Ford F-150, Ford Mustang, Ford Bronco, Ford Explorer",
         },
-        // Local geo tags for Ashtabula County & Northeast Ohio
+        // Local geo tags for Ashtabula County
         { name: "geo.region", content: "US-OH" },
-        { name: "geo.placename", content: dealerInfo.city },
+        { name: "geo.placename", content: "Ashtabula County, OH" },
         { name: "geo.position", content: "41.7389;-80.7684" },
         { name: "ICBM", content: "41.7389, -80.7684" },
         {
           property: "og:title",
-          content: `New and Certified Ford Dealer in ${dealerInfo.city} | AM Ford`,
+          content: `Ford Dealer in Ashtabula County, OH | AM Ford`,
         },
         {
           property: "og:description",
-          content: `Find your next Ford truck, SUV, or EV with flexible financing at AM Ford in ${dealerInfo.city}. ${DELIVERY_CLAIM}`,
+          content: `Find your next Ford truck, SUV, or EV with flexible financing at AM Ford in Ashtabula County, OH. ${DELIVERY_CLAIM}`,
         },
         { property: "og:type", content: "website" },
         { property: "og:url", content: CANONICAL },
@@ -93,7 +93,7 @@ export const Route = createFileRoute("/")({
         { property: "og:image:height", content: "630" },
         {
           property: "og:image:alt",
-          content: `AM Ford Dealership showroom and lot in ${dealerInfo.city}, OH`,
+          content: `AM Ford Dealership showroom and lot in Ashtabula County, OH`,
         },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImage },

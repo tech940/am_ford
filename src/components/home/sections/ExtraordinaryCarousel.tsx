@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { vehicles, type Vehicle } from "@/lib/vehicles";
+import { vehicles, type Vehicle, vehicleSlug } from "@/lib/vehicles";
 
 function getTagForVehicle(v: Vehicle): string {
   if (v.fuel === "Electric") return "ALL-ELECTRIC";
@@ -106,7 +106,7 @@ export function ExtraordinaryCarousel() {
         </h2>
 
         <p className="mx-auto mt-4 max-w-xl text-sm font-semibold leading-relaxed text-slate-600 sm:text-base">
-          From high-performance trucks to trail-ready 4x4 SUVs — discover Northeast Ohio's finest Ford
+          From high-performance trucks to trail-ready 4x4 SUVs — discover Ashtabula County's finest Ford
           vehicle collection standing live on the lot today at AM Ford.
         </p>
 
@@ -132,7 +132,7 @@ export function ExtraordinaryCarousel() {
                     if (isActive) {
                       navigate({
                         to: "/vehicle/$id",
-                        params: { id: item.vehicle.id },
+                        params: { id: vehicleSlug(item.vehicle) },
                       });
                     } else {
                       setActiveIndex(idx);
@@ -205,7 +205,7 @@ export function ExtraordinaryCarousel() {
                             e.stopPropagation();
                             navigate({
                               to: "/vehicle/$id",
-                              params: { id: item.vehicle.id },
+                              params: { id: vehicleSlug(item.vehicle) },
                             });
                           }}
                           className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-white px-4 py-2 text-xs font-black uppercase tracking-wider text-[#002c5f] shadow-lg hover:bg-slate-100 transition active:scale-95 cursor-pointer"

@@ -15,7 +15,7 @@ import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { getFordModel, getRelatedReading, type FordModel } from "@/lib/fordModels";
-import { dealerInfo, DELIVERY_CLAIM, getVehicle, type Vehicle } from "@/lib/vehicles";
+import { dealerInfo, DELIVERY_CLAIM, getVehicle, type Vehicle, vehicleSlug } from "@/lib/vehicles";
 import { getServiceArea, SERVICE_AREAS, type ServiceArea } from "@/lib/serviceAreas";
 import type { InventorySearch } from "./inventory";
 
@@ -90,12 +90,12 @@ export const Route = createFileRoute("/ford/$model")({
     if (!model) return { meta: [{ title: "Ford Models | AM Ford" }] };
 
     const canonical = `${SITE_ORIGIN}/ford/${model.slug}`;
-    const title = `${model.name} for Sale in ${dealerInfo.city} | AM Ford`;
+    const title = `${model.name} for Sale in Ashtabula County, OH | AM Ford`;
     // Leads with the tagline because that is the only part of this string that differs
     // between the six model pages. DELIVERY_CLAIM is deliberately not concatenated here:
     // it is 84 characters of boilerplate that pushed every description past 240, well over
     // the ~155 characters a result actually shows. It still appears verbatim on the page.
-    const description = `${model.tagline} ${model.name} for sale at AM Ford in ${dealerInfo.city}, serving Ashtabula County.`;
+    const description = `${model.tagline} ${model.name} for sale in Ashtabula County at AM Ford (${dealerInfo.city}).`;
 
     // Built from the same model.faqs the page renders, so the visible copy and the
     // structured data can never drift apart.
@@ -120,19 +120,19 @@ export const Route = createFileRoute("/ford/$model")({
         {
           name: "keywords",
           content: [
-            `${model.name} Jefferson Ohio`,
             `${model.name} Ashtabula County`,
+            `Ford ${model.name} Ashtabula County OH`,
+            `${model.name} Jefferson Ohio`,
+            `${model.name} for sale Ashtabula County`,
             `new ${model.name} Northeast Ohio`,
-            `${model.name} for sale ${dealerInfo.city}`,
             `${model.name} dealer near Geneva Ohio`,
             `${model.name} dealer near Conneaut Ohio`,
-            `${model.name} dealer near Erie PA`,
-            "Ford dealer Jefferson Ohio",
+            "Ford dealer Ashtabula County",
           ].join(", "),
         },
         // Local geo tags
         { name: "geo.region", content: "US-OH" },
-        { name: "geo.placename", content: dealerInfo.city },
+        { name: "geo.placename", content: "Ashtabula County, OH" },
         { name: "geo.position", content: "41.7389;-80.7684" },
         { name: "ICBM", content: "41.7389, -80.7684" },
         { property: "og:title", content: title },
@@ -179,7 +179,7 @@ function FordModelPage() {
         <div className="relative mx-auto max-w-7xl px-6">
           <SectionTag>{model.bodyStyle === "EV" ? "Electric" : model.bodyStyle} Lineup</SectionTag>
           <h1 className="display mt-3 max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
-            {model.name} for Sale in {dealerInfo.city}
+            {model.name} for Sale in Ashtabula County, OH
           </h1>
           <p className="mt-4 max-w-2xl text-base font-semibold text-ink sm:text-lg">
             {model.tagline}
@@ -283,7 +283,7 @@ function FordModelPage() {
                 <Link
                   key={v.id}
                   to="/vehicle/$id"
-                  params={{ id: v.id }}
+                  params={{ id: vehicleSlug(v) }}
                   className="group flex flex-col overflow-hidden rounded-3xl bg-card ring-1 ring-border transition hover:ring-[#002c5f]/40"
                 >
                   <img

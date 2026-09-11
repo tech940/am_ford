@@ -66,22 +66,27 @@ const SERVICE_SCHEMA = {
 export const Route = createFileRoute("/commercial")({
   head: () => ({
     meta: [
-      { title: "Commercial and Work Vehicles | AM Ford Jefferson OH" },
+      { title: "Commercial Trucks & Work Vans in Ashtabula County, OH | AM Ford" },
       {
         name: "description",
         content:
-          "AM Ford in Jefferson, Ohio orders Ford Transit vans, Super Duty trucks, chassis cab, and E-Series work vehicles, with upfit coordination and service.",
+          "AM Ford in Ashtabula County (Jefferson, OH) orders Ford Transit vans, Super Duty trucks, chassis cabs, and commercial fleet vehicles with custom upfit coordination.",
       },
       {
         name: "keywords",
         content:
-          "commercial Ford dealer Ohio, Ford Transit van Jefferson Ohio, Super Duty work truck Ashtabula County, chassis cab dealer Northeast Ohio, fleet vehicles Ohio, Ford E-Series, work van upfitting Ohio, contractor truck dealer",
+          "commercial Ford dealer Ashtabula County, Super Duty work truck Ashtabula County, Ford Transit van Ashtabula County OH, fleet vehicles Ashtabula County, chassis cab dealer Northeast Ohio, commercial Ford dealer Ohio, contractor truck dealer",
       },
-      { property: "og:title", content: "Commercial and Work Vehicles at AM Ford" },
+      // Local geo tags
+      { name: "geo.region", content: "US-OH" },
+      { name: "geo.placename", content: "Ashtabula County, OH" },
+      { name: "geo.position", content: "41.7389;-80.7684" },
+      { name: "ICBM", content: "41.7389, -80.7684" },
+      { property: "og:title", content: "Commercial Trucks & Work Vans | AM Ford Ashtabula County, OH" },
       {
         property: "og:description",
         content:
-          "Transit vans, Super Duty, chassis cab, and E-Series, ordered to your spec and upfitted for the work you actually do.",
+          "Transit vans, Super Duty, chassis cab, and E-Series in Ashtabula County, ordered to your spec and upfitted for the work you actually do.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: CANONICAL },

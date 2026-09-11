@@ -12,7 +12,7 @@ const REASONS: { title: string; copy: string; image: string; alt: string }[] = [
     title: "Effortless handover",
     copy: "Paperwork prepared before you arrive, so your visit stays short.",
     image: "am-ford-hero",
-    alt: `The AM Ford showroom and front line in ${dealerInfo.locality}, Ohio`,
+    alt: "The AM Ford showroom and front line in Ashtabula County, Ohio",
   },
   {
     title: "Driven by specialists",

@@ -89,7 +89,7 @@ const NEXT_STEPS: NextStep[] = [
   {
     label: "Schedule Ford Service",
     to: "/service",
-    copy: `Book maintenance, diagnostics, and repairs with Ford-trained technicians at our ${dealerInfo.locality} shop.`,
+    copy: "Book maintenance, diagnostics, and repairs with Ford-trained technicians at our Ashtabula County service shop.",
     Icon: Wrench,
   },
   {
@@ -239,7 +239,7 @@ export function InventoryInterlinks({
             <div>
               <BlockHeading>Shopping from outside Ashtabula County?</BlockHeading>
               <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
-                Buyers drive to our {dealerInfo.locality} store from {NEARBY_TOWNS_TEXT}, along with
+                Buyers visit our dealership from {NEARBY_TOWNS_TEXT}, along with
                 the rest of Northeast Ohio and Northwestern Pennsylvania. If the distance is the
                 only thing standing between you and the right vehicle, it does not have to be.{" "}
                 {DELIVERY_CLAIM}

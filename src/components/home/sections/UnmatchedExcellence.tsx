@@ -11,7 +11,7 @@ interface UnmatchedExcellenceProps {
 export function UnmatchedExcellence({
   image = "https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/am-ford-banner.webp",
   title = "Family-Owned Excellence Since 1964",
-  subtitle = "Sixty years of transparent pricing, factory-certified Ford service, and dedicated ownership care in Jefferson, Ohio.",
+  subtitle = "Sixty years of transparent pricing, factory-certified Ford service, and dedicated ownership care in Ashtabula County, Ohio.",
 }: UnmatchedExcellenceProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -34,7 +34,7 @@ export function UnmatchedExcellence({
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src = dealershipImg;
           }}
-          alt="AM Ford Dealership in Jefferson, Ohio"
+          alt="AM Ford Dealership in Ashtabula County, Ohio"
           loading="lazy"
           decoding="async"
           className="h-full w-full object-cover object-center"
@@ -44,7 +44,7 @@ export function UnmatchedExcellence({
 
       <motion.div style={{ opacity }} className="relative z-10 mx-auto max-w-4xl px-6 text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1 text-[11px] font-bold uppercase tracking-[0.25em] text-white backdrop-blur-md mb-4 shadow-sm">
-          Jefferson, OH &middot; Ashtabula County
+          Ashtabula County, OH
         </span>
         <h2 className="mb-4 text-3xl font-black tracking-tight text-white drop-shadow-2xl sm:text-4xl md:text-5xl">
           {title}

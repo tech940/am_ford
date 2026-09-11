@@ -103,15 +103,15 @@ const TYPE_NOUN_MID: Record<Vehicle["type"], string> = {
 };
 
 const TYPE_TEMPLATES: ((noun: string) => string)[] = [
-  (n) => `${n} for sale in Jefferson OH`,
+  (n) => `${n} for sale in Ashtabula County`,
   (n) => `${n} near Ashtabula`,
-  (n) => `${n} available in Jefferson, Ohio`,
-  (n) => `${n} for Northeast Ohio drivers`,
+  (n) => `${n} in Northeast Ohio`,
+  (n) => `${n} for Ashtabula County drivers`,
 ];
 
 const FUEL_LABEL: Record<Vehicle["fuel"], string> = {
   Gas: "Gas powered Fords for sale near Ashtabula",
-  Hybrid: "Hybrid Fords in Jefferson OH",
+  Hybrid: "Hybrid Fords in Ashtabula County",
   Electric: "Electric Ford models in stock",
 };
 
@@ -123,7 +123,7 @@ const PRICE_TEMPLATES: ((band: string) => string)[] = [
 ];
 
 const CONDITION_LABEL: Record<Vehicle["condition"], string> = {
-  New: "New Fords for sale in Jefferson OH",
+  New: "New Fords for sale in Ashtabula County",
   "Certified Pre-Owned": "Certified pre-owned Fords near Ashtabula",
   Used: "Used vehicles for sale near Ashtabula",
 };
@@ -136,18 +136,18 @@ const CONDITION_ADJECTIVE: Record<Vehicle["condition"], string> = {
 
 const CONDITION_TYPE_TEMPLATES: ((adjective: string, noun: string) => string)[] = [
   (a, n) => `${a} ${n} near Ashtabula`,
-  (a, n) => `${a} ${n} in Jefferson OH`,
+  (a, n) => `${a} ${n} in Ashtabula County`,
   (a, n) => `${a} ${n} on the lot today`,
   (a, n) => `${a} ${n} for Ashtabula County drivers`,
 ];
 
 const MODEL_TEMPLATES: ((name: string) => string)[] = [
-  (m) => `${m} for sale in Jefferson OH`,
+  (m) => `${m} for sale in Ashtabula County`,
   (m) => `${m} near Ashtabula OH`,
   (m) => `${m} trims, specs, and current stock`,
   (m) => `${m} at a Ford dealer in Ashtabula County`,
-  (m) => `${m} for Northeast Ohio drivers`,
-  (m) => `Buying a ${m} in Jefferson OH`,
+  (m) => `${m} for Ashtabula County drivers`,
+  (m) => `Buying a ${m} in Ashtabula County`,
 ];
 
 /** Every city phrasing says "near" or "serving". AM Ford has one location, in Jefferson, so no
@@ -460,7 +460,7 @@ export function FrequentSearches({
           </h2>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
             Every link opens a page on this site, and each filtered search runs against the Ford
-            stock standing in Jefferson today.
+            stock standing on our lot today.
           </p>
 
           <div className="mt-6 space-y-4">

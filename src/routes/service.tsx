@@ -26,19 +26,24 @@ const BREADCRUMBS = crumbs({ label: "Service & Parts" });
 export const Route = createFileRoute("/service")({
   head: () => ({
     meta: [
-      { title: `Certified Ford Service & Repair in ${dealerInfo.city} | AM Ford` },
+      { title: `Certified Ford Service & Auto Repair in Ashtabula County, OH | AM Ford` },
       {
         name: "description",
-        content: `Ford-certified service in ${dealerInfo.city}. Oil changes, brakes, tires, batteries, diagnostics, and recall work for Ashtabula County drivers. Book online.`,
+        content: `Ford-certified service center in Ashtabula County (${dealerInfo.city}). Oil changes, brakes, tires, batteries, warranty diagnostics, and recall repairs. Schedule online.`,
       },
       {
         name: "keywords",
         content:
-          "Ford service Jefferson Ohio, Ford oil change Jefferson OH, Ford repair Ashtabula County, Ford parts, Ford brake repair, Ford dealer Northeast Ohio, AM Ford service schedule",
+          "Ford service Ashtabula County, Ford repair Ashtabula County OH, Ford oil change Ashtabula, Ford parts Ashtabula County, Ford service Jefferson Ohio, Ford brake repair, Ford dealer Northeast Ohio",
       },
+      // Local geo tags
+      { name: "geo.region", content: "US-OH" },
+      { name: "geo.placename", content: "Ashtabula County, OH" },
+      { name: "geo.position", content: "41.7389;-80.7684" },
+      { name: "ICBM", content: "41.7389, -80.7684" },
       {
         property: "og:title",
-        content: `Certified Ford Service Center | AM Ford ${dealerInfo.city}`,
+        content: `Certified Ford Service Center in Ashtabula County, OH | AM Ford`,
       },
       {
         property: "og:description",
@@ -171,10 +176,10 @@ function ServicePage() {
               Tell us what you need; we'll confirm by text within minutes.
             </p>
             <a
-              href={dealerInfo.phoneHref}
+              href={dealerInfo.phones.serviceHref}
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white"
             >
-              <Phone className="h-4 w-4" /> Or call {dealerInfo.phone}
+              <Phone className="h-4 w-4" /> Or call {dealerInfo.phones.service}
             </a>
           </div>
           <div className="rounded-3xl bg-card p-7 ring-1 ring-border lg:col-span-7">

@@ -229,13 +229,66 @@ export const fallbackVehicles: Vehicle[] = [
 ];
 
 /**
- * The full active vehicle inventory. Prioritizes the real 233-vehicle inventory extracted
- * from Supabase `vehicle_inventory`, with instant local fallback.
+ * Automatically derives relevant badges based on vehicle attributes, trim, powertrain, and equipment.
  */
-export const vehicles: Vehicle[] =
+export function deriveVehicleBadges(v: Partial<Vehicle>): string[] {
+  const badges = new Set<string>(v.badges || []);
+
+  if (v.year && v.year >= 2026 && v.condition === "New") {
+    badges.add("New Arrival");
+  }
+  if (
+    v.model &&
+    ["F-150", "Explorer", "Bronco Sport", "Escape", "Mustang", "Ranger"].some(
+      (m) => v.model === m || v.model?.startsWith(m),
+    )
+  ) {
+    badges.add("Best Seller");
+  }
+  if (
+    (v.trim && /ST|GT|Raptor|Shelby|Tremor/i.test(v.trim)) ||
+    (v.horsepower && v.horsepower >= 400)
+  ) {
+    badges.add("Performance");
+  }
+  if (
+    (v.model && /Explorer|Expedition|Yukon|Highlander|Enclave|Sorento|Pacifica/i.test(v.model)) ||
+    (v.features && v.features.some((f) => /3rd Row|Third Row|7 Passenger|8 Passenger/i.test(f)))
+  ) {
+    badges.add("3-Row");
+  }
+  if (v.fuel === "Electric" || v.type === "EV" || (v.model && /Lightning|Mach-E/i.test(v.model))) {
+    badges.add("Electric");
+  }
+  if (
+    (v.trim && /Tremor|Badlands|Trailhawk|Raptor|Power Wagon|AT4|Timberline/i.test(v.trim)) ||
+    (v.model && /Bronco/i.test(v.model) && !/Sport/i.test(v.model)) ||
+    (v.features && v.features.some((f) => /FX4|Off-Road|Skid Plate/i.test(f)))
+  ) {
+    badges.add("Off-Road");
+  }
+  if (v.condition === "Certified Pre-Owned") {
+    badges.add("Certified Pre-Owned");
+  }
+  if (v.fuel === "Hybrid") {
+    badges.add("Hybrid");
+  }
+
+  return Array.from(badges);
+}
+
+/**
+ * The full active vehicle inventory. Prioritizes the real 233-vehicle inventory extracted
+ * from Supabase `vehicle_inventory`, with instant local fallback and dynamic badge enrichment.
+ */
+export const vehicles: Vehicle[] = (
   vehicleInventory && Array.isArray(vehicleInventory) && vehicleInventory.length > 0
     ? (vehicleInventory as unknown as Vehicle[])
-    : fallbackVehicles;
+    : fallbackVehicles
+).map((v) => ({
+  ...v,
+  badges: deriveVehicleBadges(v),
+}));
 
 /**
  * Conditions a URL is allowed to filter by, and the single source of truth for that list.
@@ -261,15 +314,37 @@ export const FILTER_OPTIONS = {
   ] as const,
 };
 
+/**
+ * Generates an SEO-friendly, unique vehicle slug combining Year, Make, Model, Trim, and VIN/ID.
+ * Example: "2026-ford-explorer-tremor-1fmuk8jh5tgb44780"
+ */
+export function vehicleSlug(v: { year: number; make: string; model: string; trim: string; vin?: string; stockNumber?: string; id: string }): string {
+  const parts = [
+    v.year,
+    v.make,
+    v.model,
+    v.trim,
+    v.vin || v.stockNumber || v.id,
+  ];
+  return parts
+    .join(" ")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export const getVehicle = (id: string): Vehicle | undefined => {
   if (!id) return undefined;
-  const lower = id.toLowerCase();
-  // 1. Direct match on real inventory by ID, VIN, or Stock Number
+  const lower = id.toLowerCase().trim();
+  // 1. Direct match on real inventory by ID, VIN, Stock Number, or generated slug
   const found = vehicles.find(
     (v) =>
       v.id.toLowerCase() === lower ||
       (v.vin && v.vin.toLowerCase() === lower) ||
-      (v.stockNumber && v.stockNumber.toLowerCase() === lower),
+      (v.stockNumber && v.stockNumber.toLowerCase() === lower) ||
+      vehicleSlug(v).toLowerCase() === lower ||
+      (v.vin && lower.endsWith(v.vin.toLowerCase())) ||
+      lower.endsWith(v.id.toLowerCase()),
   );
   if (found) return found;
 
@@ -277,7 +352,10 @@ export const getVehicle = (id: string): Vehicle | undefined => {
   return fallbackVehicles.find(
     (v) =>
       v.id.toLowerCase() === lower ||
-      (v.vin && v.vin.toLowerCase() === lower),
+      (v.vin && v.vin.toLowerCase() === lower) ||
+      vehicleSlug(v).toLowerCase() === lower ||
+      (v.vin && lower.endsWith(v.vin.toLowerCase())) ||
+      lower.endsWith(v.id.toLowerCase()),
   );
 };
 
@@ -323,13 +401,23 @@ export const dealerInfo = {
   legalName: "AM Ford Inc.",
   formerName: "Nassief Ford",
   city: "Jefferson, OH",
+  county: "Ashtabula County",
   street: "1059 State Route 46 North",
   locality: "Jefferson",
   region: "OH",
   postalCode: "44047",
   address: "1059 State Route 46 North, Jefferson, OH 44047",
-  phone: "(440) 998-2151",
-  phoneHref: "tel:+14409982151",
+  fullAddress: "1059 State Route 46 North - Jefferson, OH 44047",
+  phone: "(440) 553-7072",
+  phoneHref: "tel:+14405537072",
+  phones: {
+    sales: "(440) 553-7072",
+    salesHref: "tel:+14405537072",
+    service: "(440) 553-7074",
+    serviceHref: "tel:+14405537074",
+    parts: "(440) 553-7075",
+    partsHref: "tel:+14405537075",
+  },
   hours: [
     { day: "Mon – Thu", time: "9:00 AM – 8:00 PM" },
     { day: "Friday", time: "9:00 AM – 6:00 PM" },

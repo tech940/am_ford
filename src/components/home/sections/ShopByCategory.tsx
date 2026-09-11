@@ -129,8 +129,8 @@ export function ShopByCategory() {
       <Reveal delay={0.1} className="mt-8">
         <div className="hm-glass-strong rounded-lg p-5 sm:p-6">
           <p className="text-[13px] leading-relaxed text-slate-600">
-            We are at {dealerInfo.street} in {dealerInfo.locality}, {dealerInfo.region}, serving
-            Ashtabula County, Northeast Ohio, Northwestern Pennsylvania, and buyers nationwide.{" "}
+            We are located in Ashtabula County, {dealerInfo.region}, serving
+            Northeast Ohio, Northwestern Pennsylvania, and buyers nationwide.{" "}
             {DELIVERY_CLAIM}
           </p>
           <Link

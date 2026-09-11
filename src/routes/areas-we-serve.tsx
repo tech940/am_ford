@@ -101,7 +101,7 @@ export const Route = createFileRoute("/areas-we-serve")({
         name: "keywords",
         content: [
           "Ford dealer Ashtabula County",
-          "Ford dealership Northeast Ohio",
+          "Ford dealership Ashtabula County OH",
           "Ford dealer Jefferson Ohio",
           "areas served AM Ford",
           ...SERVICE_AREAS.map((a) => `Ford dealer near ${a.city} ${a.state}`),
@@ -109,11 +109,11 @@ export const Route = createFileRoute("/areas-we-serve")({
       },
       {
         property: "og:title",
-        content: "Ford Dealer Serving Ashtabula County and Northeast Ohio | AM Ford",
+        content: "Ford Dealer Serving Ashtabula County, OH | AM Ford",
       },
       {
         property: "og:description",
-        content: `AM Ford is located in ${dealerInfo.locality}, Ohio and serves drivers across Northeast Ohio and Northwest Pennsylvania. ${DELIVERY_CLAIM}`,
+        content: `AM Ford is located in ${dealerInfo.locality}, Ohio and serves drivers across Ashtabula County and Northeast Ohio. ${DELIVERY_CLAIM}`,
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: CANONICAL },

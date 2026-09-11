@@ -8,14 +8,16 @@ import { ExitIntentOffer } from "@/components/convert/ExitIntentOffer";
 export function SiteShell({
   children,
   hideStickyCTA = false,
+  mainClassName,
 }: {
   children: ReactNode;
   hideStickyCTA?: boolean;
+  mainClassName?: string;
 }) {
   return (
     <div className="relative min-h-screen overflow-x-clip bg-background text-foreground">
       <SiteNav />
-      <main className="pt-20 sm:pt-24">{children}</main>
+      <main className={mainClassName ?? "pt-20 sm:pt-24"}>{children}</main>
       <SiteFooter />
       {/* Spacer so the fixed MobileStickyCTA never covers the footer's last rows */}
       {!hideStickyCTA && (

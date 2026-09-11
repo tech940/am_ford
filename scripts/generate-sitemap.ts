@@ -11,7 +11,7 @@
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { vehicles, FILTER_OPTIONS, FILTERABLE_CONDITIONS } from "../src/lib/vehicles";
+import { vehicles, FILTER_OPTIONS, FILTERABLE_CONDITIONS, vehicleSlug } from "../src/lib/vehicles";
 import { SERVICE_AREAS } from "../src/lib/serviceAreas";
 import { FORD_MODELS } from "../src/lib/fordModels";
 import { GUIDES, COMPARISONS } from "../src/lib/contentPages";
@@ -39,7 +39,7 @@ const entries: Entry[] = [
     changefreq: "daily",
   })),
   ...vehicles.map((v) => ({
-    path: `/vehicle/${v.id}`,
+    path: `/vehicle/${vehicleSlug(v)}`,
     priority: "0.8",
     changefreq: "weekly",
   })),
@@ -81,6 +81,7 @@ const entries: Entry[] = [
   { path: "/service", priority: "0.6", changefreq: "monthly" },
   { path: "/contact", priority: "0.6", changefreq: "monthly" },
   { path: "/about", priority: "0.5", changefreq: "monthly" },
+  { path: "/sitemap", priority: "0.5", changefreq: "weekly" },
 ];
 
 const xmlEscape = (s: string) => s.replace(/&/g, "&amp;");

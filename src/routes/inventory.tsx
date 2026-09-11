@@ -35,6 +35,7 @@ import {
   FILTERABLE_CONDITIONS,
   dealerInfo,
   DELIVERY_CLAIM,
+  vehicleSlug,
   type Vehicle,
 } from "@/lib/vehicles";
 import { SectionTag } from "@/components/site/Home";
@@ -61,44 +62,68 @@ const OTPPopup = lazy(() => import("@/components/popups/OTPPopup"));
  */
 const FAQ_ITEMS: { q: string; a: string }[] = [
   {
-    q: `What kind of Ford inventory does AM Ford stock in ${dealerInfo.city}?`,
-    a: `AM Ford stocks new Ford trucks, SUVs, cars, and EVs alongside certified pre-owned Ford models at ${dealerInfo.address}. We serve Ashtabula County, Saybrook, Geneva, Mentor, and Erie, PA.`,
+    q: `What new and used vehicles does AM Ford stock in Ashtabula County, OH?`,
+    a: `AM Ford stocks a comprehensive lineup of new Ford trucks, SUVs, crossovers, sports cars, and commercial work vehicles alongside inspected pre-owned and Certified Pre-Owned vehicles at ${dealerInfo.address}. We serve drivers across Ashtabula County, Saybrook, Geneva, Conneaut, Mentor, and Erie, PA.`,
   },
   {
-    q: "What is the difference between a used Ford and a Certified Pre-Owned (CPO) Ford?",
-    a: "A Certified Pre-Owned Ford passes a Ford-authorized multi-point inspection and comes with manufacturer-backed limited warranty coverage, roadside assistance, and a CARFAX vehicle history report. A standard used vehicle carries no factory certification.",
+    q: "What is the difference between a used vehicle and a Certified Pre-Owned (CPO) Ford?",
+    a: "A Certified Pre-Owned Ford undergoes a rigorous Ford-authorized multi-point inspection (139-point for Blue Certified, 172-point for Gold Certified) and includes manufacturer-backed limited warranty coverage, 24/7 roadside assistance, FordPass Rewards points, and a full CARFAX vehicle history report. Standard used vehicles are fully safety-inspected and reconditioned by our factory-trained technicians.",
   },
   {
-    q: "Can I apply for financing at AM Ford with less than perfect credit?",
-    a: "Yes. AM Ford works with Ohio credit unions and national lenders to find auto loan options across a wide range of credit profiles, including first-time buyers. Apply online and our finance team will follow up with your terms.",
+    q: "Can I get approved for auto financing in Ashtabula County with bad credit or no credit?",
+    a: "Yes. AM Ford partners with local Ohio credit unions and major national automotive lenders to offer competitive financing solutions for all credit situations, including first-time buyers, low credit, and credit rebuilding programs. You can submit our secure online pre-approval application in under 60 seconds with no impact on your credit score.",
   },
   {
-    q: `Can I trade in my current vehicle at AM Ford in ${dealerInfo.locality}?`,
-    a: "Yes. AM Ford appraises trade-ins of any make or model using current market data, and your trade equity can be applied directly to any vehicle in our inventory.",
+    q: "How does vehicle trade-in valuation work at AM Ford in Ashtabula County, OH?",
+    a: "AM Ford provides transparent, market-backed trade appraisals for all vehicle makes and models. You can value your trade-in online by entering your VIN or license plate, or visit our showroom for a quick written evaluation. Your trade-in equity can be applied directly toward your down payment on any new or used vehicle.",
   },
   {
-    q: "Does AM Ford offer nationwide or home vehicle delivery?",
-    a: "Yes. AM Ford offers nationwide vehicle delivery and home delivery across Northeast Ohio and Ashtabula County. We handle documentation remotely and coordinate shipping directly to your driveway or workplace.",
+    q: "Does AM Ford offer free home vehicle delivery within Ashtabula County and beyond?",
+    a: "Yes. AM Ford provides complimentary home vehicle delivery within 300 miles of our dealership, covering Ashtabula County, Northeast Ohio, and Northwestern Pennsylvania. We also offer insured vehicle shipping to all 50 states with fully digital paperwork and remote trade-in pickup.",
   },
   {
-    q: "What warranties come with new Ford vehicles at AM Ford?",
-    a: "Every new Ford includes Ford's factory 3-year/36,000-mile Bumper-to-Bumper Limited Warranty and a 5-year/60,000-mile Powertrain Limited Warranty, along with 24/7 Ford Roadside Assistance.",
+    q: "What factory and powertrain warranty coverage comes with new Ford vehicles?",
+    a: "Every new Ford vehicle purchased at AM Ford comes standard with Ford's 3-year/36,000-mile Bumper-to-Bumper Limited Factory Warranty, a 5-year/60,000-mile Powertrain Limited Warranty, 5-year/unlimited-mile Corrosion Coverage, and 5-year/60,000-mile 24/7 Roadside Assistance.",
   },
   {
-    q: "Can I order a custom Ford vehicle directly from the factory?",
-    a: "Yes. If the exact trim, color, or package you want is not on our lot, AM Ford can place a factory custom order directly with Ford Motor Company or source it through our regional dealer network.",
+    q: "Can I custom order a new Ford directly from the factory at AM Ford?",
+    a: "Yes. If your preferred Ford model, trim, exterior color, or package is not currently on our lot, AM Ford can submit a priority factory custom order directly to Ford Motor Company, locking in eligible retail incentives and tracking your build until delivery.",
   },
   {
-    q: "How does test drive booking work at AM Ford?",
-    a: "You can schedule a test drive online or by calling (440) 998-2151. We will have the vehicle prepped, cleaned, and waiting out front for your arrival.",
+    q: "How do I schedule a VIP test drive at AM Ford?",
+    a: "You can schedule a test drive online through any vehicle listing or by calling our sales team at (440) 553-7072. Our team will have the keys ready, vehicle detailed, and parked out front for your scheduled arrival.",
   },
   {
-    q: "Are there any hidden dealer documentation or add-on fees at AM Ford?",
-    a: "No. AM Ford practices straightforward, transparent pricing. The price quoted is the price you pay plus state tax and title fees; we do not add unexpected dealer prep or doc fees at signing.",
+    q: "Are there any hidden dealer documentation, prep, or add-on fees at AM Ford?",
+    a: "No. AM Ford upholds a transparent, honest pricing promise: the price you see is the price you pay, with no surprise dealer preparation fees, unexpected administrative markups, or mandatory accessory packages added at signing.",
   },
   {
-    q: "What maintenance services does the AM Ford Service Center handle?",
-    a: "Our certified Ford Service Center handles oil changes, tire rotations, brake service, battery replacement, transmission service, and major recall work using genuine OEM Ford and Motorcraft parts.",
+    q: "What automotive services and repairs does the AM Ford Service Center provide?",
+    a: "Our certified Ford Service Center handles complete vehicle maintenance including The Works® synthetic oil changes, brake pad and rotor replacements, tire sales and four-wheel alignments, battery testing, transmission service, and factory warranty/recall repairs using genuine OEM Ford and Motorcraft parts.",
+  },
+  {
+    q: "Can out-of-state buyers from Pennsylvania (Erie, PA) purchase from AM Ford?",
+    a: "Yes. AM Ford regularly assists Pennsylvania car shoppers from Erie, Meadville, and surrounding counties. Our finance and title departments handle all cross-state sales tax collection, Pennsylvania DMV title transfer, and vehicle registration seamlessly.",
+  },
+  {
+    q: "Do Ford trucks and SUVs at AM Ford come equipped for Northeast Ohio winter driving?",
+    a: "Yes. Our inventory is specifically stocked for Ashtabula County and Lake Erie snowbelt conditions, featuring intelligent AWD and 4WD systems, Terrain Management / G.O.A.T. modes, heated seats and steering wheels, remote engine start, and optional factory engine block heaters.",
+  },
+  {
+    q: "Does AM Ford sell electric and hybrid Ford vehicles with home charging support?",
+    a: "Yes. We carry Ford's advanced electrified lineup including the all-electric F-150 Lightning and Mustang Mach-E, as well as Escape and Maverick Hybrids. Our factory-trained EV specialists assist with home charger installation guidance, public charging networks, and potential utility incentives.",
+  },
+  {
+    q: "Can I purchase or lease a commercial work truck or fleet van at AM Ford?",
+    a: "Yes. AM Ford's Commercial Vehicle Department provides fleet sales, custom upfit coordination, and business financing for Ford Super Duty (F-250, F-350, F-450, F-550) pickups, Chassis Cabs, and Ford Transit cargo vans tailored for local contractors and businesses.",
+  },
+  {
+    q: "What vehicle history report is provided with pre-owned cars at AM Ford?",
+    a: "Every pre-owned vehicle on our lot includes a complimentary, comprehensive CARFAX® Vehicle History Report verifying previous ownership, odometer verification, title records, and documented service history.",
+  },
+  {
+    q: "How quickly can I take delivery of an in-stock vehicle from AM Ford?",
+    a: "For in-stock vehicles, you can complete paperwork and drive home the same day. For online purchases with home delivery, local deliveries within 300 miles are typically scheduled within 24 to 72 hours of purchase finalization.",
   },
 ];
 
@@ -371,70 +396,70 @@ function soloFilter(
 /** Unique on-page copy for each indexable landing page — distinct content per URL. */
 const LANDING_CONTENT: Record<string, { heading: string; body: string[] }> = {
   "type:Truck": {
-    heading: `Ford Trucks for Sale in ${dealerInfo.locality}, Ohio`,
+    heading: "Ford Trucks for Sale in Ashtabula County, OH",
     body: [
       "Northeast Ohio asks a lot of a truck: lake-effect snow from November to March, boat ramps along Lake Erie all summer, and back roads that punish anything without real ground clearance. The trucks on this page, led by the Ford F-150, are chosen for exactly that duty cycle, with 4WD drivetrains, proven EcoBoost and V8 powertrains, and tow packages inspected point by point before they earn a spot on our lot.",
       `Every truck at AM Ford comes with a full mechanical inspection, transparent pricing, and trade-in valuations that reward the truck you're driving today. We put Ford trucks to work for crews and contractors across Ashtabula County, so compare payloads and options above, then book a test drive at our showroom at ${dealerInfo.address}.`,
     ],
   },
   "type:SUV": {
-    heading: `Ford SUVs for Sale in ${dealerInfo.locality}, Ohio`,
+    heading: "Ford SUVs for Sale in Ashtabula County, OH",
     body: [
       "From three-row family haulers like the Ford Explorer to trail-ready icons like the Bronco and efficient hybrids like the Escape, the SUVs on this page cover every version of Ohio family life: school runs in Saybrook, ski trips to Peek'n Peak, and everything Lake Erie throws in between. AWD and 4WD options give you four-season confidence, and flexible cargo layouts swallow strollers, sports gear, and Costco runs alike.",
       `Every SUV on our lot, new and certified pre-owned alike, is inspected by factory-trained technicians and priced against current market data. Filter by drivetrain, price, or mileage above, then come see your shortlist in person at AM Ford in ${dealerInfo.locality}, an easy drive from anywhere in Ashtabula County.`,
     ],
   },
   "type:Car": {
-    heading: `Ford Cars for Sale in ${dealerInfo.locality}, Ohio`,
+    heading: "Ford Cars for Sale in Ashtabula County, OH",
     body: [
       "Some drivers want a commuting appliance; some want a reason to take the long way home. The cars on this page, including the Ford Mustang GT with its 5.0L V8, deliver the lower center of gravity, sharper steering, and driver-first feel that no crossover can imitate.",
       `Every car at AM Ford passes a comprehensive mechanical and safety inspection before sale, and our finance team works with Ohio credit unions and national lenders to find terms that fit real budgets. Browse the inventory above or call ${dealerInfo.phone} to hold a car for your visit to our ${dealerInfo.locality} lot.`,
     ],
   },
   "type:EV": {
-    heading: `Ford EVs for Sale in ${dealerInfo.locality}, Ohio`,
+    heading: "Ford EVs for Sale in Ashtabula County, OH",
     body: [
       "Electric ownership in Northeast Ohio is more practical than most drivers expect: charge overnight on a standard home circuit or a Level 2 charger, wake up to a full battery every morning, and skip the gas station entirely. The EVs on this page, like the F-150 Lightning with its 320-mile extended-range battery and Pro Power Onboard generator capability, prove electric doesn't mean compromise.",
       `AM Ford's technicians are factory-trained on Ford's EV platform, so your battery health check, software updates, and service all happen here in ${dealerInfo.locality}, not at a dealership an hour away in Cleveland. Ask us about home-charger installation guidance with any EV purchase.`,
     ],
   },
   "fuel:Gas": {
-    heading: `Gas Fords for Sale in ${dealerInfo.locality}, Ohio`,
+    heading: "Gas Fords for Sale in Ashtabula County, OH",
     body: [
       "Gasoline power remains the simplest ownership story there is: fill up anywhere, service anywhere, and rely on decades of proven Ford powertrain engineering. The gas-powered trucks, SUVs, and cars on this page range from the workhorse F-150 EcoBoost to the 480-horsepower Mustang GT, each fully inspected before it reaches the lot.",
       `If you're weighing gas against hybrid or electric, our sales team will walk you through real cost-of-ownership numbers for your actual commute; no pressure, just math. Visit AM Ford at ${dealerInfo.address} to compare them side by side.`,
     ],
   },
   "fuel:Hybrid": {
-    heading: `Hybrid Fords for Sale in ${dealerInfo.locality}, Ohio`,
+    heading: "Hybrid Fords for Sale in Ashtabula County, OH",
     body: [
       "A hybrid earns its keep in exactly the driving Ashtabula County serves up: stop-and-go around town where the electric motor does the work, and open highway to Cleveland or Erie where the gas engine cruises efficiently. Hybrids like the Escape Titanium on this page are rated over 40 MPG in the city with no charging required, so there are no cords and no planning, just fewer fuel stops.",
       `Every hybrid at AM Ford gets a battery-health verification as part of its inspection, and our certified technicians handle hybrid service in-house at our ${dealerInfo.locality} shop. Compare hybrid options above or book a test drive to feel the difference yourself.`,
     ],
   },
   "fuel:Electric": {
-    heading: `Electric Fords for Sale in ${dealerInfo.locality}, Ohio`,
+    heading: "Electric Fords for Sale in Ashtabula County, OH",
     body: [
       "An electric Ford is the shortest path to lower running costs without giving up capability. The electric vehicles on this page, like the F-150 Lightning Lariat with 580 horsepower and a 320-mile range, combine instant torque, near-silent cruising, and a far simpler maintenance story: no oil changes, fewer moving parts, and electricity that costs a fraction of gasoline per mile.",
       `AM Ford verifies battery health on every EV we sell, and our factory-trained EV technicians provide full service support right here in ${dealerInfo.locality} for drivers across Ashtabula County and Northeast Ohio. Ask about home charging setup and Ohio utility off-peak rates when you visit.`,
     ],
   },
   "condition:New": {
-    heading: `New Ford Trucks, SUVs, Cars, and EVs in ${dealerInfo.locality}, Ohio`,
+    heading: "New Ford Trucks, SUVs, Cars, and EVs in Ashtabula County, OH",
     body: [
       "Buying new means you are the first name on the title: delivery miles on the odometer, the current model year of Ford technology, and a vehicle nobody else has already configured to their own taste. The new inventory on this page runs from the F-150 Platinum and the Bronco Outer Banks through the Mustang GT and the all-electric F-150 Lightning, which between them cover the work week, the weekend, and the school run without asking you to give up any of the three.",
       `Every new Ford here is prepped and inspected by factory-trained technicians before it reaches the front line, and the price on the listing is the price we quote you, with no hidden dealer fees attached at the desk. ${DELIVERY_CLAIM} If you would rather look first and decide later, we are at ${dealerInfo.address}, and ${dealerInfo.phone} reaches the sales team directly.`,
     ],
   },
   "condition:Used": {
-    heading: `Used Vehicles for Sale in ${dealerInfo.locality}, Ohio`,
+    heading: "Used Vehicles for Sale in Ashtabula County, OH",
     body: [
       `AM Ford carries a dependable selection of pre-owned cars, trucks, and SUVs from Ford and other leading automakers at our showroom in ${dealerInfo.locality}. Every vehicle passes a multi-point safety and mechanical inspection before it is offered for front-line sale.`,
       `Whether you need an affordable commuter car, a tough work truck, or a family SUV, browse our live used inventory above. We offer fair, transparent market pricing, competitive trade-in valuations, and straightforward financing options for all credit profiles.`,
     ],
   },
   "condition:Certified Pre-Owned": {
-    heading: `Certified Pre-Owned Fords for Sale in ${dealerInfo.locality}, Ohio`,
+    heading: "Certified Pre-Owned Fords for Sale in Ashtabula County, OH",
     body: [
       "Certified pre-owned sits between a new Ford and an ordinary second-hand car, and the certification is the entire difference. A CPO Ford is not simply a trade-in that looked clean enough to put out front. Ford sets the eligibility rules on age and mileage, defines the inspection a technician has to complete, and requires the vehicle history to be reviewed before anything can be listed as certified. A vehicle that does not qualify is never sold to you as one that does.",
       `For a lot of Ashtabula County buyers that is the balance point: someone else has already taken the first years of depreciation, and the manufacturer still stands behind the vehicle instead of handing it over as-is. Coverage and terms are set by the Ford program and documented per vehicle, so ask us for the paperwork on the specific unit you are considering and read it before you sign anything. Certified stock turns over as trade-ins arrive and clear inspection, so if the right one is not on this page today, call ${dealerInfo.phone} and we will tell you when it lands.`,
@@ -463,16 +488,16 @@ function conditionPhrase(list: Vehicle[]): string {
  */
 const CONDITION_SEO: Record<FilterableCondition, { title: string; description: string }> = {
   New: {
-    title: `New Fords for Sale in ${dealerInfo.city} | AM Ford`,
-    description: `Browse new Ford trucks, SUVs, cars, and EVs at AM Ford in ${dealerInfo.city}, serving Ashtabula County and Northeast Ohio. Compare pricing and specs.`,
+    title: `New Fords for Sale in Ashtabula County, OH | AM Ford`,
+    description: `Browse new Ford trucks, SUVs, and EVs at AM Ford in Ashtabula County, OH. Serving Ashtabula, Geneva, Conneaut, and Northeast Ohio.`,
   },
   Used: {
-    title: `Used Cars & Trucks in ${dealerInfo.city} | AM Ford`,
-    description: `Shop quality used cars, trucks, and SUVs for sale at AM Ford in ${dealerInfo.city}, OH. Inspected pre-owned vehicles with competitive financing.`,
+    title: `Used Cars & Trucks in Ashtabula County, OH | AM Ford`,
+    description: `Shop quality used cars, trucks, and SUVs for sale in Ashtabula County at AM Ford. Inspected pre-owned vehicles with competitive financing.`,
   },
   "Certified Pre-Owned": {
-    title: `Certified Pre-Owned Fords in ${dealerInfo.city} | AM Ford`,
-    description: `Shop certified pre-owned Fords at AM Ford in ${dealerInfo.city}, serving Ashtabula County. Every CPO Ford is manufacturer certified and inspected.`,
+    title: `Certified Pre-Owned Fords in Ashtabula County | AM Ford`,
+    description: `Shop certified pre-owned Fords at AM Ford in Ashtabula County, OH. Every CPO Ford is manufacturer certified and multi-point inspected.`,
   },
 };
 
@@ -526,16 +551,16 @@ function buildInventorySeo(s: InventorySearch) {
     const label = onlyType ? TYPE_SEO_LABEL[s.type!] : FUEL_SEO_LABEL[s.fuel!];
     const param = onlyType ? `type=${s.type}` : `fuel=${s.fuel}`;
     return {
-      title: `${label} for Sale in ${dealerInfo.city} | AM Ford`,
-      description: `Shop ${conditionPhrase(matchingVehicles(s))} ${label} at AM Ford in ${dealerInfo.city}, serving Ashtabula County and Northeast Ohio. Compare pricing and specs.`,
+      title: `${label} for Sale in Ashtabula County, OH | AM Ford`,
+      description: `Shop ${conditionPhrase(matchingVehicles(s))} ${label} at AM Ford in Ashtabula County, OH. Serving Ashtabula, Geneva, Conneaut, and Northeast Ohio.`,
       canonical: `https://amford.com/inventory?${param}`,
       robots: paginatedRobots,
     };
   }
 
   return {
-    title: `Ford Trucks, SUVs & Cars for Sale in ${dealerInfo.city} | AM Ford`,
-    description: `Shop the AM Ford lineup in ${dealerInfo.city}: new and certified pre-owned Ford trucks, SUVs, cars, and EVs. Serving Ashtabula County and Northeast Ohio.`,
+    title: `Ford Trucks, SUVs & Cars for Sale in Ashtabula County | AM Ford`,
+    description: `Shop the AM Ford lineup in Ashtabula County, OH: new and certified pre-owned Ford trucks, SUVs, cars, and EVs. Serving Northeast Ohio.`,
     canonical: "https://amford.com/inventory",
     robots: activeKeys.length > 0 ? "noindex,follow" : undefined,
   };
@@ -704,7 +729,7 @@ function buildInventoryItemListSchema(s: InventorySearch) {
       item: {
         "@type": ["Product", "Vehicle"],
         name: `${v.year} ${v.make} ${v.model} ${v.trim}`,
-        url: `${SITE_ORIGIN}/vehicle/${v.id}`,
+        url: `${SITE_ORIGIN}/vehicle/${vehicleSlug(v)}`,
         brand: { "@type": "Brand", name: v.make },
         itemCondition: CONDITION_SCHEMA_URL[v.condition],
         mileageFromOdometer: {
@@ -745,7 +770,7 @@ export const Route = createFileRoute("/inventory")({
         {
           name: "keywords",
           content:
-            "Ford dealer Jefferson Ohio, Ford dealership Jefferson OH, Ford trucks Jefferson Ohio, Ford SUVs Ashtabula County, certified pre-owned Ford Jefferson OH, Ford dealer Northeast Ohio, Ford dealer near Erie PA, AM Ford inventory",
+            "Ford dealer Ashtabula County, Ford dealership Ashtabula County OH, Ford trucks Ashtabula County, Ford SUVs Ashtabula County, used trucks Ashtabula County, certified pre-owned Ford Ashtabula County, Ford dealer Jefferson Ohio, Ford dealer Northeast Ohio, AM Ford inventory",
         },
         { property: "og:title", content: seo.title },
         // og:description has no length cap, unlike the meta description above, so this is
@@ -760,14 +785,14 @@ export const Route = createFileRoute("/inventory")({
         { property: "og:image", content: `${SITE_ORIGIN}/am-ford-lot-banner.webp` },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
-        { property: "og:image:alt", content: `AM Ford Dealership in ${dealerInfo.city}` },
+        { property: "og:image:alt", content: "AM Ford Dealership in Ashtabula County, OH" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: seo.title },
         { name: "twitter:description", content: seo.description },
         { name: "twitter:image", content: `${SITE_ORIGIN}/am-ford-lot-banner.webp` },
         // Local geo tags for Ashtabula County / Jefferson, OH dealership
         { name: "geo.region", content: "US-OH" },
-        { name: "geo.placename", content: dealerInfo.locality },
+        { name: "geo.placename", content: "Ashtabula County, OH" },
         { name: "geo.position", content: "41.7456;-80.7676" },
         { name: "ICBM", content: "41.7456, -80.7676" },
       ],
@@ -1122,15 +1147,15 @@ export function InventoryPage() {
         <div className="relative mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-x-10 gap-y-5 px-6 pb-8 pt-3 sm:pb-10 sm:pt-4">
           <div className="max-w-2xl">
             <h1 className="display text-balance text-[32px] font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-[2.75rem]">
-              {landingLabel(search) ?? "Vehicles"} for sale in {dealerInfo.city}
+              {landingLabel(search) ?? "Vehicles"} for sale in Ashtabula County, OH
             </h1>
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-600">
               {search.condition === "New"
-                ? `Explore brand-new Ford trucks, SUVs, cars, and EVs with delivery miles, full factory warranty, and transparent pricing in ${dealerInfo.city}.`
+                ? `Explore brand-new Ford trucks, SUVs, cars, and EVs with delivery miles, full factory warranty, and transparent pricing in Ashtabula County, OH.`
                 : search.condition === "Used"
-                ? `Browse inspected, high-quality pre-owned vehicles with competitive financing and complete peace of mind at AM Ford in ${dealerInfo.city}.`
+                ? `Browse inspected, high-quality pre-owned vehicles with competitive financing and complete peace of mind at AM Ford in Ashtabula County, OH.`
                 : search.condition === "Certified Pre-Owned"
-                ? `Browse manufacturer-backed Certified Pre-Owned Fords with multi-point inspection and warranty coverage at AM Ford in ${dealerInfo.city}.`
+                ? `Browse manufacturer-backed Certified Pre-Owned Fords with multi-point inspection and warranty coverage at AM Ford in Ashtabula County, OH.`
                 : `Browse the current lot at AM Ford, serving Ashtabula County and Northeast Ohio. Compare pricing, check specs, and schedule a test drive.`}
             </p>
           </div>
@@ -1506,18 +1531,18 @@ export function InventoryPage() {
             </p>
             <h2 className="mt-3 text-3xl font-extrabold text-slate-900 sm:text-4xl lg:text-5xl tracking-tight">
               {landingLabel(search)
-                ? `Explore ${landingLabel(search)} at AM Ford in ${dealerInfo.locality}, Ohio`
-                : `Shop Ford Trucks, SUVs & Cars for Sale in ${dealerInfo.locality}, Ohio`}
+                ? `Explore ${landingLabel(search)} at AM Ford in Ashtabula County, OH`
+                : `Shop Ford Trucks, SUVs & Cars for Sale in Ashtabula County, OH`}
             </h2>
             <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
               Welcome to <strong>AM Ford</strong>, your local source for{" "}
               <strong className="text-slate-900">
-                Ford vehicles for sale in {dealerInfo.city}
+                Ford vehicles for sale in Ashtabula County, OH
               </strong>{" "}
-              and across Ashtabula County and the surrounding Northeast Ohio communities. Whether
+              and across the surrounding Northeast Ohio communities. Whether
               you are searching for a capable <strong>Ford F-150 truck</strong>, a spacious 3-row{" "}
               <strong>Ford Explorer SUV</strong>, an iconic <strong>Mustang sports car</strong>, or
-              an all-electric <strong>F-150 Lightning</strong>, our {dealerInfo.locality} dealership
+              an all-electric <strong>F-150 Lightning</strong>, our Ashtabula County dealership
               stocks new and certified pre-owned Fords that are inspected before they reach the lot.
             </p>
           </div>
@@ -1545,7 +1570,7 @@ export function InventoryPage() {
               </div>
               <h3 className="mt-5 text-xl font-bold text-slate-900">Flexible Ford Financing</h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                We make financing a Ford in {dealerInfo.locality} straightforward and stress-free.
+                We make financing a Ford in Ashtabula County straightforward and stress-free.
                 Working with Ohio credit unions and national lenders, we source auto loan options
                 for a wide range of credit profiles. Start your application online and our finance
                 team will follow up with your terms.
@@ -1571,7 +1596,7 @@ export function InventoryPage() {
           <div className="rounded-3xl bg-white p-8 border border-[#002c5f]/12 shadow-sm sm:p-10 space-y-8">
             <div>
               <h3 className="text-2xl font-bold text-slate-900 sm:text-3xl">
-                Why Buy Your Next Ford from AM Ford in {dealerInfo.city}?
+                Why Buy Your Next Ford from AM Ford in Ashtabula County?
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
                 Shopping for a vehicle in Ohio shouldn't mean compromising on quality or paying
@@ -1659,7 +1684,7 @@ export function InventoryPage() {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl bg-slate-50 p-6 border border-[#002c5f]/10">
               <div>
                 <h4 className="text-base font-bold text-slate-900">
-                  Ready to schedule a test drive in {dealerInfo.city}?
+                  Ready to schedule a test drive in Ashtabula County?
                 </h4>
                 <p className="text-xs text-slate-600">
                   Contact our friendly sales team today at {dealerInfo.phone} or visit our showroom
@@ -1682,7 +1707,7 @@ export function InventoryPage() {
                 Got Questions?
               </p>
               <h3 className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">
-                Frequently Asked Questions About Buying a Ford in {dealerInfo.city}
+                Frequently Asked Questions About Buying a Ford in Ashtabula County, OH
               </h3>
               <p className="mt-1 text-sm text-slate-600">
                 Get quick answers regarding our new and certified pre-owned inventory, financing
@@ -2646,7 +2671,7 @@ function CompareModal({
                     ) : null}
                     <Link
                       to="/vehicle/$id"
-                      params={{ id: v.id }}
+                      params={{ id: vehicleSlug(v) }}
                       className="inline-flex w-full items-center justify-center gap-1 rounded-xl border border-slate-200 bg-white py-1.5 px-3 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
                     >
                       View vehicle page
@@ -3145,7 +3170,7 @@ function SavedCarsStrip() {
           <Link
             key={v.id}
             to="/vehicle/$id"
-            params={{ id: v.id }}
+            params={{ id: vehicleSlug(v) }}
             className="group flex items-center gap-3 rounded-2xl border border-[#002c5f]/15 bg-white p-3 shadow-sm transition hover:border-[#002c5f]/35 hover:shadow-md"
           >
             <img
@@ -3189,7 +3214,7 @@ function RecentlyViewedStrip() {
           <Link
             key={v.id}
             to="/vehicle/$id"
-            params={{ id: v.id }}
+            params={{ id: vehicleSlug(v) }}
             className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:border-[#002c5f]/30 hover:shadow-md"
           >
             <img

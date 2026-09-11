@@ -35,8 +35,7 @@ export function DeliveryBanner({ variant = "full" }: { variant?: "full" | "compa
           <p className="mt-3 max-w-2xl text-xs sm:text-sm leading-relaxed text-slate-600">
             You do not have to live in Ashtabula County to buy from AM Ford. Choose your vehicle
             online, complete much of the financing and paperwork remotely, and we will bring it to
-            your driveway free of charge within 300 miles of our {dealerInfo.locality}, Ohio
-            dealership. Farther away? We can arrange shipping to any of the 50 states.
+            your driveway free of charge within 300 miles of our dealership. Farther away? We can arrange shipping to any of the 50 states.
           </p>
           <p className="mt-2 text-[11px] text-slate-500">
             Shipping charges may apply outside the complimentary 300-mile delivery area. Delivery

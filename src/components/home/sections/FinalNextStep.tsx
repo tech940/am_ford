@@ -32,7 +32,7 @@ export function FinalNextStep() {
           Find yours.
         </h2>
         <p className="mt-5 text-base sm:text-lg font-light text-slate-600 max-w-md mx-auto leading-relaxed">
-          {vehicles.length} vehicles in stock in Jefferson, Ohio.
+          {vehicles.length} vehicles in stock on our lot today.
           Browse online or talk to someone directly.
         </p>
 

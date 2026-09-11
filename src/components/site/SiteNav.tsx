@@ -52,7 +52,7 @@ const MODELS_MENU: NavMenu = {
     { heading: "Ford models we stock", items: modelItems() },
     { heading: "Shop by body style", items: bodyStyleItems() },
   ],
-  extraHubs: [{ to: "/inventory", label: "Every Ford in stock in Jefferson OH" }],
+  extraHubs: [{ to: "/inventory", label: "Every Ford in stock in Ashtabula County" }],
 };
 
 const AREAS_MENU: NavMenu = {

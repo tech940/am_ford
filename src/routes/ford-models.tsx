@@ -10,14 +10,14 @@ import { dealerInfo, DELIVERY_CLAIM } from "@/lib/vehicles";
 const SITE_ORIGIN = "https://amford.com";
 const CANONICAL = `${SITE_ORIGIN}/ford-models`;
 
-const TITLE = `Ford Models for Sale in ${dealerInfo.city} | AM Ford`;
+const TITLE = `Ford Models for Sale in Ashtabula County, OH | AM Ford`;
 
 /**
  * Meta description is held under the ~155 char SERP cap, so DELIVERY_CLAIM (84 chars) stays
  * out of it and lives in og:description and the body copy instead, where there is no cap.
  */
-const DESCRIPTION = `Ford models at AM Ford in ${dealerInfo.city}: F-150, Mustang, Explorer, F-150 Lightning, Bronco, and Escape. Serving Ashtabula County and Northeast Ohio.`;
-const OG_DESCRIPTION = `Compare the Ford models AM Ford sells in ${dealerInfo.city}: F-150, Mustang, Explorer, F-150 Lightning, Bronco, and Escape. Serving Ashtabula County and Northeast Ohio. ${DELIVERY_CLAIM}`;
+const DESCRIPTION = `Explore Ford models at AM Ford in Ashtabula County (${dealerInfo.city}): F-150, Explorer, Bronco, Escape, and Mustang. Compare trims, specs, and pricing.`;
+const OG_DESCRIPTION = `Compare the Ford models AM Ford sells in Ashtabula County (${dealerInfo.city}): F-150, Explorer, Bronco, Escape, and Mustang. ${DELIVERY_CLAIM}`;
 
 const BREADCRUMBS = crumbs({ label: "Ford Models" });
 
@@ -96,7 +96,7 @@ function FordModelsHub() {
         <div className="relative mx-auto max-w-7xl px-6">
           <SectionTag>Model Lineup</SectionTag>
           <h1 className="display mt-3 max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
-            Ford Models for Sale in {dealerInfo.locality}, Ohio
+            Ford Models for Sale in Ashtabula County, OH
           </h1>
           <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             Each model below has its own page with what the vehicle is built for, who tends to buy

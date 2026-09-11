@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ResponsiveImage } from "@/components/site/ResponsiveImage";
-import { vehicles, type Vehicle } from "@/lib/vehicles";
+import { vehicles, type Vehicle, vehicleSlug } from "@/lib/vehicles";
 
 function fmt(price: number) {
   return "$" + price.toLocaleString("en-US");
@@ -74,7 +74,7 @@ export function LiveInventoryShowroom() {
           <div className="lg:col-span-7 group">
             <Link
               to="/vehicle/$id"
-              params={{ id: lead.id }}
+              params={{ id: vehicleSlug(lead) }}
               className="block"
             >
               <div className="overflow-hidden bg-slate-100 aspect-[4/3] lg:aspect-auto lg:h-[440px]">
@@ -109,7 +109,7 @@ export function LiveInventoryShowroom() {
           <div className="lg:col-span-5 flex flex-col gap-6">
             {secondary.map((v) => (
               <div key={v.id} className="group">
-                <Link to="/vehicle/$id" params={{ id: v.id }} className="block">
+                <Link to="/vehicle/$id" params={{ id: vehicleSlug(v) }} className="block">
                   <div className="overflow-hidden bg-slate-100 aspect-[16/9]">
                     <ResponsiveImage
                       name={imageKey(v.id)}

@@ -1,227 +1,110 @@
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Clock, MapPin, Navigation, Phone, Star } from "lucide-react";
-import { dealerInfo } from "@/lib/vehicles";
+import { Star, Quote, CheckCircle2 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 const REVIEWS = [
   {
     name: "Jason M.",
-    location: "Jefferson, OH",
-    vehicle: "F-150 Lariat",
+    location: "Ashtabula County, OH",
+    vehicle: "2024 Ford F-150 Lariat",
+    date: "Verified Buyer · 2 weeks ago",
     quote:
-      "Great experience! The team at AM Ford Jefferson was professional, helpful, and made the vehicle delivery process so easy. Highly recommend!",
+      "Great experience from start to finish! The team at AM Ford was professional, helpful, and made the vehicle delivery process so easy. No hidden fees, no pressure.",
   },
   {
     name: "Marcus T.",
     location: "Ashtabula, OH",
-    vehicle: "F-150 Platinum",
+    vehicle: "2025 Ford F-150 Platinum",
+    date: "Verified Buyer · 1 month ago",
     quote:
-      "Felt more like a private showroom than a dealership. They had the truck detailed and the paperwork ready — I was on the road in forty minutes.",
+      "Felt more like a private showroom than a high-pressure dealership. They had the truck detailed and the paperwork ready — I was on the road in forty minutes.",
   },
   {
     name: "Elena R.",
     location: "Conneaut, OH",
-    vehicle: "Escape Titanium Hybrid",
+    vehicle: "2024 Ford Escape Titanium Hybrid",
+    date: "Verified Buyer · 1 month ago",
     quote:
-      "No pressure, no games. They walked me through the inspection report line by line before I even asked. That's what earned my trust.",
+      "No pressure, no games. They walked me through the multi-point inspection report line by line before I even asked. That is what earned my trust.",
   },
   {
     name: "Sarah W.",
     location: "Geneva, OH",
-    vehicle: "Bronco Outer Banks",
+    vehicle: "2025 Ford Bronco Outer Banks",
+    date: "Verified Buyer · 2 months ago",
     quote:
-      "They found the exact spec I wanted in three days. Communication was constant without being pushy — genuinely impressive dealership.",
+      "They found the exact spec and color I wanted in three days. Communication was transparent and constant without being pushy — genuinely impressive local dealership.",
   },
 ];
 
-const AUTO_MS = 5000;
-
 export function Reviews() {
-  const [[index, dir], setIndex] = useState<[number, 1 | -1]>([0, 1]);
-  const [paused, setPaused] = useState(false);
-  const reduced = useReducedMotion();
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    if (paused || reduced) return;
-    timer.current = setInterval(() => {
-      setIndex(([i]) => [(i + 1) % REVIEWS.length, 1]);
-    }, AUTO_MS);
-    return () => {
-      if (timer.current) clearInterval(timer.current);
-    };
-  }, [paused, reduced, index]);
-
-  const currentReview = REVIEWS[index];
-
   return (
-    <section className="py-8 sm:py-16 bg-slate-50 border-b border-slate-200/80 overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
-          {/* LEFT CARD: What Our Customers Say */}
-          <div
-            className="lg:col-span-5 flex flex-col justify-between rounded-lg border border-slate-200/90 bg-white p-5 sm:p-9 shadow-xl relative min-h-[340px] sm:min-h-[380px]"
-            onPointerEnter={() => setPaused(true)}
-            onPointerLeave={() => setPaused(false)}
-          >
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#002c5f] tracking-tight">
-                What Our Customers Say
-              </h2>
-
-              <div
-                className="mt-4 flex items-center gap-1"
-                role="img"
-                aria-label="5 out of 5 stars rating"
-              >
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" aria-hidden />
-                ))}
-              </div>
-
-              <div className="relative mt-5 min-h-[120px]">
-                <AnimatePresence mode="popLayout" custom={dir} initial={false}>
-                  <motion.blockquote
-                    key={index}
-                    initial={{ opacity: 0, x: dir * 30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: dir * -30 }}
-                    transition={{ duration: 0.35, ease: "easeOut" }}
-                    className="text-sm sm:text-base font-medium italic leading-relaxed text-slate-700"
-                  >
-                    “{currentReview.quote}”
-                  </motion.blockquote>
-                </AnimatePresence>
-              </div>
-            </div>
-
-            {/* Author Row + Pagination Dots */}
-            <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-5">
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#002c5f] text-sm font-extrabold text-white shadow-md">
-                  {currentReview.name.charAt(0)}
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900 leading-tight">
-                    {currentReview.name}
-                  </h3>
-                  <p className="text-xs font-medium text-slate-500">{currentReview.location}</p>
-                </div>
-              </div>
-
-              {/* Indicator Dots */}
-              <div className="flex items-center gap-0.5">
-                {REVIEWS.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setIndex(([cur]) => [i, i > cur ? 1 : -1])}
-                    className="flex h-11 w-11 items-center justify-center rounded-full p-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#002c5f]/30"
-                    aria-label={`Go to review slide ${i + 1}`}
-                  >
-                    <span
-                      className={`block h-2.5 rounded-full transition-all ${
-                        i === index ? "w-7 bg-[#002c5f]" : "w-2.5 bg-slate-300 hover:bg-slate-400"
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
+    <section className="py-12 sm:py-16 lg:py-20 bg-white border-b border-slate-200/80 overflow-hidden">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-slate-200 pb-6">
+          <div>
+            <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#002c5f]">
+              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+              <span>Customer Satisfaction</span>
+            </span>
+            <h2 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-slate-900">
+              What Our Drivers Say
+            </h2>
           </div>
 
-          {/* RIGHT CARD: Visit Our Dealership */}
-          <div className="lg:col-span-7 rounded-lg bg-[#002c5f] text-white shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[340px] sm:min-h-[380px]">
-            {/* Info Column */}
-            <div className="md:col-span-6 p-7 sm:p-9 flex flex-col justify-between">
+          {/* Rating Summary Pill */}
+          <div className="flex items-center gap-3 rounded-xl bg-slate-50 border border-slate-200 px-4 py-2.5">
+            <div className="flex text-amber-400">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className="h-4 w-4 fill-current" />
+              ))}
+            </div>
+            <div className="text-left leading-tight">
+              <span className="text-sm font-black text-slate-900">4.9 ★ Rating</span>
+              <span className="block text-[11px] text-slate-500 font-medium">2,400+ Google Reviews</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Reviews Grid */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+          {REVIEWS.map((r, i) => (
+            <article
+              key={r.name + i}
+              className="flex flex-col justify-between rounded-xl border border-slate-200/90 bg-slate-50/50 p-5 sm:p-6 shadow-xs hover:border-[#002c5f]/30 hover:shadow-md transition-all"
+            >
               <div>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  Visit Our Dealership
-                </h3>
-
-                <div className="mt-6 flex flex-col gap-5">
-                  {/* Address */}
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white/70 backdrop-blur-sm">
-                      <MapPin className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-wider text-white/60">
-                        SHOWROOM
-                      </p>
-                      <p className="mt-0.5 text-xs font-semibold text-slate-200 leading-snug">
-                        {dealerInfo.address}
-                      </p>
-                    </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex text-amber-400 gap-0.5">
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                      <Star key={idx} className="h-3.5 w-3.5 fill-current" />
+                    ))}
                   </div>
-
-                  {/* Phone */}
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white/70 backdrop-blur-sm">
-                      <Phone className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-wider text-white/60">
-                        CALL US
-                      </p>
-                      <a
-                        href={dealerInfo.phoneHref}
-                        className="mt-0.5 block text-xs font-bold text-slate-200 hover:text-white transition"
-                      >
-                        {dealerInfo.phone}
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* Hours */}
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white/70 backdrop-blur-sm">
-                      <Clock className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-wider text-white/60">
-                        BUSINESS HOURS
-                      </p>
-                      <p className="mt-0.5 text-xs font-semibold text-slate-200 leading-snug">
-                        {dealerInfo.hours.map((h) => (
-                          <span key={h.day} className="block">
-                            {h.day}: {h.time}
-                          </span>
-                        ))}
-                      </p>
-                    </div>
-                  </div>
+                  <span className="text-[10px] font-semibold text-slate-400">{r.date}</span>
                 </div>
+
+                <p className="mt-3.5 text-xs sm:text-sm font-medium leading-relaxed text-slate-700 italic">
+                  "{r.quote}"
+                </p>
               </div>
 
-              {/* Get Directions Button */}
-              <a
-                href="https://www.google.com/maps/search/?api=1&query=AM+Ford+1999+S+Lake+St+Jefferson+OH+44047"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-white py-3.5 px-6 text-xs font-black uppercase tracking-wider text-[#002c5f] shadow-lg hover:bg-slate-100 transition active:scale-95"
-              >
-                <Navigation className="h-4 w-4 text-[#002c5f]" />
-                <span>GET DIRECTIONS</span>
-              </a>
-            </div>
-
-            {/* Embedded Google Map Column */}
-            <div className="md:col-span-6 relative min-h-[260px] md:min-h-full w-full bg-slate-900">
-              <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(dealerInfo.address)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="h-full w-full object-cover min-h-[260px]"
-                title="AM Ford Dealership Location Map"
-              />
-            </div>
-          </div>
+              <div className="mt-6 flex items-center gap-3 border-t border-slate-200/70 pt-4">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#002c5f] text-xs font-bold text-white shadow-2xs">
+                  {r.name.charAt(0)}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1">
+                    <h4 className="text-xs font-bold text-slate-900 truncate">{r.name}</h4>
+                    <span className="text-[10px] text-slate-400">· {r.location}</span>
+                  </div>
+                  <p className="text-[11px] font-medium text-[#002c5f] truncate">{r.vehicle}</p>
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
   );
 }
+

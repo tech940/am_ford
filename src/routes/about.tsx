@@ -15,15 +15,25 @@ const BREADCRUMBS = crumbs({ label: "About" });
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: `About AM Ford | Family-Owned Ford Dealer in ${dealerInfo.city}` },
+      { title: `About AM Ford | Family-Owned Ford Dealer in Ashtabula County, OH` },
       {
         name: "description",
-        content: `AM Ford is a family-owned Ford dealer in ${dealerInfo.city}, serving Ashtabula County with honest pricing, certified Ford service, and no-pressure buying.`,
+        content: `AM Ford is a family-owned Ford dealership in Ashtabula County (${dealerInfo.city}), serving local drivers with transparent pricing, certified Ford service, and home delivery.`,
       },
-      { property: "og:title", content: `About AM Ford | Ford Dealer in ${dealerInfo.city}` },
+      {
+        name: "keywords",
+        content:
+          "About AM Ford, Ford dealer Ashtabula County, Ford dealership Ashtabula County OH, Ford dealer Jefferson Ohio, family owned car dealer Ashtabula, Ford dealership Northeast Ohio",
+      },
+      // Local geo tags
+      { name: "geo.region", content: "US-OH" },
+      { name: "geo.placename", content: "Ashtabula County, OH" },
+      { name: "geo.position", content: "41.7389;-80.7684" },
+      { name: "ICBM", content: "41.7389, -80.7684" },
+      { property: "og:title", content: `About AM Ford | Ford Dealer in Ashtabula County, OH` },
       {
         property: "og:description",
-        content: `Family-owned Ford dealer in ${dealerInfo.city}, serving Ashtabula County and Northeast Ohio drivers.`,
+        content: `Family-owned Ford dealer in Ashtabula County (${dealerInfo.city}), serving Ashtabula, Geneva, Conneaut, and Northeast Ohio drivers.`,
       },
       { property: "og:url", content: "https://amford.com/about" },
     ],

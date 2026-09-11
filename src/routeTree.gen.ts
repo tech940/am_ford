@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TradeInRouteImport } from './routes/trade-in'
+import { Route as SitemapRouteImport } from './routes/sitemap'
 import { Route as ServiceRouteImport } from './routes/service'
 import { Route as NationwideVehicleDeliveryRouteImport } from './routes/nationwide-vehicle-delivery'
 import { Route as InventoryRouteImport } from './routes/inventory'
@@ -39,6 +40,11 @@ import { Route as FordDealerCountyCountyRouteImport } from './routes/ford-dealer
 const TradeInRoute = TradeInRouteImport.update({
   id: '/trade-in',
   path: '/trade-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapRoute = SitemapRouteImport.update({
+  id: '/sitemap',
+  path: '/sitemap',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServiceRoute = ServiceRouteImport.update({
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/inventory': typeof InventoryRoute
   '/nationwide-vehicle-delivery': typeof NationwideVehicleDeliveryRoute
   '/service': typeof ServiceRoute
+  '/sitemap': typeof SitemapRoute
   '/trade-in': typeof TradeInRoute
   '/compare/bronco-vs-explorer': typeof CompareBroncoVsExplorerRoute
   '/compare/explorer-vs-escape': typeof CompareExplorerVsEscapeRoute
@@ -213,6 +220,7 @@ export interface FileRoutesByTo {
   '/inventory': typeof InventoryRoute
   '/nationwide-vehicle-delivery': typeof NationwideVehicleDeliveryRoute
   '/service': typeof ServiceRoute
+  '/sitemap': typeof SitemapRoute
   '/trade-in': typeof TradeInRoute
   '/compare/bronco-vs-explorer': typeof CompareBroncoVsExplorerRoute
   '/compare/explorer-vs-escape': typeof CompareExplorerVsEscapeRoute
@@ -242,6 +250,7 @@ export interface FileRoutesById {
   '/inventory': typeof InventoryRoute
   '/nationwide-vehicle-delivery': typeof NationwideVehicleDeliveryRoute
   '/service': typeof ServiceRoute
+  '/sitemap': typeof SitemapRoute
   '/trade-in': typeof TradeInRoute
   '/compare/bronco-vs-explorer': typeof CompareBroncoVsExplorerRoute
   '/compare/explorer-vs-escape': typeof CompareExplorerVsEscapeRoute
@@ -272,6 +281,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/nationwide-vehicle-delivery'
     | '/service'
+    | '/sitemap'
     | '/trade-in'
     | '/compare/bronco-vs-explorer'
     | '/compare/explorer-vs-escape'
@@ -300,6 +310,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/nationwide-vehicle-delivery'
     | '/service'
+    | '/sitemap'
     | '/trade-in'
     | '/compare/bronco-vs-explorer'
     | '/compare/explorer-vs-escape'
@@ -328,6 +339,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/nationwide-vehicle-delivery'
     | '/service'
+    | '/sitemap'
     | '/trade-in'
     | '/compare/bronco-vs-explorer'
     | '/compare/explorer-vs-escape'
@@ -357,6 +369,7 @@ export interface RootRouteChildren {
   InventoryRoute: typeof InventoryRoute
   NationwideVehicleDeliveryRoute: typeof NationwideVehicleDeliveryRoute
   ServiceRoute: typeof ServiceRoute
+  SitemapRoute: typeof SitemapRoute
   TradeInRoute: typeof TradeInRoute
   CompareBroncoVsExplorerRoute: typeof CompareBroncoVsExplorerRoute
   CompareExplorerVsEscapeRoute: typeof CompareExplorerVsEscapeRoute
@@ -381,6 +394,13 @@ declare module '@tanstack/react-router' {
       path: '/trade-in'
       fullPath: '/trade-in'
       preLoaderRoute: typeof TradeInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap': {
+      id: '/sitemap'
+      path: '/sitemap'
+      fullPath: '/sitemap'
+      preLoaderRoute: typeof SitemapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/service': {
@@ -573,6 +593,7 @@ const rootRouteChildren: RootRouteChildren = {
   InventoryRoute: InventoryRoute,
   NationwideVehicleDeliveryRoute: NationwideVehicleDeliveryRoute,
   ServiceRoute: ServiceRoute,
+  SitemapRoute: SitemapRoute,
   TradeInRoute: TradeInRoute,
   CompareBroncoVsExplorerRoute: CompareBroncoVsExplorerRoute,
   CompareExplorerVsEscapeRoute: CompareExplorerVsEscapeRoute,

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { vehicles, type Vehicle } from "@/lib/vehicles";
+import { vehicles, type Vehicle, vehicleSlug } from "@/lib/vehicles";
 import { OfferPopup } from "@/components/popups/OfferPopup";
 
 const CATEGORIES = [
@@ -91,7 +91,7 @@ export function MostSearchedCars() {
                 {/* Photo & Badge with increased 4:3 size for full vehicle fit */}
                 <Link
                   to="/vehicle/$id"
-                  params={{ id: car.id }}
+                  params={{ id: vehicleSlug(car) }}
                   className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100 block"
                 >
                   <img
@@ -117,7 +117,7 @@ export function MostSearchedCars() {
                   <div>
                     <Link
                       to="/vehicle/$id"
-                      params={{ id: car.id }}
+                      params={{ id: vehicleSlug(car) }}
                       className="block"
                     >
                       <h3 className="text-[13.5px] sm:text-[15px] font-black text-slate-900 group-hover:text-[#002c5f] transition-colors leading-snug line-clamp-1">
@@ -151,7 +151,7 @@ export function MostSearchedCars() {
                     </button>
                     <Link
                       to="/vehicle/$id"
-                      params={{ id: car.id }}
+                      params={{ id: vehicleSlug(car) }}
                       className="rounded-md border border-slate-200 bg-slate-50 p-2 text-slate-700 hover:bg-[#002c5f] hover:text-white hover:border-[#002c5f] transition-all flex items-center justify-center shrink-0"
                       aria-label={`View ${car.year} ${car.model}`}
                     >

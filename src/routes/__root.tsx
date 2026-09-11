@@ -34,9 +34,9 @@ const autoDealerSchema = {
   name: "AM Ford",
   alternateName: "Nassief Ford",
   description:
-    "Family-owned Ford dealership in Jefferson, Ohio serving Ashtabula County, Northeast Ohio, and Northwestern Pennsylvania with new Ford trucks and SUVs, used vehicles, commercial vehicles, financing, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
+    "Family-owned Ford dealership in Ashtabula County (Jefferson, Ohio), serving Ashtabula, Geneva, Conneaut, and Northeast Ohio with new Ford trucks and SUVs, used vehicles, commercial vehicles, financing, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
   url: "https://amford.com",
-  telephone: "+14409982151",
+  telephone: "+14405537072",
   priceRange: "$$$",
   address: {
     "@type": "PostalAddress",
@@ -95,7 +95,7 @@ const organizationSchema = {
   alternateName: "Nassief Ford",
   url: "https://amford.com",
   logo: "https://amford.com/og-default.jpg",
-  telephone: "+14409982151",
+  telephone: "+14405537072",
   address: {
     "@type": "PostalAddress",
     streetAddress: "1059 State Route 46 North",
@@ -133,27 +133,27 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#002c5f" },
-      { title: "AM Ford | Ford Dealer in Jefferson, OH Serving Ashtabula County" },
+      { title: "AM Ford | Ford Dealer in Ashtabula County, OH (Jefferson)" },
       {
         name: "description",
         content:
-          "Family-owned Ford dealership in Jefferson, Ohio. Shop new Ford trucks and SUVs, quality used vehicles, and commercial vehicles with financing, trade-ins, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
+          "Family-owned Ford dealership in Ashtabula County, OH (Jefferson). Shop new Ford trucks and SUVs, quality used vehicles, and commercial vehicles with financing, trade-ins, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
       },
       {
         name: "keywords",
         content:
-          "Ford dealer Jefferson Ohio, Ford dealership Jefferson OH, Ford dealer Ashtabula County, used trucks Ashtabula County, Ford service Jefferson Ohio, used cars Jefferson Ohio, Ford dealer Northeast Ohio",
+          "Ford dealer Ashtabula County, Ford dealership Ashtabula County OH, Ford dealer Jefferson Ohio, used trucks Ashtabula County, Ford service Ashtabula County, used cars Ashtabula County, Ford dealer Northeast Ohio",
       },
       { name: "author", content: "AM Ford" },
       { property: "og:site_name", content: "AM Ford" },
       {
         property: "og:title",
-        content: "AM Ford | Ford Dealer in Jefferson, OH Serving Ashtabula County",
+        content: "AM Ford | Ford Dealer in Ashtabula County, OH (Jefferson)",
       },
       {
         property: "og:description",
         content:
-          "Shop new Ford trucks and SUVs, quality used vehicles, and commercial vehicles. Financing for many credit situations, trade-in appraisals, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
+          "Shop new Ford trucks and SUVs, quality used vehicles, and commercial vehicles in Ashtabula County, OH. Financing for many credit situations, trade-in appraisals, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
       },
       { property: "og:type", content: "website" },
       // Matches the homepage canonical exactly (with trailing slash). Every other route

@@ -2,7 +2,7 @@ import { useId, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 import { ArrowUpRight, Fuel, Gauge } from "lucide-react";
-import { vehicles, type Vehicle } from "@/lib/vehicles";
+import { vehicles, type Vehicle, vehicleSlug } from "@/lib/vehicles";
 import { cn } from "@/lib/utils";
 import { Reveal, SectionHeading, Stagger, StaggerItem } from "../fx/Reveal";
 import { CountUp } from "../fx/ui";
@@ -136,7 +136,7 @@ function CarCard({ v }: { v: Vehicle }) {
                 links on one page are still distinguishable to a screen reader. */}
             <Link
               to="/vehicle/$id"
-              params={{ id: v.id }}
+              params={{ id: vehicleSlug(v) }}
               aria-label={`View details for the ${v.year} ${v.make} ${v.model} ${v.trim}`}
               className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#002c5f] text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-[#001f44]"
             >

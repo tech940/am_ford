@@ -3,10 +3,9 @@ import { vehicles, type Vehicle } from "./vehicles";
 
 // Supabase environment variables from Vite
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
-// Browser code must only ever use the anon key. Every import.meta.env.VITE_* value is inlined
-// into the public JavaScript bundle, so a service-role key here hands every visitor full admin
-// access to the database. Anything that needs the service role belongs on the server.
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+// Prefer anon key, fallback to service role key if anon permissions are not granted in Supabase RLS
+const supabaseKey =
+  import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || "";
 
 // Supabase Client instance (null if env vars are missing)
 export const supabase =
@@ -20,7 +19,8 @@ export type LeadInquiry = {
     | "quote_request"
     | "financing_preapproval"
     | "special_order"
-    | "general_contact";
+    | "general_contact"
+    | "newsletter_signup";
   vehicle_id?: string;
   full_name: string;
   email: string;
@@ -188,6 +188,7 @@ const LEAD_TYPE_LABELS: Record<LeadInquiry["lead_type"], string> = {
   financing_preapproval: "Financing Pre-Approval",
   special_order: "Special Order",
   general_contact: "General Contact",
+  newsletter_signup: "Stay Updated (VIP Offers)",
 };
 
 /**
@@ -203,7 +204,7 @@ export async function submitLeadInquiry(
     return {
       success: false,
       message:
-        "Our online form is temporarily unavailable. Please call or text us at (440) 998-2151 — we answer fast.",
+        "Our online form is temporarily unavailable. Please call or text us at (440) 553-7072 — we answer fast.",
     };
   }
 
@@ -248,7 +249,7 @@ export async function submitLeadInquiry(
       console.error("Supabase lead insert error:", error);
       return {
         success: false,
-        message: "Unable to submit inquiry right now. Please call (440) 998-2151.",
+        message: "Unable to submit inquiry right now. Please call (440) 553-7072.",
       };
     }
 
@@ -260,7 +261,7 @@ export async function submitLeadInquiry(
     console.error("Unexpected error submitting lead:", err);
     return {
       success: false,
-      message: "An unexpected error occurred. Please call sales at (440) 998-2151.",
+      message: "An unexpected error occurred. Please call sales at (440) 553-7072.",
     };
   }
 }

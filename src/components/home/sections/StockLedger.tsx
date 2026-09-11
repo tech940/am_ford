@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { vehicles, dealerInfo, type Vehicle } from "@/lib/vehicles";
+import { vehicles, dealerInfo, type Vehicle, vehicleSlug } from "@/lib/vehicles";
 import { cn } from "@/lib/utils";
 
 /**
@@ -27,7 +27,7 @@ function ManifestRow({ v, index }: { v: Vehicle; index: number }) {
   return (
     <Link
       to="/vehicle/$id"
-      params={{ id: v.id }}
+      params={{ id: vehicleSlug(v) }}
       className={cn(
         "lg-row lg-rule group grid items-baseline gap-x-4 gap-y-2 border-t px-3 py-5 sm:px-4",
         // 12-column manifest on desktop; on phones it folds to two readable rows.
@@ -115,9 +115,9 @@ export function StockLedger() {
       </div>
 
       <p className="mt-6 max-w-[68ch] text-[15px] leading-relaxed text-ink/65">
-        Here is a sample of our active inventory. We are one store at {dealerInfo.address}, so
-        what is listed here is what is standing on the ground in {dealerInfo.locality} today. If the
-        right vehicle is not among these, explore our full inventory of {total} vehicles or tell us what you need and we will source it.
+        Here is a sample of our active inventory. What is listed here is what is standing on our
+        dealership lot today. If the right vehicle is not among these, explore our full inventory
+        of {total} vehicles or tell us what you need and we will source it.
       </p>
 
       <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">

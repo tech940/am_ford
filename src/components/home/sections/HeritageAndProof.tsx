@@ -11,7 +11,7 @@ export function HeritageAndProof() {
       <div className="relative w-full overflow-hidden" style={{ height: "clamp(320px, 55vw, 680px)" }}>
         <img
           src="https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/am-ford-banner.webp"
-          alt="AM Ford dealership lot in Jefferson, Ohio"
+          alt="AM Ford dealership lot in Ashtabula County, Ohio"
           loading="lazy"
           className="h-full w-full object-cover object-center"
         />
@@ -52,7 +52,7 @@ export function HeritageAndProof() {
               >
                 AM Ford.
                 <br />
-                Jefferson, Ohio.
+                Ashtabula County, Ohio.
               </h2>
             </div>
 

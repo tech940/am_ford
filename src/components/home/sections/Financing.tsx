@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, BadgePercent, Clock3, ShieldCheck } from "lucide-react";
-import { ResponsiveImage } from "@/components/site/ResponsiveImage";
 import { Reveal, SectionHeading, Stagger, StaggerItem } from "../fx/Reveal";
 import { MagneticButton, ctaGhost } from "../fx/ui";
 
@@ -27,18 +26,20 @@ export function Financing() {
   return (
     <section className="relative z-10 mx-auto max-w-6xl px-6 py-10 sm:py-20" aria-label="Financing">
       <div className="grid items-center gap-10 sm:gap-14 lg:grid-cols-2">
-        {/* Decorative, so it stays off phones, where it would only push the copy down.
-            This was a live WebGL alloy rim costing ~930 KB of three.js. The render ships
-            as a JPEG on white, so it sits on its own white plate: bare on this slate page
-            it would read as a white box, not a photograph. */}
         <Reveal className="relative order-2 hidden lg:order-1 lg:block">
-          <div className="mx-auto w-full max-w-[30rem] rounded-lg border border-slate-200 bg-white px-8 py-12 shadow-xl">
-            <ResponsiveImage
-              name="model-explorer"
-              alt=""
-              sizes="(min-width: 1024px) 416px, 100vw"
-              className="h-auto w-full object-contain"
-            />
+          <div className="relative mx-auto flex w-full max-w-[32rem] items-center justify-center py-4">
+            {/* Soft vehicle shadow under tires */}
+            <div className="pointer-events-none absolute bottom-4 h-8 w-4/5 rounded-full bg-slate-900/15 blur-lg" />
+            <picture>
+              <source srcSet="/images/model-explorer-cutout.webp" type="image/webp" />
+              <img
+                src="/images/model-explorer-cutout.png"
+                alt="Ford Explorer Financing"
+                width={640}
+                height={480}
+                className="relative z-10 h-auto w-full object-contain drop-shadow-xl"
+              />
+            </picture>
           </div>
         </Reveal>
 

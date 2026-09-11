@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, ArrowRight, Eye, ShieldCheck } from "lucide-react";
-import { vehicles, type Vehicle } from "@/lib/vehicles";
+import { ChevronLeft, ChevronRight, ArrowRight, Eye } from "lucide-react";
+import { vehicles, type Vehicle, vehicleSlug } from "@/lib/vehicles";
 import { OfferPopup } from "@/components/popups/OfferPopup";
 import { cn } from "@/lib/utils";
 
@@ -156,11 +156,10 @@ export function FeaturedSpotlight() {
 
               {/* Top Left Badges */}
               <div className="absolute left-3 top-3 z-10 flex items-center gap-1.5">
-                <span className="inline-flex items-center gap-1 rounded-md bg-[#002c5f] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-md">
+                <span className="inline-flex items-center rounded-md bg-[#002c5f] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-md">
                   FEATURED SPOTLIGHT
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-md bg-white/95 px-2.5 py-1 text-[10px] font-bold text-slate-900 shadow-md">
-                  <ShieldCheck className="h-3 w-3 text-emerald-600" />
+                <span className="inline-flex items-center rounded-md bg-white/95 px-2.5 py-1 text-[10px] font-bold text-slate-900 shadow-md">
                   {vehicle.condition}
                 </span>
               </div>
@@ -201,7 +200,7 @@ export function FeaturedSpotlight() {
 
                 <Link
                   to="/vehicle/$id"
-                  params={{ id: vehicle.id }}
+                  params={{ id: vehicleSlug(vehicle) }}
                   className="inline-flex items-center justify-center gap-1.5 rounded-md bg-[#002c5f] px-3.5 py-2 text-xs font-bold text-white shadow-lg hover:bg-[#001f44] transition shrink-0"
                 >
                   <Eye className="h-3.5 w-3.5" />

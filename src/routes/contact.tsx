@@ -14,20 +14,25 @@ const BREADCRUMBS = crumbs({ label: "Contact" });
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: `Contact AM Ford in ${dealerInfo.city} | Phone, Hours & Address` },
+      { title: `Contact AM Ford | Ford Dealership in Ashtabula County, OH` },
       {
         name: "description",
-        content: `Reach AM Ford at ${dealerInfo.address}. Call ${dealerInfo.phone} or message us to book a test drive. Serving Ashtabula County.`,
+        content: `Contact AM Ford in Ashtabula County at ${dealerInfo.address}. Call ${dealerInfo.phone} or visit our showroom in Jefferson, OH. Serving all of Ashtabula County.`,
       },
       {
         name: "keywords",
         content:
-          "AM Ford contact, AM Ford address, AM Ford hours, Ford dealer Jefferson Ohio, Ford dealership Jefferson OH phone number, AM Ford location, Ford dealer Ashtabula County",
+          "Ford dealer Ashtabula County, Ford dealership Ashtabula County OH, AM Ford contact, AM Ford address, Ford dealer Jefferson Ohio, AM Ford location",
       },
-      { property: "og:title", content: `Contact AM Ford | ${dealerInfo.city}` },
+      // Local geo tags
+      { name: "geo.region", content: "US-OH" },
+      { name: "geo.placename", content: "Ashtabula County, OH" },
+      { name: "geo.position", content: "41.7389;-80.7684" },
+      { name: "ICBM", content: "41.7389, -80.7684" },
+      { property: "og:title", content: `Contact AM Ford | Ford Dealership in Ashtabula County, OH` },
       {
         property: "og:description",
-        content: `Visit us at ${dealerInfo.address} or call ${dealerInfo.phone}. We're open 6 days a week.`,
+        content: `Visit AM Ford in Ashtabula County at ${dealerInfo.address} or call ${dealerInfo.phone}. We're open 6 days a week.`,
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://amford.com/contact" },
@@ -88,14 +93,35 @@ function ContactPage() {
 
           {/* Info column */}
           <div className="space-y-4 lg:col-span-5">
-            <a
-              href={dealerInfo.phoneHref}
-              className="block rounded-3xl bg-gradient-navy p-7 text-white shadow-glow transition hover:opacity-95"
-            >
-              <Phone className="h-6 w-6" />
-              <p className="display mt-4 text-3xl">{dealerInfo.phone}</p>
-              <p className="mt-1 text-sm text-white/70">Sales · Service · Parts</p>
-            </a>
+            <div className="rounded-3xl bg-gradient-navy p-7 text-white shadow-glow">
+              <div className="flex items-center gap-2 mb-4">
+                <Phone className="h-6 w-6" />
+                <h3 className="text-lg font-bold">Direct Phone Lines</h3>
+              </div>
+              <div className="space-y-3">
+                <a
+                  href={dealerInfo.phones.salesHref}
+                  className="flex items-center justify-between border-b border-white/15 pb-2 transition hover:text-sky-300"
+                >
+                  <span className="text-sm text-white/80 font-medium">Sales:</span>
+                  <span className="text-lg font-black tracking-tight">{dealerInfo.phones.sales}</span>
+                </a>
+                <a
+                  href={dealerInfo.phones.serviceHref}
+                  className="flex items-center justify-between border-b border-white/15 pb-2 transition hover:text-sky-300"
+                >
+                  <span className="text-sm text-white/80 font-medium">Service:</span>
+                  <span className="text-lg font-black tracking-tight">{dealerInfo.phones.service}</span>
+                </a>
+                <a
+                  href={dealerInfo.phones.partsHref}
+                  className="flex items-center justify-between transition hover:text-sky-300"
+                >
+                  <span className="text-sm text-white/80 font-medium">Parts:</span>
+                  <span className="text-lg font-black tracking-tight">{dealerInfo.phones.parts}</span>
+                </a>
+              </div>
+            </div>
             <Info icon={MapPin} title="Visit us" body={dealerInfo.address} />
             <Info icon={Mail} title="Email" body="sales@amfordashtabula.com" />
             <div className="rounded-3xl bg-card p-6 ring-1 ring-border">

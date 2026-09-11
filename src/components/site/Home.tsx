@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
 import {
   ArrowRight,
@@ -24,79 +24,145 @@ import heroTruck from "@/assets/hero-truck.jpg";
 import dealership from "@/assets/dealership.jpg";
 import interior from "@/assets/interior.jpg";
 import service from "@/assets/service.jpg";
-import { vehicles, dealerInfo } from "@/lib/vehicles";
+import { vehicles, dealerInfo, vehicleSlug } from "@/lib/vehicles";
 import { VehicleCard } from "@/components/site/VehicleCard";
 import OfferPopup from "@/components/popups/OfferPopup";
-import TradeOfferPopup from "@/components/popups/TradeOfferPopup";
 
 /* ------------ Hero ------------ */
 function Hero({ onOpenOffer, onOpenTrade }: { onOpenOffer: () => void; onOpenTrade: () => void }) {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const yBg = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
-  const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+  const yContent = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const fade = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate({
+        to: "/inventory",
+        search: { q: searchQuery.trim() },
+      });
+    } else {
+      navigate({ to: "/inventory" });
+    }
+  };
+
+  const quickModels = [
+    { label: "F-150", q: "F-150" },
+    { label: "Super Duty", q: "Super Duty" },
+    { label: "Explorer", q: "Explorer" },
+    { label: "Bronco", q: "Bronco" },
+    { label: "Escape", q: "Escape" },
+    { label: "Mustang", q: "Mustang" },
+  ];
 
   return (
-    <section ref={ref} className="relative min-h-[92vh] overflow-hidden">
-      {/* Background gradient + grid */}
-      <div className="absolute inset-0 bg-gradient-soft" />
-      <div className="absolute inset-0 grid-bg opacity-60 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
-      <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-radial-navy" />
-
-      {/* Vehicle image — parallax */}
-      <motion.div
-        style={{ y: yBg, scale }}
-        className="absolute inset-x-0 top-[18%] flex justify-center"
-      >
+    <section
+      ref={ref}
+      className="relative flex min-h-[85vh] sm:min-h-[88vh] lg:min-h-[92vh] w-full items-center justify-center overflow-hidden bg-slate-950"
+    >
+      {/* Background Dealership Image with Parallax */}
+      <motion.div style={{ y: yBg }} className="absolute inset-0 z-0 h-[120%] w-full">
         <img
-          src={heroTruck}
-          alt="2025 Ford F-150 Platinum"
-          width={1920}
-          height={1080}
-          className="w-[140%] max-w-none object-contain drop-shadow-[0_40px_60px_rgba(0,20,46,0.25)] sm:w-[110%] lg:w-[95%]"
+          src={dealership}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src =
+              "https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/am-ford-banner.webp";
+          }}
+          alt="AM Ford Dealership in Ashtabula County, OH"
+          loading="eager"
+          decoding="async"
+          className="h-full w-full object-cover object-center scale-105"
         />
+        {/* Cinema-grade dark overlay for high contrast white typography */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/65 to-slate-950/85" />
+        <div className="absolute inset-0 bg-radial-at-c from-transparent via-slate-950/40 to-slate-950/80" />
       </motion.div>
-
-      {/* Bottom fade */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent via-background/60 to-background" />
 
       {/* Content */}
       <motion.div
-        style={{ y, opacity: fade }}
-        className="relative z-10 mx-auto flex min-h-[92vh] max-w-7xl flex-col items-center justify-start px-6 pt-16 text-center sm:pt-24"
+        style={{ y: yContent, opacity: fade }}
+        className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center justify-center px-4 sm:px-6 py-20 sm:py-28 text-center"
       >
-        <motion.span
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-ink"
-        >
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
-          Now arriving · 2025 Ford lineup
-        </motion.span>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="display mt-6 max-w-4xl text-balance text-5xl text-ink sm:text-6xl lg:text-7xl"
-        >
-          The road ahead, <span className="text-primary">built in Ashtabula.</span>
-        </motion.h1>
+        {/* Eyebrow badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="mt-6 max-w-2xl rounded-2xl bg-white/90 px-6 py-3.5 shadow-md ring-1 ring-border/80 backdrop-blur-xl"
+          transition={{ delay: 0.15, duration: 0.7 }}
+          className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold text-white/90 shadow-sm backdrop-blur-md"
         >
-          <p className="text-balance text-base font-medium leading-relaxed text-slate-900 sm:text-lg sm:font-semibold">
-            Family-owned Ford dealer with the full lineup of trucks, SUVs and EVs — straight
-            pricing, expert service, zero pressure.
-          </p>
+          <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+          <span>Ashtabula County&apos;s Trusted Ford Dealer Since 1964</span>
         </motion.div>
 
+        {/* Large Bold Headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          className="display mt-5 sm:mt-6 max-w-4xl text-balance text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]"
+        >
+          Ashtabula County&apos;s largest selection of new & pre-owned cars, trucks, & SUVs
+        </motion.h1>
+
+        {/* Subtitle Line with Bullet Separators */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="mt-4 sm:mt-5 text-balance text-sm sm:text-lg lg:text-xl font-semibold text-slate-200 tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
+        >
+          Ford F-150 • Super Duty • Explorer • Bronco • Escape • Mustang • and more
+        </motion.p>
+
+        {/* Center Prominent Search Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55, duration: 0.8 }}
+          className="mt-7 sm:mt-9 w-full max-w-3xl"
+        >
+          <form
+            onSubmit={handleSearchSubmit}
+            className="group relative flex items-center rounded-full bg-white p-1.5 sm:p-2 shadow-[0_20px_60px_rgba(0,0,0,0.6)] ring-1 ring-white/30 transition-all focus-within:ring-2 focus-within:ring-primary focus-within:shadow-[0_20px_70px_rgba(37,99,235,0.3)]"
+          >
+            <Search className="ml-3.5 sm:ml-4 h-5 w-5 shrink-0 text-slate-400 transition-colors group-focus-within:text-primary" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by make, model, feature"
+              className="w-full bg-transparent px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-5 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-white shadow-md transition hover:bg-primary/90 active:scale-95"
+            >
+              <span>Search</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          </form>
+
+          {/* Quick Filter Tags */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <span className="text-xs font-semibold text-slate-300/90">Popular:</span>
+            {quickModels.map((item) => (
+              <Link
+                key={item.label}
+                to="/inventory"
+                search={{ q: item.q }}
+                className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white/95 backdrop-blur-md transition hover:border-white/40 hover:bg-white/20 active:scale-95"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* CTA Actions */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -105,9 +171,9 @@ function Hero({ onOpenOffer, onOpenTrade }: { onOpenOffer: () => void; onOpenTra
         >
           <Link
             to="/inventory"
-            className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-glow transition hover:opacity-90"
+            className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white shadow-glow transition hover:opacity-95"
           >
-            Browse inventory{" "}
+            Browse All Inventory
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
           </Link>
           <button
@@ -118,26 +184,26 @@ function Hero({ onOpenOffer, onOpenTrade }: { onOpenOffer: () => void; onOpenTra
           </button>
           <button
             onClick={onOpenTrade}
-            className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-slate-900 ring-1 ring-border shadow-sm transition hover:bg-slate-50"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-bold text-white shadow-sm backdrop-blur-md transition hover:bg-white/20"
           >
-            <DollarSign className="h-4 w-4 text-emerald-600" /> Value Your Trade
+            <DollarSign className="h-4 w-4 text-emerald-400" /> Value Your Trade
           </button>
           <a
             href={dealerInfo.phoneHref}
-            className="inline-flex items-center gap-2 rounded-full bg-white/80 px-6 py-3 text-sm font-semibold text-ink ring-1 ring-border backdrop-blur-md transition hover:bg-white"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/20"
           >
             <Phone className="h-4 w-4" /> Call sales
           </a>
         </motion.div>
 
-        {/* Floating stat cards */}
-        <div className="pointer-events-none absolute inset-x-0 top-[58%] mx-auto hidden max-w-7xl px-6 lg:block">
+        {/* Floating Stat Badges */}
+        <div className="pointer-events-none absolute inset-x-0 top-[60%] mx-auto hidden max-w-7xl px-6 lg:block">
           <FloatCard className="absolute left-2 top-0" delay={0.9}>
             <div className="flex items-center gap-3">
-              <Star className="h-5 w-5 text-primary" />
+              <Star className="h-5 w-5 text-amber-400" />
               <div className="text-left">
-                <p className="display text-lg leading-none">4.9 ★</p>
-                <p className="text-xs text-muted-foreground">2,400+ reviews</p>
+                <p className="display text-lg leading-none font-bold text-slate-900">4.9 ★</p>
+                <p className="text-xs text-slate-600 font-medium">2,400+ Google Reviews</p>
               </div>
             </div>
           </FloatCard>
@@ -145,17 +211,19 @@ function Hero({ onOpenOffer, onOpenTrade }: { onOpenOffer: () => void; onOpenTra
             <div className="flex items-center gap-3">
               <ShieldCheck className="h-5 w-5 text-primary" />
               <div className="text-left">
-                <p className="display text-lg leading-none">Lifetime</p>
-                <p className="text-xs text-muted-foreground">Powertrain warranty</p>
+                <p className="display text-lg leading-none font-bold text-slate-900">Lifetime</p>
+                <p className="text-xs text-slate-600 font-medium">Powertrain Warranty</p>
               </div>
             </div>
           </FloatCard>
-          <FloatCard className="absolute left-1/2 top-44 -translate-x-1/2" delay={1.3}>
+          <FloatCard className="absolute left-1/2 top-48 -translate-x-1/2" delay={1.3}>
             <div className="flex items-center gap-3">
               <MapPin className="h-5 w-5 text-primary" />
               <div className="text-left">
-                <p className="display text-sm leading-none">Ashtabula, OH</p>
-                <p className="text-xs text-muted-foreground">Open today · 9–8</p>
+                <p className="display text-sm leading-none font-bold text-slate-900">
+                  Ashtabula County, OH
+                </p>
+                <p className="text-xs text-slate-600 font-medium">Open Today · 9AM–8PM</p>
               </div>
             </div>
           </FloatCard>
@@ -280,7 +348,7 @@ function ScrollAssembly() {
             </div>
             <h3 className="display mt-4 text-2xl">Built around you</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              60+ years serving Northeast Ohio drivers.
+              60+ years serving Ashtabula County drivers.
             </p>
           </motion.div>
         </div>
@@ -539,7 +607,12 @@ function Offers() {
             </p>
             <Link
               to="/vehicle/$id"
-              params={{ id: "f150-lightning-2025" }}
+              params={{
+                id: (() => {
+                  const v = vehicles.find((x) => x.id === "f150-lightning-2025" || x.model.toLowerCase().includes("lightning"));
+                  return v ? vehicleSlug(v) : "2025-ford-f-150-lightning-flash";
+                })(),
+              }}
               className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-primary"
             >
               View the F-150 Lightning <ChevronRight className="h-4 w-4" />

@@ -15,7 +15,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { fetchAllLeads, updateLeadStatus, deleteLead, type DbLead } from "@/lib/supabase";
-import { vehicles, type Vehicle } from "@/lib/vehicles";
+import { vehicles, type Vehicle, vehicleSlug } from "@/lib/vehicles";
 import { cn } from "@/lib/utils";
 
 // Route definition with strict noindex for privacy and search hygiene
@@ -402,6 +402,7 @@ function AdminPage() {
                   <option value="Test Drive">Test Drive</option>
                   <option value="Financing Pre-Approval">Financing</option>
                   <option value="Special Order">Special Order</option>
+                  <option value="Stay Updated (VIP Offers)">Stay Updated (VIP Offers)</option>
                   <option value="General Contact">General Contact</option>
                 </select>
               </div>
@@ -634,7 +635,7 @@ function AdminPage() {
                       <span className="text-[11px] text-slate-400">ID: {v.id}</span>
                       <Link
                         to="/vehicle/$id"
-                        params={{ id: v.id }}
+                        params={{ id: vehicleSlug(v) }}
                         target="_blank"
                         className="inline-flex items-center gap-1 text-xs font-bold text-[#002c5f] hover:underline"
                       >

@@ -84,7 +84,7 @@ export function DeliveryHighlight() {
               <StaggerItem>
                 <p className="mt-5 text-base leading-relaxed text-white/75">
                   Choose your vehicle online, handle financing and your trade remotely, and we bring
-                  it to your driveway free within 300 miles of the {dealerInfo.locality} store.
+                  it to your driveway free within 300 miles of our dealership.
                   Farther away, we arrange shipping to you.
                 </p>
               </StaggerItem>

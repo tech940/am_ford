@@ -66,11 +66,11 @@ export function AreasWeServe() {
         eyebrow="Areas we serve"
         title={
           <>
-            Rooted in Jefferson,
+            Rooted in Ashtabula County,
             <span className="text-slate-500 font-normal"> driving the whole region</span>
           </>
         }
-        copy="People make the trip to Jefferson from all over Ashtabula County, Northeast Ohio, and Northwestern Pennsylvania for the inventory, straightforward pricing, and a process that stays simple from first question to keys in hand. If you live farther out, distance does not have to be the deciding factor; our delivery program closes the gap."
+        copy="People visit AM Ford from all over Ashtabula County, Northeast Ohio, and Northwestern Pennsylvania for the inventory, straightforward pricing, and a process that stays simple from first question to keys in hand. If you live farther out, distance does not have to be the deciding factor; our delivery program closes the gap."
       />
 
       <Reveal className="mx-auto mt-6 max-w-2xl" delay={0.1}>

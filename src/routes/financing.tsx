@@ -25,24 +25,24 @@ const BREADCRUMBS = crumbs({ label: "Financing" });
 export const Route = createFileRoute("/financing")({
   head: () => ({
     meta: [
-      { title: `Ford Auto Finance & Loans in ${dealerInfo.city} | AM Ford` },
+      { title: `Ford Financing & Auto Loans in Ashtabula County, OH | AM Ford` },
       {
         name: "description",
-        content: `Apply online for Ford financing pre-approval with AM Ford in ${dealerInfo.city}. Soft credit check with no impact to your score. Serving Ashtabula County.`,
+        content: `Apply online for Ford financing & auto loans in Ashtabula County with AM Ford (${dealerInfo.city}). Pre-approval options with flexible terms across all credit tiers.`,
       },
       {
         name: "keywords",
         content:
-          "Ford financing Jefferson Ohio, auto loan Jefferson OH, car pre-approval Ashtabula County, Ford lease deals, low APR auto loan, Ford dealer Northeast Ohio, AM Ford finance",
+          "Ford financing Ashtabula County, auto loan Ashtabula County OH, car pre-approval Ashtabula County, Ford financing Jefferson Ohio, Ford lease deals Ashtabula, low APR auto loan, Ford dealer Northeast Ohio, AM Ford finance",
       },
       // Local geo tags
       { name: "geo.region", content: "US-OH" },
-      { name: "geo.placename", content: dealerInfo.city },
+      { name: "geo.placename", content: "Ashtabula County, OH" },
       { name: "geo.position", content: "41.7389;-80.7684" },
       { name: "ICBM", content: "41.7389, -80.7684" },
       {
         property: "og:title",
-        content: `Ford Auto Loans & Pre-Approval | AM Ford ${dealerInfo.city}`,
+        content: `Ford Auto Loans & Pre-Approval in Ashtabula County | AM Ford`,
       },
       {
         property: "og:description",

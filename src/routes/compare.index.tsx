@@ -12,7 +12,7 @@ const CANONICAL = `${SITE_ORIGIN}${PATH}`;
 
 const TITLE = "Compare Ford Models Side by Side | AM Ford";
 const DESCRIPTION =
-  "Compare Ford models side by side at AM Ford in Jefferson, OH. Explorer vs Escape, F-150 vs Lightning, Bronco vs Explorer, with specs and buying advice.";
+  `Compare Ford models side by side at AM Ford in Ashtabula County (${dealerInfo.city}). Explorer vs Escape, F-150 vs Lightning, Bronco vs Explorer, with local buying advice.`;
 
 const BREADCRUMBS = crumbs({ label: "Compare" });
 
@@ -84,13 +84,13 @@ export const Route = createFileRoute("/compare/")({
       {
         name: "keywords",
         content: [
-          "compare Ford models",
+          "compare Ford models Ashtabula County",
           "Ford model comparison",
           "Ford Explorer vs Escape",
           "Ford F-150 vs Lightning",
           "Ford Bronco vs Explorer",
+          "Ford dealer Ashtabula County",
           "Ford dealer Jefferson Ohio",
-          "Ford SUV and truck comparison Northeast Ohio",
         ].join(", "),
       },
       { property: "og:title", content: TITLE },

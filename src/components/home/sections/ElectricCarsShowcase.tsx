@@ -42,7 +42,7 @@ export function ElectricCarsShowcase() {
             </h2>
             <p className="mt-2 max-w-xl text-sm font-medium text-slate-300 sm:text-base">
               Experience instant torque, zero tailpipe emissions, and Ford's next-generation EV
-              charging network in {`Jefferson, Ohio`}.
+              charging network in Ashtabula County, Ohio.
             </p>
           </div>
 

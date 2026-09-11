@@ -57,18 +57,23 @@ const SERVICE_SCHEMA = {
 export const Route = createFileRoute("/finance/bad-credit")({
   head: () => ({
     meta: [
-      { title: "Ford Financing for Every Credit Situation | AM Ford" },
+      { title: "Ford Financing for All Credit Situations | Ashtabula County, OH | AM Ford" },
       {
         name: "description",
         content:
-          "First-time buyer, limited credit history, or rebuilding credit? AM Ford in Jefferson, Ohio works with multiple lenders. Apply online, no obligation.",
+          "First-time buyer, limited credit history, or rebuilding credit in Ashtabula County, OH? AM Ford in Jefferson works with multiple lenders. Apply online with no obligation.",
       },
       {
         name: "keywords",
         content:
-          "bad credit car loan Ohio, no credit auto financing Ashtabula County, first time car buyer Jefferson Ohio, rebuilding credit auto loan, second chance financing Ford, buy here pay here alternative Northeast Ohio, car loan after bankruptcy Ohio",
+          "no credit auto financing Ashtabula County, bad credit car loan Ashtabula County, first time car buyer Ashtabula County OH, rebuilding credit auto loan, second chance financing Ford, buy here pay here alternative Northeast Ohio, car loan after bankruptcy Ohio",
       },
-      { property: "og:title", content: "Ford Financing for Every Credit Situation | AM Ford" },
+      // Local geo tags
+      { name: "geo.region", content: "US-OH" },
+      { name: "geo.placename", content: "Ashtabula County, OH" },
+      { name: "geo.position", content: "41.7389;-80.7684" },
+      { name: "ICBM", content: "41.7389, -80.7684" },
+      { property: "og:title", content: "Ford Financing for All Credit Situations | Ashtabula County, OH | AM Ford" },
       {
         property: "og:description",
         content:

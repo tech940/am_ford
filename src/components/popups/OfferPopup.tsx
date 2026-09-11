@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
+import { X, CheckCircle2, ChevronDown } from "lucide-react";
 import {
-  PRIVACY_POLICY_URL,
   SMS_CONSENT_DISCLOSURE,
-  SMS_MARKETING_CONSENT_DISCLOSURE,
-  SMS_TRANSACTIONAL_CONSENT_DISCLOSURE,
-  TERMS_CONSENT_DISCLOSURE,
   TERMS_OF_USE_URL,
 } from "@/lib/smsConsent";
 import { submitLeadInquiry } from "@/lib/supabase";
@@ -26,14 +23,12 @@ interface OfferPopupProps {
   initialCarData?: CarData | null;
 }
 
-function buildSourceLabel(pageSource: string): string {
-  if (!pageSource) return "500 off Popup";
-  const labels: Record<string, string> = {
-    Home: "Home page",
-    SRP: "Listing page",
-    VDP: "VDP page",
-  };
-  return "500 off Popup (" + (labels[pageSource] || pageSource) + ")";
+const TRADE_HERO_IMAGE =
+  "https://vehicle-images.carscommerce.inc/9d49-110013336/1FTEW3LP7TKD22464/844985e1845dbb3c196e6a196fe08341.webp";
+
+function formatE164(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+  return "+" + digits;
 }
 
 export function OfferPopup({
@@ -44,43 +39,63 @@ export function OfferPopup({
 }: OfferPopupProps) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [preferredContact, setPreferredContact] = useState("Text");
+  const [phone, setPhone] = useState("+1");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+
   const [carData, setCarData] = useState<CarData>(() => {
     if (initialCarData) return initialCarData;
-    if (typeof window === "undefined")
+    if (typeof window === "undefined") {
       return { title: "", price: "", vin: "", stock: "", pageUrl: "" };
-    const p = new URLSearchParams(window.location.search);
+    }
+    const params = new URLSearchParams(window.location.search);
     return {
-      title: p.get("vehicle") || p.get("title") || "General Offer Inquiry",
-      price: p.get("price") || "",
-      vin: p.get("vin") || "",
-      stock: p.get("stock") || "",
-      pageUrl: p.get("pageUrl") || window.location.href,
+      title: params.get("vehicle") || params.get("title") || "",
+      price: params.get("price") || "",
+      vin: params.get("vin") || "",
+      stock: params.get("stock") || "",
+      pageUrl: params.get("page_url") || params.get("pageUrl") || window.location.href,
+      vehicleSnapshot: null,
     };
   });
 
   useEffect(() => {
-    if (initialCarData) {
-      setCarData(initialCarData);
-    }
+    if (initialCarData) setCarData(initialCarData);
   }, [initialCarData]);
+
+  const handlePhoneChange = (value: string) => {
+    let next = value;
+    if (!next.startsWith("+1")) {
+      next = "+1" + next.replace(/\D/g, "");
+    }
+    const digits = next.slice(2).replace(/\D/g, "").slice(0, 10);
+    setPhone("+1" + digits);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
 
+    if (!firstName.trim()) {
+      setError("Please enter your first name.");
+      return;
+    }
+    if (phone.length < 12) {
+      setError("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
+    setLoading(true);
     try {
       const res = await submitLeadInquiry({
         lead_type: "quote_request",
         full_name: `${firstName} ${lastName}`.trim(),
         email: email,
-        phone: phone,
-        message: `Claimed $500 OFF Offer on ${carData.title || "Vehicle"}. Source: ${buildSourceLabel(pageSource)}`,
+        phone: formatE164(phone),
+        message: `Submitted $500 More For Your Trade request on ${carData.title || "Vehicle"}. Preferred contact: ${preferredContact}. Source: ${pageSource || "Trade Offer Popup"}`,
       });
 
       if (res.success) {
@@ -98,22 +113,34 @@ export function OfferPopup({
 
   if (submitted) {
     return (
-      <div className="offer-overlay">
-        <div className="relative w-full max-w-[460px] overflow-hidden rounded-3xl bg-white p-8 text-center shadow-2xl border border-slate-200">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 text-3xl font-bold">
-            ✓
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-xs">
+        <div className="relative w-full max-w-[480px] overflow-hidden rounded-xl bg-white p-8 text-center shadow-2xl border border-slate-200">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close popup"
+            className="absolute top-3.5 right-3.5 grid h-7 w-7 place-items-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer"
+          >
+            <X className="h-4 w-4" />
+          </button>
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+            <CheckCircle2 className="h-8 w-8" />
           </div>
-          <h2 className="mt-5 text-2xl font-black text-slate-900">
-            Voucher Claimed!
+          <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-[11px] font-mono font-bold text-slate-700">
+            CERTIFICATE #AMF-500-TRADE
+          </div>
+          <h2 className="mt-3 text-xl font-black text-slate-900 tracking-tight">
+            $500 Trade Bonus Registered!
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            Your $500 vehicle voucher has been generated. Our sales department will confirm your redemption details shortly.
+          <p className="mt-2 text-xs text-slate-600 leading-relaxed">
+            Your $500 trade-in bonus voucher has been registered with AM Ford in Ashtabula County, OH. A sales advisor will follow up via your preferred contact method ({preferredContact}).
           </p>
           <button
+            type="button"
             onClick={onClose}
-            className="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-[#002c5f] py-3 text-xs sm:text-sm font-bold text-white shadow-md transition hover:bg-[#001f44] active:scale-95"
+            className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#002c5f] py-3 text-xs font-bold text-white shadow-sm transition hover:bg-[#001f44] cursor-pointer"
           >
-            Return to Inventory
+            Done & Return to Site
           </button>
         </div>
       </div>
@@ -121,195 +148,168 @@ export function OfferPopup({
   }
 
   return (
-    <div className="offer-overlay">
-      <div className="relative w-full max-w-[500px] overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200">
-        {/* CLOSE BUTTON */}
-        <button
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute right-3.5 top-3.5 z-20 grid h-9 w-9 place-items-center rounded-full bg-white/15 text-white/90 backdrop-blur-md transition hover:bg-white/25 hover:text-white"
-        >
-          <span className="text-lg leading-none">×</span>
-        </button>
-
-        {/* HEADER */}
-        <div className="relative bg-[#002c5f] px-6 pt-7 pb-6 text-center text-white overflow-hidden">
-          {/* Subtle warm glow background accent */}
-          <div
-            className="pointer-events-none absolute -top-16 left-1/2 -translate-x-1/2 h-44 w-72 rounded-full bg-amber-400/20 blur-3xl"
-            aria-hidden="true"
-          />
-
-          <div className="relative z-10">
-            {/* Dealer Logo Pill */}
-            <div className="inline-flex items-center justify-center rounded-xl bg-white px-3 py-1.5 shadow-sm mb-3">
-              <img
-                src="https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/Am-ford.png"
-                alt="AM Ford"
-                className="h-6 w-auto object-contain"
-              />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-[680px] overflow-hidden rounded-lg bg-white shadow-2xl border border-slate-200/90 animate-in zoom-in-95 duration-200">
+        {/* Top Hero Banner (Split 50/50) */}
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          {/* Left Promo Half - Main Brand Navy */}
+          <div className="flex flex-col justify-center bg-[#002c5f] p-6 sm:p-7 text-white">
+            {/* Top Accent Line */}
+            <div className="h-[3px] w-14 bg-white/90 mb-3" />
+            
+            {/* $500 Text */}
+            <div className="text-4xl sm:text-5xl font-black tracking-tight text-white leading-none">
+              $500
             </div>
 
-            {/* Main Value Proposition */}
-            <div className="flex items-baseline justify-center gap-2">
-              <span className="text-4xl sm:text-5xl font-black tracking-tight text-white">
-                $500
-              </span>
-              <span className="rounded-lg bg-amber-400 px-2 py-0.5 text-xl sm:text-2xl font-black tracking-wide text-slate-950">
-                OFF
+            {/* MORE FOR YOUR TRADE* */}
+            <div className="mt-2.5">
+              <span className="inline-block border-b-2 border-white pb-1 text-base sm:text-lg font-black uppercase tracking-tight text-white leading-tight">
+                MORE FOR YOUR TRADE*
               </span>
             </div>
 
-            <p className="mt-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-200">
-              Your Next Vehicle Purchase
+            {/* Footnote */}
+            <p className="mt-2.5 text-[9.5px] sm:text-[10px] leading-tight text-white/75 font-normal">
+              Cannot be combined with any other discounts or promotions. Please contact dealer for details.
             </p>
+          </div>
 
-            {/* Trust rating */}
-            <div className="mt-2 flex items-center justify-center gap-1 text-amber-400 text-xs">
-              <span>★</span>
-              <span>★</span>
-              <span>★</span>
-              <span>★</span>
-              <span>★</span>
-              <span className="ml-1 text-[11px] font-semibold text-slate-300">
-                Authorized Ohio Dealership
-              </span>
-            </div>
+          {/* Right Hero Image Half */}
+          <div className="relative min-h-[160px] md:min-h-full bg-slate-100 overflow-hidden">
+            <img
+              src={TRADE_HERO_IMAGE}
+              alt="AM Ford Dealership & Truck"
+              className="h-full w-full object-cover object-center"
+            />
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close popup"
+              className="absolute top-2.5 right-2.5 grid h-7 w-7 place-items-center rounded-full bg-white/90 text-slate-800 hover:bg-white shadow-sm transition cursor-pointer z-10"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
         </div>
 
-        {/* BODY */}
-        <div className="p-6 sm:p-7">
-          <form onSubmit={handleSubmit} className="space-y-3.5">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-600">
-                  First Name <span className="text-amber-600">*</span>
+        {/* Bottom Form Body */}
+        <div className="p-5 sm:p-7 bg-white">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+              {/* First Name */}
+              <div className="relative rounded border border-slate-300 bg-white focus-within:border-[#002c5f] focus-within:ring-1 focus-within:ring-[#002c5f] transition-all">
+                <label className="absolute -top-2.5 left-3 bg-white px-1 text-[10.5px] font-semibold text-slate-500">
+                  First Name <span className="text-slate-400">*</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="John"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   required
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-xs sm:text-sm font-medium text-slate-900 outline-none transition focus:border-[#002c5f] focus:bg-white focus:ring-2 focus:ring-[#002c5f]/15"
+                  className="w-full bg-transparent px-3.5 py-2.5 text-xs sm:text-sm font-medium text-slate-900 outline-none"
                 />
               </div>
 
-              <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-600">
-                  Last Name <span className="text-amber-600">*</span>
+              {/* Last Name */}
+              <div className="relative rounded border border-slate-300 bg-white focus-within:border-[#002c5f] focus-within:ring-1 focus-within:ring-[#002c5f] transition-all">
+                <label className="absolute -top-2.5 left-3 bg-white px-1 text-[10.5px] font-semibold text-slate-500">
+                  Last Name
                 </label>
                 <input
                   type="text"
-                  placeholder="Doe"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  required
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-xs sm:text-sm font-medium text-slate-900 outline-none transition focus:border-[#002c5f] focus:bg-white focus:ring-2 focus:ring-[#002c5f]/15"
+                  className="w-full bg-transparent px-3.5 py-2.5 text-xs sm:text-sm font-medium text-slate-900 outline-none"
                 />
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-600">
-                  Phone Number <span className="text-amber-600">*</span>
+              {/* Preferred Contact */}
+              <div className="relative rounded border border-slate-300 bg-white focus-within:border-[#002c5f] focus-within:ring-1 focus-within:ring-[#002c5f] transition-all">
+                <label className="absolute -top-2.5 left-3 bg-white px-1 text-[10.5px] font-semibold text-slate-500">
+                  Preferred Contact
+                </label>
+                <div className="relative">
+                  <select
+                    value={preferredContact}
+                    onChange={(e) => setPreferredContact(e.target.value)}
+                    className="w-full appearance-none bg-transparent px-3.5 py-2.5 text-xs sm:text-sm font-medium text-slate-900 outline-none cursor-pointer pr-9"
+                  >
+                    <option value="Text">Text</option>
+                    <option value="Call">Call</option>
+                    <option value="Email">Email</option>
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-700" />
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div className="relative rounded border border-slate-300 bg-white focus-within:border-[#002c5f] focus-within:ring-1 focus-within:ring-[#002c5f] transition-all">
+                <label className="absolute -top-2.5 left-3 bg-white px-1 text-[10.5px] font-semibold text-slate-500">
+                  Phone <span className="text-slate-400">*</span>
                 </label>
                 <input
                   type="tel"
-                  placeholder="(440) 555-0199"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => handlePhoneChange(e.target.value)}
                   required
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-xs sm:text-sm font-medium text-slate-900 outline-none transition focus:border-[#002c5f] focus:bg-white focus:ring-2 focus:ring-[#002c5f]/15"
+                  placeholder="+1"
+                  className="w-full bg-transparent px-3.5 py-2.5 text-xs sm:text-sm font-medium text-slate-900 outline-none"
                 />
               </div>
 
-              <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-600">
-                  Email Address <span className="text-amber-600">*</span>
+              {/* Email (Full width) */}
+              <div className="sm:col-span-2 relative rounded border border-slate-300 bg-white focus-within:border-[#002c5f] focus-within:ring-1 focus-within:ring-[#002c5f] transition-all">
+                <label className="absolute -top-2.5 left-3 bg-white px-1 text-[10.5px] font-semibold text-slate-500">
+                  Email
                 </label>
                 <input
                   type="email"
-                  placeholder="john@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-xs sm:text-sm font-medium text-slate-900 outline-none transition focus:border-[#002c5f] focus:bg-white focus:ring-2 focus:ring-[#002c5f]/15"
+                  className="w-full bg-transparent px-3.5 py-2.5 text-xs sm:text-sm font-medium text-slate-900 outline-none"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="rounded-xl bg-red-50 p-2.5 text-center text-xs font-semibold text-red-600 border border-red-200">
+              <div className="rounded-md bg-red-50 p-2.5 text-center text-xs font-semibold text-red-600 border border-red-100">
                 {error}
               </div>
             )}
 
-            <div className="rounded-xl bg-slate-50 p-2.5 text-center">
-              <p className="text-[10px] leading-relaxed text-slate-500">
-                {SMS_CONSENT_DISCLOSURE}{" "}
-                <a
-                  href={TERMS_OF_USE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-bold text-[#002c5f] hover:underline"
-                >
-                  Terms of use
-                </a>
-              </p>
+            {/* Action Buttons */}
+            <div className="pt-1 flex items-center justify-between gap-4">
+              <button
+                type="button"
+                onClick={onClose}
+                className="text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition px-2 py-2 cursor-pointer"
+              >
+                Not Interested
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="rounded-md bg-[#002c5f] px-9 py-2.5 text-xs sm:text-sm font-bold text-white shadow-sm transition hover:bg-[#001f44] active:scale-95 disabled:opacity-50 cursor-pointer"
+              >
+                {loading ? "Submitting..." : "Submit"}
+              </button>
             </div>
 
-            {/* CTA BUTTON */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-[#002c5f] py-3.5 px-4 text-xs sm:text-sm font-bold text-white shadow-md transition hover:bg-[#001f44] active:scale-95 disabled:opacity-50"
-            >
-              <span>{loading ? "Processing..." : "Claim My $500 Voucher"}</span>
-              <span className="transition-transform group-hover:translate-x-1">→</span>
-            </button>
-          </form>
-
-          {/* TRUST BADGES INLINE */}
-          <div className="mt-4 flex items-center justify-center gap-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-500">
-            <span className="flex items-center gap-1">🔒 100% Secure</span>
-            <span className="text-slate-300">·</span>
-            <span className="flex items-center gap-1">✓ No Obligation</span>
-            <span className="text-slate-300">·</span>
-            <span className="flex items-center gap-1">⚡ Instant Delivery</span>
-          </div>
-
-          {/* FOOTER */}
-          <div className="mt-3 flex items-center justify-between text-[10px] text-slate-400">
-            <div className="flex gap-2">
+            {/* Legal SMS / Terms Disclaimer */}
+            <p className="mt-3 text-center text-[11px] text-slate-500 leading-normal">
+              {SMS_CONSENT_DISCLOSURE}{" "}
               <a
                 href={TERMS_OF_USE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:underline"
+                className="font-bold underline text-slate-900 hover:text-[#002c5f]"
               >
-                Terms
+                Terms of use
               </a>
-              <span>·</span>
-              <a
-                href={PRIVACY_POLICY_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                Privacy
-              </a>
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="font-medium text-slate-400 hover:text-slate-600 hover:underline"
-            >
-              No, thank you
-            </button>
-          </div>
+            </p>
+          </form>
         </div>
       </div>
     </div>
