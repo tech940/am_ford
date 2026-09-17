@@ -283,7 +283,17 @@ type EffectiveFilters = {
 function vehicleMatches(v: Vehicle, f: EffectiveFilters): boolean {
   if (f.type !== "All" && v.type !== f.type) return false;
   if (f.fuel !== "All" && v.fuel !== f.fuel) return false;
-  if (f.condition !== "All" && v.condition !== f.condition) return false;
+  // "Used" means pre-owned, which includes Certified Pre-Owned. A shopper choosing Used
+  // expects every vehicle that is not new; selecting "Certified Pre-Owned" still narrows to
+  // certified stock. Exact matching hid the 34 certified cars, leaving the Used page with 9
+  // of 43 vehicles, and 9 fits in one page of PAGE_SIZE=12, so no pager rendered either.
+  if (f.condition !== "All") {
+    const matchesCondition =
+      f.condition === "Used"
+        ? v.condition === "Used" || v.condition === "Certified Pre-Owned"
+        : v.condition === f.condition;
+    if (!matchesCondition) return false;
+  }
   if (f.drivetrain !== "All" && v.drivetrain !== f.drivetrain) return false;
   if (f.transmission !== "All" && v.transmission !== f.transmission) return false;
   if (f.year !== "All" && v.year !== Number(f.year)) return false;

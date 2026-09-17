@@ -2,1357 +2,841 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://amford.com/</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?type=Truck</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?type=SUV</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?type=Car</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?type=EV</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?fuel=Gas</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?fuel=Hybrid</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?fuel=Electric</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?condition=New</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?condition=Used</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/inventory?condition=Certified+Pre-Owned</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://amford.com/vehicle/2026-ford-explorer-tremor-1fmuk8jh5tgb44780</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-250sd-xl-1ft8w2bm3tee57714</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-escape-active-1fmcu9gn2tua16653</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2019-ford-f-350sd-lariat-1ft8w3bt6kee62286</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2021-ford-expedition-limited-1fmju2at3mea15092</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2021-ford-f-150-xlt-1ftfw1ed3mfa98860</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2022-ford-escape-se-1fmcu9g69nub56968</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2022-ford-bronco-outer-banks-1fmde5bh9nla82766</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2022-ford-escape-se-1fmcu0g6xnua47821</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-350sd-lariat-1ft8w3bn5tec64897</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn4tre07304</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftfw3l88tkd32580</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2020-ford-f-350sd-lariat-1ft8w3bt4lec66171</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2022-ford-explorer-limited-1fmsk8fh4ngc09184</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2023-ford-bronco-sport-big-bend-3fmcr9b62prd82031</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftfw3l54tkd34445</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-expedition-king-ranch-1fmju1p8xtea27929</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-maverick-xlt-3fttw8ja1tra41176</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn1tre33908</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftew3lp5tfa27243</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-explorer-platinum-1fmuk8hh9tga71838</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn0tre17697</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2017-ford-f-350sd-xl-1ft8w3dt6heb27762</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2021-ford-f-150-limited-1ftfw1ed2mfb08245</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2023-ford-f-150-xlt-1ftew1ep0pfc73964</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2023-ford-edge-sel-2fmpk4j94pba05753</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-maverick-xl-3fttw8ba9tra04164</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-maverick-xlt-3fttw8ja4tra39356</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2019-ford-f-150-xlt-1ftex1ep1kkc95615</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2020-ford-f-150-xlt-1ftew1e43lfb36713</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-outer-banks-3fmcr9cn5tre26152</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-250sd-king-ranch-1ft8w2bm5ted13727</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2023-ford-f-150-lariat-1ftfw1edxpfb31647</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-explorer-st-line-1fmuk8kh4tga19638</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-raptor-1ftfw1rg8tfa17953</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-transit-250-base-1ftbr1c86tka09865</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2024-ford-f-250sd-xl-1ft7w2ba2ref10431</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2025-ford-bronco-sport-big-bend-3fmcr9bn6srf81440</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-badlands-3fmcr9da2tre25195</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2025-ford-f-150-raptor-1ftfw1rg7sfa50134</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2025-ford-explorer-active-1fmuk8dh7sga05969</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-big-bend-1fmee7bh2tla80256</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn2tre05065</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn8tre34909</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2023-ford-explorer-xlt-1fmsk8dh7pgb79541</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-ranger-xlt-1fter4hh6tle02055</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2004-ford-f-650sd-xl-3frnw65n34v655331</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2024-ford-maverick-xlt-3fttw8h31rrb32867</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-350sd-platinum-1ft8w3btxted05314</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-maverick-xlt-3fttw8ja9tra34900</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn1tre07583</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-350sd-xl-1ftrf3ba8ted87272</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bnxtre60606</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn0tre34905</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2019-ford-transit-150-base-1ftye1cm3kka74903</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2022-ford-escape-se-1fmcu9g65nua28758</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2023-ford-explorer-xlt-1fmsk8dh4pgb36324</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-maverick-xlt-3fttw8ja7tra21434</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn4tre05374</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-250sd-king-ranch-1ft8w2bn3tec69302</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-expedition-platinum-1fmju1mg4tea22396</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftfw3l55tkd82259</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-raptor-1fmee0rr0tla97790</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-explorer-platinum-1fmuk8hh9tga44414</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn4tre11899</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2024-ford-explorer-limited-1fmsk8fh4rga64783</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftfw3l54tfa22845</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftew3lp7tkd22464</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-350sd-xl-1ftrf3bn7ted89937</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftfw3ld1tfa20221</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2019-ford-f-150-xl-1ftex1eb8kkc06644</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2021-ford-f-150-xlt-1ftfw1e52mkd49805</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-250sd-lariat-1ft8w2bt3tec66382</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-explorer-platinum-1fmuk8hh3tga23445</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-250sd-lariat-1ft8w2bt7ted68820</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-outer-banks-3fmcr9cn1tre24642</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-big-bend-1fmde7bh4tla43799</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn2tre11500</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2020-ford-f-150-xlt-1ftew1e44lfa31730</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2025-ford-maverick-xlt-3fttw8ja1srb22676</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2020-ford-transit-connect-xl-nm0ls7e23l1466267</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-stx-1ftex2lp4tkd51704</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-maverick-xl-3fttw8ba0tra78203</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftfw3l58tkd42256</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2024-ford-bronco-sport-big-bend-3fmcr9b60rrf11676</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2022-ford-escape-se-1fmcu0g60nub63853</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-maverick-xlt-3fttw8j33tra34652</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftew3lp1tkd14294</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-explorer-platinum-1fmuk8hh9tgb13084</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn1tre22231</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://amford.com/vehicle/2010-ford-f-150-xl-1ftfx1ev6afc22704</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2013-ford-f-150-lariat-1ftfw1et0dfb50758</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2016-ford-f-150-xlt-1ftex1ep1gfb00628</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2017-ford-f-350sd-xl-1ft8w3dt6heb27762</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2018-ford-f-150-xlt-1ftew1ep5jfd68205</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2018-ford-f-150-xlt-1ftex1ep9jfb62771</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2019-ford-ranger-xlt-1fter4fh1kla19884</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://amford.com/vehicle/2019-ford-f-150-xlt-1ftew1e5xkfc48190</loc>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2020-ford-explorer-st-1fm5k8gc8lgc05961</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://amford.com/vehicle/2020-ford-transit-connect-xl-nm0ls7e22l1441960</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://amford.com/vehicle/2020-ford-transit-connect-xlt-nm0ge9f2xl1466303</loc>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2020-ford-expedition-max-limited-1fmjk2at9lea47159</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2021-ford-f-350sd-lariat-1ft8w3bt8med84905</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2021-ford-ranger-xlt-1fter4fh4mld26579</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2021-ford-expedition-limited-1fmju2at7mea52680</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2021-ford-ecosport-se-maj6s3gl9mc409064</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://amford.com/vehicle/2021-ford-transit-350-base-1ftbw3x89mka60924</loc>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2021-ford-ranger-xl-1fter4fh0mld97746</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2022-ford-ranger-xlt-1fter1fh7nld44574</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2022-ford-f-150-xlt-1ftew1ep2nkd49172</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2022-ford-explorer-limited-1fmsk8fh4ngc09184</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2023-ford-mustang-mach-e-premium-3fmtk3ss8pma48582</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2023-ford-f-150-lariat-1ftfw1edxpfb31647</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2023-ford-f-150-xl-1ftfw1e51pkf28504</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2023-ford-f-150-xlt-1ftex1ep7pkg22140</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2023-ford-f-150-xl-1ftex1ep2pke86970</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2023-ford-escape-st-line-1fmcu9mn5pua54498</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://amford.com/vehicle/2023-ford-escape-active-1fmcu9gn5pua76982</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://amford.com/vehicle/2023-ford-escape-st-line-1fmcu9mn6pua14270</loc>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2023-ford-bronco-sport-big-bend-3fmcr9b61prd98527</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2024-ford-f-150-xlt-1ftfw3ldxrfa92348</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2024-ford-bronco-sport-big-bend-3fmcr9b66rre87884</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2024-ford-maverick-lariat-3fttw8s98rrb30580</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2024-ford-edge-se-2fmpk4g95rba52378</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2024-ford-f-150-raptor-1ftfw1rgxrfb08912</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2024-ford-f-150-stx-1ftew2lp2rkd57027</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2025-ford-f-150-xl-1ftmf1l53skd45415</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2025-ford-f-250sd-lariat-1ft8w2bt1sec03988</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2025-ford-f-250sd-xl-1ft7w2ba1sed60107</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2025-ford-maverick-xlt-3fttw8ja2srb38580</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2025-ford-f-150-xlt-1ftfw3ld5sfa16655</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-big-bend-1fmee7bh2tla97056</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn6tre35458</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn8tre54397</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn9tre67286</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-badlands-3fmcr9da1tre68555</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn1tre88021</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn4tre87932</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bnxtre88065</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-base-1fmde6bh0tlb24020</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-outer-banks-3fmcr9cn3trf02810</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-250sd-lariat-1ft8w2bt3tec66382</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-ranger-xlt-1fter4hh4tle35975</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-150-stx-1ftew2lp7tfb92284</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-explorer-st-1fmwk8gc0tgb81109</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftew3lp5tke07612</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-150-stx-1ftew2l56tfa31097</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-150-stx-1ftew2lp5tfb60126</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-badlands-3fmcr9daxtre68702</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn5tre41641</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn8tre94804</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn9tre93788</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-outer-banks-3fmcr9cn3tre97513</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-250sd-xlt-1ftbf2ba4tef44629</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-250sd-xlt-1ftbf2baxtef47972</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn7tre94230</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-250sd-xlt-1ftbf2ba5tef56580</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn8tre94236</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftfw3l85tke51901</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-mustang-ecoboost-premium-1fa6p8th8t5132510</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-big-bend-1fmde7bh0tlb31376</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-explorer-st-line-1fmuk8kh3tgc46562</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-explorer-st-line-1fmuk8kh4tgb54148</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-350sd-platinum-1ft8w3btxted05314</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn0tre17697</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-badlands-3fmcr9da8tre69007</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-expedition-king-ranch-1fmju1p8xtea27929</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-250sd-xlt-1ft8w2bm3tee57714</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bnxtre60606</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftew3lp1tkd14294</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn0tre34905</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn8tre34909</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-250sd-king-ranch-1ft8w2bn3tec69302</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-explorer-platinum-1fmuk8hh9tga44414</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-explorer-platinum-1fmuk8hh3tga23445</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-250sd-king-ranch-1ft8w2bm5ted13727</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftfw3l56tfb55493</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-f-150-stx-1ftew2lpxtkd67196</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-bronco-sport-big-bend-3fmcr9bn4tre11899</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftfw3l54tfb16188</loc>
-    <lastmod>2026-09-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amford.com/vehicle/2026-ford-maverick-xlt-3fttw8j30tra15556</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/vehicle/2026-ford-explorer-tremor-1fmuk8jh4tgb38081</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://amford.com/vehicle/2026-ford-f-150-xlt-1ftfw3l59tkd38569</loc>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-models</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/f-150</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/mustang</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/explorer</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/f-150-lightning</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/bronco</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford/escape</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/areas-we-serve</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/county/ashtabula-oh</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/county/lake-oh</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/county/geauga-oh</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/county/trumbull-oh</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/ashtabula-oh</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/geneva-oh</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/conneaut-oh</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/austinburg-oh</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/madison-oh</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/chardon-oh</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/erie-pa</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/ford-dealer/cleveland-oh</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/nationwide-vehicle-delivery</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/guides</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/guides/is-a-used-ford-f-150-reliable</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/guides/is-ford-ecoboost-reliable</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/guides/what-to-check-before-buying-a-used-ford</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/guides/best-ford-suv-for-families</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/compare</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/compare/explorer-vs-escape</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/compare/f-150-vs-f-150-lightning</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/compare/bronco-vs-explorer</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/trade-in</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amford.com/finance/bad-credit</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/commercial</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amford.com/financing</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/service</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/contact</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://amford.com/about</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://amford.com/sitemap</loc>
-    <lastmod>2026-09-11</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

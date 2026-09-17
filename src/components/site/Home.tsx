@@ -27,6 +27,7 @@ import service from "@/assets/service.jpg";
 import { vehicles, dealerInfo, vehicleSlug } from "@/lib/vehicles";
 import { VehicleCard } from "@/components/site/VehicleCard";
 import OfferPopup from "@/components/popups/OfferPopup";
+import TradeOfferPopup from "@/components/popups/TradeOfferPopup";
 
 /* ------------ Hero ------------ */
 function Hero({ onOpenOffer, onOpenTrade }: { onOpenOffer: () => void; onOpenTrade: () => void }) {

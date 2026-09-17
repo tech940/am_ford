@@ -3,9 +3,10 @@ import { vehicles, type Vehicle } from "./vehicles";
 
 // Supabase environment variables from Vite
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
-// Prefer anon key, fallback to service role key if anon permissions are not granted in Supabase RLS
-const supabaseKey =
-  import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+// Anon key ONLY. Every import.meta.env.VITE_* value is inlined into the public JavaScript
+// bundle, so a service-role key here hands every visitor full admin access to the database.
+// The anon role now has SELECT on vehicle_inventory, so the browser needs nothing more.
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
 
 // Supabase Client instance (null if env vars are missing)
 export const supabase =
@@ -90,9 +91,15 @@ export function mapInventoryRowToVehicle(r: InventoryRawRow): Vehicle {
       : d["New/Used"] === "N"
         ? "New"
         : "Used";
-  const photos = Array.isArray(d["Photo Url List"])
-    ? d["Photo Url List"].filter((p: unknown): p is string => typeof p === "string" && !!p)
-    : [];
+  // The feed delivers every photo for a vehicle as ONE comma-joined string, usually wrapped
+  // in a single-element array: ["https://a.jpg,https://b.jpg,https://c.jpg"]. Taking [0] gave
+  // a 36-URL blob as the src, which is why the cards showed broken images. Flatten, split on
+  // commas, and keep only real URLs, so `images` is a genuine gallery.
+  const rawPhotos = d["Photo Url List"] ?? d["Clean Photo Url List"] ?? [];
+  const photos: string[] = (Array.isArray(rawPhotos) ? rawPhotos : [rawPhotos])
+    .flatMap((p: unknown) => (typeof p === "string" ? p.split(",") : []))
+    .map((p: string) => p.trim())
+    .filter((p: string) => p.startsWith("http"));
 
   return {
     id: r.vin || d.VIN || String(r.id),

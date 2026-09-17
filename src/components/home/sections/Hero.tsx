@@ -5,7 +5,15 @@ import { Search } from "lucide-react";
 const HERO_BANNER_IMAGE =
   "https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/am-ford-banner.webp";
 
-const QUICK_TAGS = [
+/** Hero quick-filter chips. Each carries whichever /inventory search params it sets. */
+type QuickFilter = {
+  label: string;
+  q?: string;
+  priceMax?: number;
+  condition?: "New" | "Used" | "Certified Pre-Owned";
+};
+
+const QUICK_TAGS: QuickFilter[] = [
   { label: "F-150", q: "F-150" },
   { label: "Super Duty", q: "Super Duty" },
   { label: "Explorer", q: "Explorer" },
