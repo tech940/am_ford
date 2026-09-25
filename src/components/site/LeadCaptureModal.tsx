@@ -15,6 +15,7 @@ import {
   Send,
 } from "lucide-react";
 import { submitLeadInquiry, type LeadInquiry } from "@/lib/supabase";
+import { CONSENT_TEXT } from "@/lib/leads";
 import { type Vehicle, dealerInfo } from "@/lib/vehicles";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +29,18 @@ interface LeadCaptureModalProps {
   /** Structured payload stored in the lead's financing_details column (e.g. calculator state). */
   financingDetails?: Record<string, unknown>;
 }
+
+/**
+ * The appointment slots offered, and the one selected by default.
+ *
+ * These are a single source of truth on purpose. The default used to be a hardcoded
+ * "10:00 AM" that was not in the option list, so a <select> with no matching value
+ * displayed the FIRST option (09:30 AM) while React state stayed "10:00 AM". A customer
+ * who accepted the default saw 09:30 and the dealership was sent 10:00 — half an hour
+ * apart, on a booking. Render the options from this array so the two cannot drift again.
+ */
+const TIME_SLOTS = ["09:30 AM", "11:00 AM", "01:30 PM", "03:30 PM", "05:30 PM"] as const;
+const DEFAULT_TIME = TIME_SLOTS[0];
 
 export function LeadCaptureModal({
   isOpen,
@@ -52,18 +65,21 @@ export function LeadCaptureModal({
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [preferredDate, setPreferredDate] = useState("");
-  const [preferredTime, setPreferredTime] = useState("10:00 AM");
+  const [preferredTime, setPreferredTime] = useState<string>(DEFAULT_TIME);
   const [tradeInDetails, setTradeInDetails] = useState("");
   const [message, setMessage] = useState("");
+  /** Starts false on purpose: consent has to be an affirmative act, never a pre-ticked default. */
+  const [smsConsent, setSmsConsent] = useState(false);
 
   const resetForm = () => {
     setFullName("");
     setEmail("");
     setPhone("");
     setPreferredDate("");
-    setPreferredTime("10:00 AM");
+    setPreferredTime(DEFAULT_TIME);
     setTradeInDetails("");
     setMessage("");
+    setSmsConsent(false);
     setSubmitted(false);
     setErrorMessage("");
   };
@@ -79,6 +95,10 @@ export function LeadCaptureModal({
       setErrorMessage("Please fill in your name, email, and phone number.");
       return;
     }
+    if (!smsConsent) {
+      setErrorMessage("Please tick the consent box so we can contact you about this request.");
+      return;
+    }
 
     setSubmitting(true);
     setErrorMessage("");
@@ -89,10 +109,15 @@ export function LeadCaptureModal({
       full_name: fullName,
       email: email,
       phone: phone,
-      preferred_date: preferredDate || undefined,
-      preferred_time: preferredTime || undefined,
+      // Only test_drive renders the date and time pickers, so only test_drive has a schedule
+      // the customer actually chose. Sending the untouched default for the other modes put a
+      // "Preferred Schedule: 09:30 AM" on price-quote leads nobody had scheduled.
+      preferred_date: mode === "test_drive" ? preferredDate || undefined : undefined,
+      preferred_time: mode === "test_drive" ? preferredTime || undefined : undefined,
       message: message || tradeInDetails || undefined,
       financing_details: financingDetails,
+      sms_consent: smsConsent,
+      sms_consent_text: CONSENT_TEXT,
     };
 
     const res = await submitLeadInquiry(payload);
@@ -235,7 +260,10 @@ export function LeadCaptureModal({
                 </div>
 
                 {errorMessage && (
-                  <div className="rounded-xl bg-destructive/10 p-3 text-xs font-semibold text-destructive">
+                  <div
+                    role="alert"
+                    className="rounded-xl bg-destructive/10 p-3 text-xs font-semibold text-destructive"
+                  >
                     {errorMessage}
                   </div>
                 )}
@@ -328,11 +356,11 @@ export function LeadCaptureModal({
                           onChange={(e) => setPreferredTime(e.target.value)}
                           className="w-full rounded-xl border border-border bg-card py-2.5 pl-9 pr-3 text-sm outline-none transition focus:border-primary"
                         >
-                          <option>09:30 AM</option>
-                          <option>11:00 AM</option>
-                          <option>01:30 PM</option>
-                          <option>03:30 PM</option>
-                          <option>05:30 PM</option>
+                          {TIME_SLOTS.map((slot) => (
+                            <option key={slot} value={slot}>
+                              {slot}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -369,6 +397,16 @@ export function LeadCaptureModal({
                 </div>
 
                 <div className="pt-2">
+                  <label className="flex items-start gap-3 rounded-2xl bg-surface/60 p-3 text-xs leading-relaxed text-muted-foreground">
+                    <input
+                      type="checkbox"
+                      checked={smsConsent}
+                      onChange={(e) => setSmsConsent(e.target.checked)}
+                      className="mt-0.5 h-4 w-4 shrink-0 rounded border-border text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    />
+                    <span>{CONSENT_TEXT}</span>
+                  </label>
+
                   <button
                     type="submit"
                     disabled={submitting}

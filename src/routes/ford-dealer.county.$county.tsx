@@ -19,7 +19,7 @@ import { getServiceArea } from "@/lib/serviceAreas";
 import { getFordModel, type FordModel } from "@/lib/fordModels";
 import type { InventorySearch } from "@/routes/inventory";
 
-const SITE_ORIGIN = "https://amford.com";
+const SITE_ORIGIN = "https://www.amfordashtabula.com";
 
 /**
  * County landing pages for /ford-dealer/county/{slug}.
@@ -113,7 +113,7 @@ export const Route = createFileRoute("/ford-dealer/county/$county")({
     const dealerSchema = {
       "@context": "https://schema.org",
       "@type": "AutoDealer",
-      "@id": "https://amford.com/#dealer",
+      "@id": "https://www.amfordashtabula.com/#dealer",
       name: dealerInfo.name,
       telephone: dealerInfo.phone,
       areaServed: {

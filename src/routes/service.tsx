@@ -50,9 +50,9 @@ export const Route = createFileRoute("/service")({
         content: "Schedule certified Ford service, oil changes, tires, and maintenance online.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://amford.com/service" },
+      { property: "og:url", content: "https://www.amfordashtabula.com/service" },
     ],
-    links: [{ rel: "canonical", href: "https://amford.com/service" }],
+    links: [{ rel: "canonical", href: "https://www.amfordashtabula.com/service" }],
     // head() runs after module evaluation, so SERVICE_SCHEMA below is already defined.
     scripts: [
       {
@@ -106,13 +106,13 @@ const SERVICES = [
 const SERVICE_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "Service",
-  "@id": "https://amford.com/service#ford-service",
+  "@id": "https://www.amfordashtabula.com/service#ford-service",
   name: "Ford-Certified Service and Parts",
   serviceType: "Ford-certified vehicle service, repair, and parts",
   description:
     "Ford-certified service and repair from factory-trained technicians using genuine Ford and Motorcraft OEM parts, including oil changes, brakes, tires, batteries, diagnostics, and recall work.",
-  url: "https://amford.com/service",
-  provider: { "@id": "https://amford.com/#dealer" },
+  url: "https://www.amfordashtabula.com/service",
+  provider: { "@id": "https://www.amfordashtabula.com/#dealer" },
   areaServed: [
     { "@type": "AdministrativeArea", name: "Ashtabula County" },
     { "@type": "AdministrativeArea", name: "Northeast Ohio" },
@@ -197,6 +197,7 @@ function ServicePage() {
                   e.preventDefault();
                   const data = new FormData(e.currentTarget);
                   const phone = String(data.get("phone") ?? "");
+                  const consent = data.get("consent") === "on";
                   if (phone.replace(/\D/g, "").length < 10) {
                     setError("Please enter a valid phone number.");
                     return;
@@ -214,6 +215,7 @@ function ServicePage() {
                         ? ` (${String(data.get("mileage"))} mi)`
                         : ""
                     } — Requested: ${day} at ${time}`,
+                    consent,
                   });
                   if (result.success) setStatus("done");
                   else {
@@ -270,6 +272,7 @@ function ServicePage() {
                       {["Today", "Tomorrow", "Thu", "Fri", "Sat"].map((d) => (
                         <button
                           key={d}
+                          type="button"
                           onClick={() => setDay(d)}
                           className={cn(
                             "rounded-full px-3 py-1.5 text-sm transition",
@@ -291,6 +294,7 @@ function ServicePage() {
                       {["8:00 AM", "10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM"].map((t) => (
                         <button
                           key={t}
+                          type="button"
                           onClick={() => setTime(t)}
                           className={cn(
                             "rounded-full px-3 py-1.5 text-sm transition",
@@ -308,6 +312,7 @@ function ServicePage() {
                 <label className="mt-6 flex items-start gap-2.5">
                   <input
                     type="checkbox"
+                    name="consent"
                     required
                     className="mt-0.5 h-6 w-6 shrink-0 accent-[#002c5f]"
                   />
@@ -315,7 +320,11 @@ function ServicePage() {
                     {CONSENT_TEXT}
                   </span>
                 </label>
-                {error && <p className="mt-3 text-sm font-medium text-red-600">{error}</p>}
+                {error && (
+                  <p role="alert" className="mt-3 text-sm font-medium text-red-600">
+                    {error}
+                  </p>
+                )}
                 <button
                   type="submit"
                   disabled={status === "sending"}

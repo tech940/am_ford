@@ -17,7 +17,7 @@ import { FORD_MODELS } from "../src/lib/fordModels";
 import { GUIDES, COMPARISONS } from "../src/lib/contentPages";
 import { COUNTIES } from "../src/lib/counties";
 
-const ORIGIN = "https://amford.com";
+const ORIGIN = "https://www.amfordashtabula.com";
 const today = new Date().toISOString().slice(0, 10);
 
 type Entry = { path: string; priority: string; changefreq: string };
@@ -25,15 +25,23 @@ type Entry = { path: string; priority: string; changefreq: string };
 const entries: Entry[] = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
   { path: "/inventory", priority: "0.9", changefreq: "daily" },
+  // Only facets that actually have stock behind them. A sitemap entry for an empty facet is a
+  // soft 404, and the inventory route now serves those same URLs as noindex, so listing one
+  // here would ask Google to index a page that refuses to be indexed.
   ...FILTER_OPTIONS.types
-    .filter((t) => t !== "All")
+    .filter((t) => t !== "All" && vehicles.some((v) => v.type === t))
     .map((t) => ({ path: `/inventory?type=${t}`, priority: "0.7", changefreq: "daily" })),
   ...FILTER_OPTIONS.fuels
-    .filter((f) => f !== "All")
+    .filter((f) => f !== "All" && vehicles.some((v) => v.fuel === f))
     .map((f) => ({ path: `/inventory?fuel=${f}`, priority: "0.7", changefreq: "daily" })),
   // "Certified Pre-Owned" carries a space. It must be encoded as "+", not "%20", to match both
   // the router-built internal links and the self-canonical the route emits for this facet.
-  ...FILTERABLE_CONDITIONS.map((c) => ({
+  ...FILTERABLE_CONDITIONS.filter((c) =>
+    // Mirrors vehicleMatches: "Used" means all pre-owned, certified included.
+    vehicles.some((v) =>
+      c === "Used" ? v.condition === "Used" || v.condition === "Certified Pre-Owned" : v.condition === c,
+    ),
+  ).map((c) => ({
     path: `/inventory?condition=${encodeURIComponent(c).replace(/%20/g, "+")}`,
     priority: "0.7",
     changefreq: "daily",
@@ -82,6 +90,11 @@ const entries: Entry[] = [
   { path: "/contact", priority: "0.6", changefreq: "monthly" },
   { path: "/about", priority: "0.5", changefreq: "monthly" },
   { path: "/sitemap", priority: "0.5", changefreq: "weekly" },
+  // Legal pages. Low priority, but they must be crawlable: a missing or unindexed privacy
+  // policy is one of the first things a complainant points at.
+  { path: "/privacy", priority: "0.3", changefreq: "yearly" },
+  { path: "/terms", priority: "0.3", changefreq: "yearly" },
+  { path: "/accessibility", priority: "0.3", changefreq: "yearly" },
 ];
 
 const xmlEscape = (s: string) => s.replace(/&/g, "&amp;");
@@ -101,11 +114,34 @@ ${entries
 </urlset>
 `;
 
-const robots = `User-agent: *
-Allow: /
+/**
+ * Answer engines are allowed on purpose. A dealership wants to be the source a shopper is
+ * handed when they ask an assistant who sells used F-150s near Ashtabula, and a crawler that
+ * cannot read the site cannot cite it. They are listed explicitly so the intent survives
+ * anyone later tightening the wildcard rule. /admin is barred everywhere: it is the staff
+ * lead console holding customer contact details, so it must never surface in a result.
+ */
+const AI_AGENTS = [
+  "GPTBot",
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "ClaudeBot",
+  "Claude-User",
+  "PerplexityBot",
+  "Google-Extended",
+  "Applebot-Extended",
+];
 
-Sitemap: ${ORIGIN}/sitemap.xml
-`;
+const robotsLines = [
+  "User-agent: *",
+  "Allow: /",
+  "Disallow: /admin",
+  "",
+  ...AI_AGENTS.flatMap((a) => [`User-agent: ${a}`, "Allow: /", "Disallow: /admin", ""]),
+  `Sitemap: ${ORIGIN}/sitemap.xml`,
+  "",
+];
+const robots = robotsLines.join("\n");
 
 const publicDir = join(import.meta.dirname, "..", "public");
 mkdirSync(publicDir, { recursive: true });

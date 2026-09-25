@@ -49,7 +49,7 @@ export const Route = createFileRoute("/financing")({
         content: "Get pre-approved in 60 seconds without affecting your credit score.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://amford.com/financing" },
+      { property: "og:url", content: "https://www.amfordashtabula.com/financing" },
       {
         property: "og:image",
         content:
@@ -68,7 +68,7 @@ export const Route = createFileRoute("/financing")({
           "https://assets.cai-media-management.com/resize/1024x1024/common-vehicle-media/303504c6-8b4d-463b-9327-a47a0c975418.jpg",
       },
     ],
-    links: [{ rel: "canonical", href: "https://amford.com/financing" }],
+    links: [{ rel: "canonical", href: "https://www.amfordashtabula.com/financing" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -79,11 +79,11 @@ export const Route = createFileRoute("/financing")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FinancialProduct",
-          "@id": "https://amford.com/financing#auto-financing",
+          "@id": "https://www.amfordashtabula.com/financing#auto-financing",
           name: "Ford Auto Financing & Loans",
           description: `Ford financing, competitive auto loans, and flexible lease terms at AM Ford in ${dealerInfo.city}, OH. Pre-approval online with no hit to your credit score.`,
-          provider: { "@id": "https://amford.com/#dealer" },
-          url: "https://amford.com/financing",
+          provider: { "@id": "https://www.amfordashtabula.com/#dealer" },
+          url: "https://www.amfordashtabula.com/financing",
           areaServed: [
             { "@type": "AdministrativeArea", name: "Ashtabula County" },
             { "@type": "AdministrativeArea", name: "Northeast Ohio" },
@@ -118,8 +118,8 @@ function FinancingPage() {
   const submitApplication = async () => {
     const phone = (app.phone ?? "").replace(/\D/g, "");
     if (phone.length < 10) {
+      // Stay on Review: appError only renders on this step, so navigating away hides the reason.
       setAppError("Please add a valid phone number in the About You step.");
-      setStep(1);
       return;
     }
     setAppStatus("sending");
@@ -132,6 +132,7 @@ function FinancingPage() {
       message: `Financing pre-approval application for ${[app.year, app.make, app.model, app.trim]
         .filter(Boolean)
         .join(" ")}`,
+      consent,
       financingDetails: {
         vehicle: { make: app.make, model: app.model, year: app.year, trim: app.trim },
         employment: {
@@ -397,7 +398,9 @@ function FinancingPage() {
                             </span>
                           </label>
                           {appError && (
-                            <p className="text-sm font-medium text-red-600">{appError}</p>
+                            <p role="alert" className="text-sm font-medium text-red-600">
+                              {appError}
+                            </p>
                           )}
                         </div>
                       )}

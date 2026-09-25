@@ -25,7 +25,7 @@ import { getCountyForCity } from "@/lib/counties";
 import { getFordModel, type FordModel } from "@/lib/fordModels";
 import type { InventorySearch } from "@/routes/inventory";
 
-const SITE_ORIGIN = "https://amford.com";
+const SITE_ORIGIN = "https://www.amfordashtabula.com";
 
 /** Titles say "OH"; body copy says "Ohio". Both come from the same two-letter source. */
 const STATE_NAMES: Record<ServiceArea["state"], string> = {
@@ -412,7 +412,7 @@ export const Route = createFileRoute("/ford-dealer/$city")({
       "@type": "AutoDealer",
       // Same @id as the site-wide node in __root.tsx: this is one dealership
       // described from a local page, not a second location.
-      "@id": "https://amford.com/#dealer",
+      "@id": "https://www.amfordashtabula.com/#dealer",
       name: dealerInfo.name,
       url: canonical,
       telephone: dealerInfo.phone,

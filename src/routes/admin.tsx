@@ -14,7 +14,13 @@ import {
   Eye,
   Trash2,
 } from "lucide-react";
-import { fetchAllLeads, updateLeadStatus, deleteLead, type DbLead } from "@/lib/supabase";
+import {
+  fetchAllLeads,
+  updateLeadStatus,
+  deleteLead,
+  leadVehicleTitle,
+  type DbLead,
+} from "@/lib/supabase";
 import { vehicles, type Vehicle, vehicleSlug } from "@/lib/vehicles";
 import { cn } from "@/lib/utils";
 
@@ -136,11 +142,11 @@ function AdminPage() {
     ];
     const rows = filteredLeads.map((l) => [
       new Date(l.created_at).toLocaleString("en-US"),
-      `"${(l.customer_name || "").replace(/"/g, '""')}"`,
-      `"${(l.customer_phone || "").replace(/"/g, '""')}"`,
-      `"${(l.customer_email || "").replace(/"/g, '""')}"`,
-      `"${(l.inquiry_type || "").replace(/"/g, '""')}"`,
-      `"${(l.listing_title || "").replace(/"/g, '""')}"`,
+      `"${(l.name || "").replace(/"/g, '""')}"`,
+      `"${(l.phone || "").replace(/"/g, '""')}"`,
+      `"${(l.email || "").replace(/"/g, '""')}"`,
+      `"${(l.source || "").replace(/"/g, '""')}"`,
+      `"${(leadVehicleTitle(l) || "").replace(/"/g, '""')}"`,
       `"${(l.status || "").replace(/"/g, '""')}"`,
       `"${(l.message || "").replace(/"/g, '""')}"`,
     ]);
@@ -160,11 +166,11 @@ function AdminPage() {
   const filteredLeads = useMemo(() => {
     return leads.filter((item) => {
       if (statusFilter !== "All" && item.status !== statusFilter) return false;
-      if (typeFilter !== "All" && item.inquiry_type !== typeFilter) return false;
+      if (typeFilter !== "All" && item.source !== typeFilter) return false;
       if (leadSearch.trim()) {
         const q = leadSearch.toLowerCase();
         const text =
-          `${item.customer_name} ${item.customer_phone} ${item.customer_email} ${item.listing_title} ${item.message}`.toLowerCase();
+          `${item.name} ${item.phone} ${item.email} ${leadVehicleTitle(item)} ${item.message}`.toLowerCase();
         if (!text.includes(q)) return false;
       }
       return true;
@@ -467,8 +473,8 @@ function AdminPage() {
                               {dateStr}
                             </td>
                             <td className="whitespace-nowrap px-4 py-3.5">
-                              <div className="font-bold text-slate-900">{lead.customer_name}</div>
-                              {lead.consent && (
+                              <div className="font-bold text-slate-900">{lead.name}</div>
+                              {lead.sms_consent_checked && (
                                 <span className="inline-flex items-center gap-0.5 text-[10px] text-emerald-700 font-semibold">
                                   <CheckCircle2 className="h-3 w-3" /> TCPA Consented
                                 </span>
@@ -477,30 +483,30 @@ function AdminPage() {
                             <td className="whitespace-nowrap px-4 py-3.5">
                               <div className="font-semibold text-slate-800">
                                 <a
-                                  href={`tel:${lead.customer_phone}`}
+                                  href={`tel:${lead.phone}`}
                                   onClick={(e) => e.stopPropagation()}
                                   className="hover:text-[#002c5f] hover:underline"
                                 >
-                                  {lead.customer_phone}
+                                  {lead.phone}
                                 </a>
                               </div>
-                              {lead.customer_email && (
+                              {lead.email && (
                                 <div className="text-[11px] text-slate-500">
                                   <a
-                                    href={`mailto:${lead.customer_email}`}
+                                    href={`mailto:${lead.email}`}
                                     onClick={(e) => e.stopPropagation()}
                                     className="hover:underline"
                                   >
-                                    {lead.customer_email}
+                                    {lead.email}
                                   </a>
                                 </div>
                               )}
                             </td>
                             <td className="whitespace-nowrap px-4 py-3.5 font-semibold text-slate-700">
-                              {lead.inquiry_type || "—"}
+                              {lead.source || "—"}
                             </td>
                             <td className="whitespace-nowrap px-4 py-3.5 max-w-[200px] truncate text-slate-700">
-                              {lead.listing_title || "Direct inquiry"}
+                              {leadVehicleTitle(lead) || "Direct inquiry"}
                             </td>
                             <td className="whitespace-nowrap px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
                               <select
@@ -657,10 +663,10 @@ function AdminPage() {
             <div className="flex items-start justify-between border-b border-slate-100 pb-3">
               <div>
                 <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-[#002c5f] uppercase tracking-wider">
-                  {selectedLead.inquiry_type || "Customer Inquiry"}
+                  {selectedLead.source || "Customer Inquiry"}
                 </span>
                 <h2 className="mt-1 text-lg font-bold text-slate-900">
-                  {selectedLead.customer_name}
+                  {selectedLead.name}
                 </h2>
                 <div className="text-xs text-slate-400">
                   Received: {new Date(selectedLead.created_at).toLocaleString("en-US")}
@@ -679,30 +685,30 @@ function AdminPage() {
                 <div>
                   <div className="font-semibold text-slate-400 uppercase text-[10px]">Phone</div>
                   <a
-                    href={`tel:${selectedLead.customer_phone}`}
+                    href={`tel:${selectedLead.phone}`}
                     className="font-bold text-[#002c5f] hover:underline text-sm"
                   >
-                    {selectedLead.customer_phone}
+                    {selectedLead.phone}
                   </a>
                 </div>
                 <div>
                   <div className="font-semibold text-slate-400 uppercase text-[10px]">Email</div>
                   <a
-                    href={`mailto:${selectedLead.customer_email}`}
+                    href={`mailto:${selectedLead.email}`}
                     className="font-bold text-slate-800 hover:underline"
                   >
-                    {selectedLead.customer_email || "Not provided"}
+                    {selectedLead.email || "Not provided"}
                   </a>
                 </div>
               </div>
 
-              {selectedLead.listing_title && (
+              {leadVehicleTitle(selectedLead) && (
                 <div>
                   <div className="font-bold uppercase tracking-wider text-slate-400 text-[10px]">
                     Vehicle of Interest
                   </div>
                   <div className="mt-0.5 font-bold text-slate-900 text-sm">
-                    {selectedLead.listing_title}
+                    {leadVehicleTitle(selectedLead)}
                   </div>
                 </div>
               )}

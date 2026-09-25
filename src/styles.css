@@ -787,7 +787,9 @@
    without needing !important. Only font-size is touched; each utility's
    line-height is left alone so vertical rhythm stays intact.
    ========================================================================== */
-@media (max-width: 639px) {
+/* Exact complement of Tailwind's `sm:` (width >= 40rem). Stated in rem, not px, so the
+   two stay in step if the root font size ever changes. */
+@media (width < 40rem) {
   /* Small type: 1px down */
   .text-\[10px\] {
     font-size: 9px;
@@ -920,3 +922,31 @@ body::-webkit-scrollbar {
   }
 }
 
+
+/* ==========================================================================
+   Floating widget clearance
+   --------------------------------------------------------------------------
+   Below `sm` every page carries a full-width sticky action bar pinned to
+   bottom-0: MobileStickyCTA (73px) on SiteShell pages, and the vehicle page's
+   own price/call bar. The chat launcher and the $500 offer pill are also
+   fixed near the bottom, so all three landed in the same 80px band and the
+   bar's Call/Book buttons ended up underneath them.
+
+   Floating widgets offset their `bottom` by this value so they sit ABOVE the
+   bar. It is 0 from `sm` up, where no bar renders and the widgets return to
+   their normal position. env() keeps them clear of the iOS home indicator,
+   which the bars themselves also pad for — so this has to be added on top of
+   the bar's own height rather than baked into a single pixel constant.
+   ========================================================================== */
+:root {
+  --floating-cta-clearance: 0px;
+}
+
+/* Exact complement of Tailwind's `sm:` (width >= 40rem). Stated in rem, not px, so the
+   two stay in step if the root font size ever changes. */
+@media (width < 40rem) {
+  :root {
+    /* 73px bar + 11px gap, plus whatever the device reserves at the bottom. */
+    --floating-cta-clearance: calc(5.25rem + env(safe-area-inset-bottom));
+  }
+}

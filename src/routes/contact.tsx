@@ -35,9 +35,9 @@ export const Route = createFileRoute("/contact")({
         content: `Visit AM Ford in Ashtabula County at ${dealerInfo.address} or call ${dealerInfo.phone}. We're open 6 days a week.`,
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://amford.com/contact" },
+      { property: "og:url", content: "https://www.amfordashtabula.com/contact" },
     ],
-    links: [{ rel: "canonical", href: "https://amford.com/contact" }],
+    links: [{ rel: "canonical", href: "https://www.amfordashtabula.com/contact" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -48,11 +48,11 @@ export const Route = createFileRoute("/contact")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "ContactPage",
-          "@id": "https://amford.com/contact#webpage",
-          url: "https://amford.com/contact",
+          "@id": "https://www.amfordashtabula.com/contact#webpage",
+          url: "https://www.amfordashtabula.com/contact",
           name: `Contact AM Ford in ${dealerInfo.city} | Phone, Hours & Address`,
           description: `Reach AM Ford at ${dealerInfo.address}. Call ${dealerInfo.phone} or message us to book a test drive.`,
-          mainEntity: { "@id": "https://amford.com/#dealer" },
+          mainEntity: { "@id": "https://www.amfordashtabula.com/#dealer" },
         }),
       },
     ],
@@ -192,6 +192,7 @@ function ContactForm() {
         setStatus("sending");
         setError(null);
         const vehicle = String(data.get("vehicle") ?? "").trim();
+        const consent = data.get("consent") === "on";
         const result = await submitQuickLead({
           leadType: "general_contact",
           name: String(data.get("name") ?? ""),
@@ -200,6 +201,7 @@ function ContactForm() {
           message: `Contact form: ${String(data.get("message") ?? "").trim() || "(no message)"}${
             vehicle ? ` — Vehicle of interest: ${vehicle}` : ""
           }`,
+          consent,
         });
         if (result.success) {
           setStatus("done");
@@ -229,10 +231,19 @@ function ContactForm() {
         </label>
       </div>
       <label className="mt-5 flex items-start gap-2.5">
-        <input type="checkbox" required className="mt-0.5 h-6 w-6 shrink-0 accent-[#002c5f]" />
+        <input
+          type="checkbox"
+          name="consent"
+          required
+          className="mt-0.5 h-6 w-6 shrink-0 accent-[#002c5f]"
+        />
         <span className="text-xs leading-relaxed text-muted-foreground">{CONSENT_TEXT}</span>
       </label>
-      {error && <p className="mt-3 text-sm font-medium text-red-600">{error}</p>}
+      {error && (
+        <p role="alert" className="mt-3 text-sm font-medium text-red-600">
+          {error}
+        </p>
+      )}
       <button
         type="submit"
         disabled={status === "sending"}

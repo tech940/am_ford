@@ -114,6 +114,7 @@ export function QuickEnquiryModal({
       phone,
       name: name.trim() || undefined,
       message: copy.message,
+      consent,
     });
     setSubmitting(false);
     if (result.success) {
@@ -220,7 +221,10 @@ export function QuickEnquiryModal({
               </p>
 
               {error && (
-                <div className="rounded-xl bg-red-50 p-3 text-xs font-semibold text-red-600">
+                <div
+                  role="alert"
+                  className="rounded-xl bg-red-50 p-3 text-xs font-semibold text-red-600"
+                >
                   {error}
                 </div>
               )}

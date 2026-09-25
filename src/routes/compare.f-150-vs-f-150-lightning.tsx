@@ -9,7 +9,7 @@ import { articleSchema, faqSchema } from "@/lib/articleSchema";
 import { dealerInfo, DELIVERY_CLAIM, getVehicle } from "@/lib/vehicles";
 
 const PATH = "/compare/f-150-vs-f-150-lightning";
-const CANONICAL = `https://amford.com${PATH}`;
+const CANONICAL = `https://www.amfordashtabula.com${PATH}`;
 const PUBLISHED = "2026-08-07";
 
 const TITLE = "Ford F-150 vs F-150 Lightning: Gas or Electric | AM Ford";

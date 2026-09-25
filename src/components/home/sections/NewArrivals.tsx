@@ -235,11 +235,6 @@ export function NewArrivals() {
                           </span>
                         </div>
                       </div>
-
-                      {/* Line 5: 5-Day Guarantee */}
-                      <div className="mt-2.5 flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
-                        <span>5-day exchange guarantee</span>
-                      </div>
                     </div>
 
                     {/* Bottom Full-Width CTA Button in Main Brand Color (#002c5f) */}
@@ -267,7 +262,7 @@ export function NewArrivals() {
             price: `$${selectedCar.price.toLocaleString()}`,
             vin: selectedCar.vin || "",
             stock: selectedCar.stockNumber || selectedCar.id,
-            pageUrl: `https://amford.com/vehicle/${vehicleSlug(selectedCar)}`,
+            pageUrl: `https://www.amfordashtabula.com/vehicle/${vehicleSlug(selectedCar)}`,
           }}
           onClose={() => {
             setOfferModalOpen(false);

@@ -9,23 +9,26 @@ function StayUpdated() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
     setStatus("submitting");
     try {
-      await submitQuickLead({
+      // No phone: this used to store the dealership's OWN sales number as the subscriber's,
+      // which pollutes the lead table and would attach a consent record to a number the
+      // subscriber never gave. An email signup collects an email.
+      const res = await submitQuickLead({
         leadType: "newsletter_signup",
         name: `${firstName.trim()} ${lastName.trim()}`.trim() || "Newsletter Subscriber",
-        phone: "(440) 553-7072",
         email: email.trim(),
-        message: `Stay Updated VIP Newsletter subscriber for special offers`,
+        message: "Newsletter signup from the site footer.",
       });
-      setStatus("success");
+      // Reporting success on failure hid the fact that every lead was being rejected.
+      setStatus(res.success ? "success" : "error");
     } catch {
-      setStatus("success");
+      setStatus("error");
     }
   };
 
@@ -81,6 +84,12 @@ function StayUpdated() {
           >
             {status === "submitting" ? "Signing Up..." : "Sign Up"}
           </button>
+          {status === "error" && (
+            <p role="alert" className="text-[11px] font-semibold text-red-600">
+              We could not sign you up just then. Please call {dealerInfo.phone} and we will add
+              you.
+            </p>
+          )}
         </form>
       )}
     </div>
@@ -242,14 +251,23 @@ export function SiteFooter() {
         <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-white/10 pt-4 text-[11px] font-semibold text-slate-200 sm:flex-row">
           <span>© {new Date().getFullYear()} AM Ford. All rights reserved.</span>
           <div className="flex items-center gap-4">
+            <Link to="/privacy" className="text-white/60 hover:text-white transition">
+              Privacy
+            </Link>
+            <span>·</span>
+            <Link to="/terms" className="text-white/60 hover:text-white transition">
+              Terms
+            </Link>
+            <span>·</span>
+            <Link to="/accessibility" className="text-white/60 hover:text-white transition">
+              Accessibility
+            </Link>
+            <span>·</span>
             <Link to="/sitemap" className="text-white/60 hover:text-white transition">
               Sitemap
             </Link>
             <span>·</span>
             <span>Ashtabula County, Ohio · Serving Northeast Ohio and beyond.</span>
-            <Link to="/admin" className="text-white/40 hover:text-white/80 transition text-[10px] uppercase tracking-wider font-mono">
-              Staff Portal
-            </Link>
           </div>
         </div>
       </div>

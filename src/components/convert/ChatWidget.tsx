@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CheckCircle2,
@@ -246,8 +246,7 @@ export function ChatWidget() {
     <>
       {/* Clean Modern Floating Launcher (Bottom Right) */}
       <div
-        className="fixed bottom-6 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center gap-3"
-        style={{ marginBottom: "env(safe-area-inset-bottom)" }}
+        className="fixed bottom-[calc(1.5rem+var(--floating-cta-clearance))] right-4 sm:right-6 z-50 flex items-center gap-3"
       >
         <AnimatePresence>
           {!open && !labelDismissed && (
@@ -400,7 +399,15 @@ export function ChatWidget() {
                         {m.list.map((v) => (
                           <div
                             key={v.id}
+                            role="button"
+                            tabIndex={0}
                             onClick={() => selectVehicleForLead(v)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                selectVehicleForLead(v);
+                              }
+                            }}
                             className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-2.5 shadow-xs transition hover:border-[#002c5f] hover:shadow-md cursor-pointer"
                           >
                             <img
@@ -560,6 +567,8 @@ function PhoneCaptureCard({
   const [consent, setConsent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  // Several capture cards can be on screen at once, so the error id has to be per-instance.
+  const errorId = useId();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -570,7 +579,8 @@ function PhoneCaptureCard({
     }
     setSending(true);
     setError("");
-    const result = await submitQuickLead({ ...ctx, phone });
+    // ctx never carries consent — it must come from the box this visitor actually ticked.
+    const result = await submitQuickLead({ ...ctx, phone, consent });
     setSending(false);
     if (result.success) {
       onCaptured(phone.trim());
@@ -605,6 +615,8 @@ function PhoneCaptureCard({
           onChange={(e) => setPhone(e.target.value)}
           placeholder="(440) 555-0199"
           aria-label="Phone number"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
           className="h-9 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs text-slate-900 outline-none transition focus:border-[#002c5f] focus:bg-white focus:ring-2 focus:ring-[#002c5f]/15"
         />
         <label className="flex cursor-pointer items-start gap-2 py-0.5">
@@ -616,7 +628,11 @@ function PhoneCaptureCard({
           />
           <span className="text-[10px] leading-tight text-slate-500">{CONSENT_TEXT}</span>
         </label>
-        {error && <p className="text-[11px] font-semibold text-red-600">{error}</p>}
+        {error && (
+          <p id={errorId} role="alert" className="text-[11px] font-semibold text-red-600">
+            {error}
+          </p>
+        )}
         <button
           type="submit"
           disabled={!consent || sending}

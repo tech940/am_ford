@@ -29,7 +29,7 @@ import { COUNTIES } from "@/lib/counties";
 import { SERVICE_AREAS } from "@/lib/serviceAreas";
 import { GUIDES, COMPARISONS } from "@/lib/contentPages";
 
-const SITE_ORIGIN = "https://amford.com";
+const SITE_ORIGIN = "https://www.amfordashtabula.com";
 const BREADCRUMBS = crumbs({ label: "Sitemap" });
 
 export const Route = createFileRoute("/sitemap")({
@@ -52,9 +52,9 @@ export const Route = createFileRoute("/sitemap")({
         content:
           "Complete list of all pages, URLs, vehicle listings, and research guides on the AM Ford website.",
       },
-      { property: "og:url", content: "https://amford.com/sitemap" },
+      { property: "og:url", content: "https://www.amfordashtabula.com/sitemap" },
     ],
-    links: [{ rel: "canonical", href: "https://amford.com/sitemap" }],
+    links: [{ rel: "canonical", href: "https://www.amfordashtabula.com/sitemap" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -245,7 +245,7 @@ function SitemapPage() {
             AM Ford Sitemap & Complete URL List
           </h1>
           <p className="mt-2 max-w-2xl text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
-            Index of all {allUrls.length} pages and live vehicle URLs across amford.com. Browse by category, filter in real-time, or copy any URL directly.
+            Index of all {allUrls.length} pages and live vehicle URLs across amfordashtabula.com. Browse by category, filter in real-time, or copy any URL directly.
           </p>
 
           {/* Controls Bar */}

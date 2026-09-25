@@ -45,6 +45,8 @@ export default function TradeOfferPopup({
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  /** Unticked by default: consent must be an affirmative act. */
+  const [smsConsent, setSmsConsent] = useState(false);
 
   const [carData, setCarData] = useState<CarData>(() => {
     if (initialCarData) return initialCarData;
@@ -87,6 +89,10 @@ export default function TradeOfferPopup({
       setError("Please enter a valid 10-digit phone number.");
       return;
     }
+    if (!smsConsent) {
+      setError("Please tick the box so we can contact you about this offer.");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -96,6 +102,8 @@ export default function TradeOfferPopup({
         email: email,
         phone: formatE164(phone),
         message: `Submitted $500 More For Your Trade request on ${carData.title || "Vehicle"}. Preferred contact: ${preferredContact}. Source: ${pageSource || "Trade Offer Popup"}`,
+        sms_consent: smsConsent,
+        sms_consent_text: SMS_CONSENT_DISCLOSURE,
       });
 
       if (res.success) {
@@ -200,10 +208,11 @@ export default function TradeOfferPopup({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3.5 gap-y-3 sm:gap-y-3.5">
               {/* First Name */}
               <div className="relative rounded-lg border border-slate-300 bg-white focus-within:border-[#002c5f] focus-within:ring-1 focus-within:ring-[#002c5f] transition-all">
-                <label className="absolute -top-2.5 left-2.5 bg-white px-1 text-[10px] font-semibold text-slate-500">
+                <label htmlFor="trade-offer-first-name" className="absolute -top-2.5 left-2.5 bg-white px-1 text-[10px] font-semibold text-slate-500">
                   First Name <span className="text-slate-400">*</span>
                 </label>
                 <input
+                  id="trade-offer-first-name"
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
@@ -214,10 +223,11 @@ export default function TradeOfferPopup({
 
               {/* Last Name */}
               <div className="relative rounded-lg border border-slate-300 bg-white focus-within:border-[#002c5f] focus-within:ring-1 focus-within:ring-[#002c5f] transition-all">
-                <label className="absolute -top-2.5 left-2.5 bg-white px-1 text-[10px] font-semibold text-slate-500">
+                <label htmlFor="trade-offer-last-name" className="absolute -top-2.5 left-2.5 bg-white px-1 text-[10px] font-semibold text-slate-500">
                   Last Name
                 </label>
                 <input
+                  id="trade-offer-last-name"
                   type="text"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
@@ -227,11 +237,12 @@ export default function TradeOfferPopup({
 
               {/* Preferred Contact */}
               <div className="relative rounded-lg border border-slate-300 bg-white focus-within:border-[#002c5f] focus-within:ring-1 focus-within:ring-[#002c5f] transition-all">
-                <label className="absolute -top-2.5 left-2.5 bg-white px-1 text-[10px] font-semibold text-slate-500">
+                <label htmlFor="trade-offer-preferred-contact" className="absolute -top-2.5 left-2.5 bg-white px-1 text-[10px] font-semibold text-slate-500">
                   Preferred Contact
                 </label>
                 <div className="relative">
                   <select
+                    id="trade-offer-preferred-contact"
                     value={preferredContact}
                     onChange={(e) => setPreferredContact(e.target.value)}
                     className="w-full appearance-none bg-transparent px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-900 outline-none cursor-pointer pr-8"
@@ -246,10 +257,11 @@ export default function TradeOfferPopup({
 
               {/* Phone */}
               <div className="relative rounded-lg border border-slate-300 bg-white focus-within:border-[#002c5f] focus-within:ring-1 focus-within:ring-[#002c5f] transition-all">
-                <label className="absolute -top-2.5 left-2.5 bg-white px-1 text-[10px] font-semibold text-slate-500">
+                <label htmlFor="trade-offer-phone" className="absolute -top-2.5 left-2.5 bg-white px-1 text-[10px] font-semibold text-slate-500">
                   Phone <span className="text-slate-400">*</span>
                 </label>
                 <input
+                  id="trade-offer-phone"
                   type="tel"
                   value={phone}
                   onChange={(e) => handlePhoneChange(e.target.value)}
@@ -261,10 +273,11 @@ export default function TradeOfferPopup({
 
               {/* Email (Full width) */}
               <div className="sm:col-span-2 relative rounded-lg border border-slate-300 bg-white focus-within:border-[#002c5f] focus-within:ring-1 focus-within:ring-[#002c5f] transition-all">
-                <label className="absolute -top-2.5 left-2.5 bg-white px-1 text-[10px] font-semibold text-slate-500">
+                <label htmlFor="trade-offer-email" className="absolute -top-2.5 left-2.5 bg-white px-1 text-[10px] font-semibold text-slate-500">
                   Email
                 </label>
                 <input
+                  id="trade-offer-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -274,10 +287,27 @@ export default function TradeOfferPopup({
             </div>
 
             {error && (
-              <div className="rounded-md bg-red-50 p-2 text-center text-xs font-semibold text-red-600 border border-red-100">
+              <div role="alert" className="rounded-md bg-red-50 p-2 text-center text-xs font-semibold text-red-600 border border-red-100">
                 {error}
               </div>
             )}
+
+            {/* Affirmative opt-in. This used to be a 10px sentence under the button with no
+                checkbox, which is not consent: TCPA exposure runs per message sent. */}
+            <label className="flex items-start gap-2.5 rounded-lg bg-slate-50 p-2.5 text-[11px] leading-snug text-slate-600 sm:text-xs">
+              <input
+                type="checkbox"
+                checked={smsConsent}
+                onChange={(e) => setSmsConsent(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-[#002c5f] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#002c5f]"
+              />
+              <span>
+                {SMS_CONSENT_DISCLOSURE}{" "}
+                <a href={TERMS_OF_USE_URL} target="_blank" rel="noopener noreferrer" className="font-bold underline text-slate-900 hover:text-[#002c5f]">
+                  Terms of use
+                </a>
+              </span>
+            </label>
 
             {/* Action Buttons */}
             <div className="pt-0.5 flex items-center justify-between gap-3">
@@ -296,19 +326,6 @@ export default function TradeOfferPopup({
                 {loading ? "Submitting..." : "Submit"}
               </button>
             </div>
-
-            {/* Legal SMS / Terms Disclaimer */}
-            <p className="mt-2 text-center text-[10px] sm:text-[11px] text-slate-500 leading-tight">
-              {SMS_CONSENT_DISCLOSURE}{" "}
-              <a
-                href={TERMS_OF_USE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-bold underline text-slate-900 hover:text-[#002c5f]"
-              >
-                Terms of use
-              </a>
-            </p>
           </form>
         </div>
       </div>

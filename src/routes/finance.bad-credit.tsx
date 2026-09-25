@@ -46,7 +46,7 @@ const SERVICE_SCHEMA = {
   description:
     "AM Ford in Jefferson, Ohio submits one application to multiple lenders on behalf of first-time buyers, drivers with limited credit history, and people rebuilding credit. We explain what lenders look at, which documents help, and how a down payment or trade affects the outcome.",
   url: CANONICAL,
-  provider: { "@id": "https://amford.com/#dealer" },
+  provider: { "@id": "https://www.amfordashtabula.com/#dealer" },
   areaServed: [
     { "@type": "AdministrativeArea", name: "Ashtabula County" },
     { "@type": "AdministrativeArea", name: "Northeast Ohio" },

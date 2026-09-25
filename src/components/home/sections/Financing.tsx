@@ -6,7 +6,9 @@ import { MagneticButton, ctaGhost } from "../fx/ui";
 const POINTS = [
   {
     icon: BadgePercent,
-    title: "Rates from 4.9% APR",
+    // Naming a rate is a Regulation Z trigger term: publish an APR and the ad must also carry
+    // the required disclosures. No rate here has been approved by the dealership either.
+    title: "Rates from multiple lenders",
     copy: "We shop multiple lenders so the right rate finds you, not the other way around.",
   },
   {

@@ -9,7 +9,7 @@ import { articleSchema, faqSchema } from "@/lib/articleSchema";
 import { dealerInfo, DELIVERY_CLAIM, getVehicle, type Vehicle } from "@/lib/vehicles";
 
 const PATH = "/compare/bronco-vs-explorer";
-const CANONICAL = `https://amford.com${PATH}`;
+const CANONICAL = `https://www.amfordashtabula.com${PATH}`;
 const PUBLISHED = "2026-08-07";
 
 const TITLE = "Ford Bronco vs Ford Explorer: Which SUV to Buy | AM Ford";

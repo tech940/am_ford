@@ -43,7 +43,7 @@ const SERVICE_SCHEMA = {
   description:
     "AM Ford in Jefferson, Ohio sources and factory orders Ford commercial vehicles including Transit cargo and passenger vans, Super Duty pickups, chassis cab, and E-Series, coordinates upfitting with the bodies and equipment your trade needs, holds fleet purchasing conversations, and services commercial vehicles.",
   url: CANONICAL,
-  provider: { "@id": "https://amford.com/#dealer" },
+  provider: { "@id": "https://www.amfordashtabula.com/#dealer" },
   areaServed: [
     { "@type": "AdministrativeArea", name: "Ashtabula County" },
     { "@type": "AdministrativeArea", name: "Northeast Ohio" },
@@ -474,6 +474,7 @@ function CommercialPage() {
                     setError("Please enter a valid phone number.");
                     return;
                   }
+                  const consent = data.get("consent") === "on";
                   setStatus("sending");
                   setError(null);
                   const result = await submitQuickLead({
@@ -481,6 +482,7 @@ function CommercialPage() {
                     name: String(data.get("name") ?? ""),
                     phone,
                     email: String(data.get("email") ?? ""),
+                    consent,
                     message: `Commercial vehicle inquiry from ${
                       String(data.get("business") ?? "").trim() || "an unnamed business"
                     }. Interested in: ${
@@ -552,6 +554,7 @@ function CommercialPage() {
                 <label className="mt-6 flex items-start gap-2.5">
                   <input
                     type="checkbox"
+                    name="consent"
                     required
                     className="mt-0.5 h-6 w-6 shrink-0 accent-[#002c5f]"
                   />
@@ -560,7 +563,11 @@ function CommercialPage() {
                   </span>
                 </label>
 
-                {error && <p className="mt-3 text-sm font-medium text-red-600">{error}</p>}
+                {error && (
+                  <p role="alert" className="mt-3 text-sm font-medium text-red-600">
+                    {error}
+                  </p>
+                )}
 
                 <button
                   type="submit"

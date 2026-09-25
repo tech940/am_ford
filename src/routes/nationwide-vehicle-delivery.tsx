@@ -77,9 +77,9 @@ export const Route = createFileRoute("/nationwide-vehicle-delivery")({
       },
       { property: "og:description", content: DELIVERY_CLAIM },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://amford.com/nationwide-vehicle-delivery" },
+      { property: "og:url", content: "https://www.amfordashtabula.com/nationwide-vehicle-delivery" },
     ],
-    links: [{ rel: "canonical", href: "https://amford.com/nationwide-vehicle-delivery" }],
+    links: [{ rel: "canonical", href: "https://www.amfordashtabula.com/nationwide-vehicle-delivery" }],
     scripts: [
       {
         type: "application/ld+json",

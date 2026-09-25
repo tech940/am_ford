@@ -25,13 +25,22 @@ export type LeadInquiry = {
   vehicle_id?: string;
   full_name: string;
   email: string;
-  phone: string;
+  /** Optional: the leads.phone column is nullable and an email-only signup has none. */
+  phone?: string;
   preferred_date?: string;
   preferred_time?: string;
   message?: string;
   financing_details?: Record<string, unknown>;
   created_at?: string;
   status?: "new" | "contacted" | "scheduled" | "closed";
+  /**
+   * True ONLY when the visitor actually ticked a consent box. This lands in
+   * sms_consent_checked, which is the record the dealership would rely on in a TCPA
+   * dispute, so it must never be set for someone who did not consent.
+   */
+  sms_consent?: boolean;
+  /** The exact disclosure shown next to that box, stored verbatim as evidence. */
+  sms_consent_text?: string;
 };
 
 export interface InventoryRawRow {
@@ -240,19 +249,51 @@ export async function submitLeadInquiry(
       messageParts.push(`Financing Details: ${JSON.stringify(lead.financing_details)}`);
     }
 
-    // Map to actual Supabase `leads` table schema columns
+    /**
+     * Sent to the public.submit_lead(jsonb) security-definer function, NOT inserted into the
+     * table directly. anon holds EXECUTE on that one function and no table privileges, so the
+     * `leads` table (343 real customer records) is not writable from the public bundle.
+     *
+     * Keys here must match what submit_lead() reads. The function itself caps field lengths and
+     * hardcodes the marketing/transactional/terms consent booleans to false, so those are
+     * deliberately NOT sent — a caller cannot forge them, nor set `status` or `created_at`.
+     *
+     * One trap worth keeping in mind: leads.vehicle_id is a uuid foreign key to another table.
+     * Our ids are VINs, so sending one fails the type cast. Vehicle context goes into
+     * vehicle_snapshot (jsonb) instead.
+     */
+    const consented = lead.sms_consent === true;
+    const snapshot: Record<string, unknown> = { lead_type: lead.lead_type };
+    if (vehicle) {
+      snapshot.vehicle = {
+        id: vehicle.id,
+        vin: vehicle.vin,
+        title: listingTitle,
+        price: vehicle.price,
+        condition: vehicle.condition,
+      };
+    } else if (lead.vehicle_id) {
+      snapshot.vehicle = { id: lead.vehicle_id };
+    }
+    if (lead.preferred_date) snapshot.preferred_date = lead.preferred_date;
+    if (lead.preferred_time) snapshot.preferred_time = lead.preferred_time;
+    if (lead.financing_details && Object.keys(lead.financing_details).length > 0) {
+      snapshot.financing = lead.financing_details;
+    }
+
     const payload = {
-      customer_name: lead.full_name?.trim() || "Valued Customer",
-      customer_phone: lead.phone?.trim() || "Not provided",
-      customer_email: lead.email?.trim() || null,
-      inquiry_type: LEAD_TYPE_LABELS[lead.lead_type] || lead.lead_type || "General Contact",
+      name: lead.full_name?.trim() || "Not provided",
+      email: lead.email?.trim() || "",
+      phone: lead.phone?.trim() || null,
       message: messageParts.join(" | ") || null,
-      listing_title: listingTitle || null,
-      status: "New",
-      consent: true,
+      source: LEAD_TYPE_LABELS[lead.lead_type] || lead.lead_type || "General Contact",
+      vehicle_snapshot: snapshot,
+      sms_consent_checked: consented,
+      sms_consent_at: consented ? new Date().toISOString() : null,
+      sms_consent_text: consented ? (lead.sms_consent_text ?? null) : null,
     };
 
-    const { error } = await supabase.from("leads").insert([payload]);
+    const { error } = await supabase.rpc("submit_lead", { payload });
 
     if (error) {
       console.error("Supabase lead insert error:", error);
@@ -277,16 +318,24 @@ export async function submitLeadInquiry(
 
 export type DbLead = {
   id: string;
-  customer_name: string;
-  customer_phone: string;
-  customer_email: string | null;
-  inquiry_type: string | null;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  source: string | null;
   message: string | null;
-  listing_title: string | null;
-  status: string;
+  vehicle_snapshot: Record<string, unknown> | null;
+  status: string | null;
   created_at: string;
-  consent: boolean;
+  sms_consent_checked: boolean;
+  sms_consent_at: string | null;
+  sms_consent_text: string | null;
 };
+
+/** The vehicle a lead was about, pulled back out of the jsonb snapshot for display. */
+export function leadVehicleTitle(lead: DbLead): string | null {
+  const v = (lead.vehicle_snapshot as { vehicle?: { title?: string; id?: string } } | null)?.vehicle;
+  return v?.title ?? v?.id ?? null;
+}
 
 /**
  * Fetch all leads from Supabase for Admin Dashboard

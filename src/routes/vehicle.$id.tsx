@@ -76,6 +76,15 @@ import { getSpin } from "@/lib/spin360";
 import { Spin360, preloadSpin } from "@/components/site/Spin360";
 
 /**
+ * The inspection-report form asks for an email first and a phone only if the visitor offers
+ * one, so it shows its own disclosure rather than the shared CONSENT_TEXT. It is declared once
+ * and both rendered and stored from here: the consent we keep as evidence has to be the exact
+ * words on screen, and two copies of a string drift apart.
+ */
+const REPORT_CONSENT_TEXT =
+  "I agree AM Ford may email me this report and follow up about this vehicle (and text/call if I provided a number). Reply STOP to opt out.";
+
+/**
  * Home > Inventory > this vehicle.
  *
  * head() and the component both build their trail from this one helper and the same loader
@@ -136,7 +145,7 @@ export const Route = createFileRoute("/vehicle/$id")({
         price: v.price,
         priceCurrency: "USD",
         availability: "https://schema.org/InStock",
-        url: `https://amford.com/vehicle/${vehicleSlug(v)}`,
+        url: `https://www.amfordashtabula.com/vehicle/${vehicleSlug(v)}`,
         priceValidUntil: "2026-12-31",
         // Condition comes from the data, never inferred from the odometer.
         // schema.org has no CertifiedPreOwnedCondition, so CPO maps to UsedCondition
@@ -147,7 +156,7 @@ export const Route = createFileRoute("/vehicle/$id")({
             : "https://schema.org/UsedCondition",
         seller: {
           "@type": "AutoDealer",
-          "@id": "https://amford.com/#dealer",
+          "@id": "https://www.amfordashtabula.com/#dealer",
           name: dealerInfo.name,
           telephone: "+14405537072",
           address: {
@@ -213,11 +222,11 @@ export const Route = createFileRoute("/vehicle/$id")({
           property: "og:image:alt",
           content: `${v.year} ${v.make} ${v.model} ${v.trim} for sale at AM Ford in ${dealerInfo.city}, OH`,
         },
-        { property: "og:url", content: `https://amford.com/vehicle/${vehicleSlug(v)}` },
+        { property: "og:url", content: `https://www.amfordashtabula.com/vehicle/${vehicleSlug(v)}` },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: v.image },
       ],
-      links: [{ rel: "canonical", href: `https://amford.com/vehicle/${vehicleSlug(v)}` }],
+      links: [{ rel: "canonical", href: `https://www.amfordashtabula.com/vehicle/${vehicleSlug(v)}` }],
       scripts: [
         {
           type: "application/ld+json",
@@ -486,7 +495,7 @@ function buildVehicleFaqs(v: Vehicle): { q: string; a: string }[] {
     },
     {
       q: `What is the price of this ${v.year} ${v.make} ${v.model} and are there any hidden dealer fees?`,
-      a: `${pricingNote(v)} At AM Ford, we provide transparent upfront pricing with no surprise dealer documentation markups or hidden prep fees. Applicable state and local sales tax, title, and registration fees are calculated separately based on your county of registration.`,
+      a: `${pricingNote(v)} The listed price is the price of the vehicle. Sales tax, title, and registration are calculated separately based on your county of registration, and dealer fees are added on top. Ask us for the full out-the-door figure in writing before you commit.`,
     },
     {
       q: `What are the powertrain, drivetrain, and fuel efficiency specs for this ${v.model}?`,
@@ -542,6 +551,9 @@ function VehicleDetail() {
   const [modalMode, setModalMode] = useState<ModalMode>("test_drive");
   const [otpOpen, setOtpOpen] = useState(false);
   const [otpSource, setOtpSource] = useState<string>("VDP");
+  // Related-vehicle cards open this same popup for a different car; null means this page's vehicle.
+  const [otpVehicle, setOtpVehicle] = useState<Vehicle | null>(null);
+  const otpCar = otpVehicle ?? v;
   // Interruption popups removed: the sitewide exit-intent offer is the only
   // unsolicited surface. In-page CTAs below do the asking instead.
   const [enquiryPreset, setEnquiryPreset] = useState<QuickEnquiryPreset | null>(null);
@@ -1277,10 +1289,10 @@ function VehicleDetail() {
                 <DollarSign className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <h3 className="display mt-4 text-base sm:text-lg font-bold text-ink">
-                Transparent Pricing & Low APR
+                Clear pricing
               </h3>
               <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                No hidden dealer markups or surprise fees. Take advantage of competitive {v.condition.toLowerCase()} vehicle financing terms, flexible trade-in valuation, and low monthly rates.
+                The listing price is the price of the vehicle. Tax, title, registration, and dealer fees are shown before you commit, and financing terms depend on lender approval. We also appraise trade-ins of any make.
               </p>
             </div>
 
@@ -1370,6 +1382,7 @@ function VehicleDetail() {
                 v={r}
                 index={i}
                 onGetPrice={(selectedCar) => {
+                  setOtpVehicle(selectedCar);
                   setOtpOpen(true);
                 }}
               />
@@ -1406,11 +1419,14 @@ function VehicleDetail() {
 
         {otpOpen && (
           <OTPPopup
-            onClose={() => setOtpOpen(false)}
+            onClose={() => {
+              setOtpOpen(false);
+              setOtpVehicle(null);
+            }}
             initialCarData={{
-              title: `${v.year} ${v.make} ${v.model} ${v.trim}`,
-              price: String(v.price),
-              stock: v.id,
+              title: `${otpCar.year} ${otpCar.make} ${otpCar.model} ${otpCar.trim}`,
+              price: String(otpCar.price),
+              stock: otpCar.id,
               source: otpSource,
             }}
           />
@@ -2126,11 +2142,14 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
                       className="mt-0.5 h-4 w-4 shrink-0 accent-[#002c5f]"
                     />
                     <span className="text-[11px] leading-relaxed text-muted-foreground">
-                      I agree AM Ford may email me this report and follow up about this vehicle (and
-                      text/call if I provided a number). Reply STOP to opt out.
+                      {REPORT_CONSENT_TEXT}
                     </span>
                   </label>
-                  {error && <p className="mt-2.5 text-xs font-medium text-red-600">{error}</p>}
+                  {error && (
+                    <p role="alert" className="mt-2.5 text-xs font-medium text-red-600">
+                      {error}
+                    </p>
+                  )}
                   <button
                     onClick={async () => {
                       if (!/.+@.+\..+/.test(email)) {
@@ -2148,6 +2167,8 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
                         phone,
                         email,
                         message: `Inspection report request for ${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.trim}`,
+                        consent,
+                        consentText: REPORT_CONSENT_TEXT,
                       });
                       if (result.success) setStatus("unlocked");
                       else {
@@ -2184,6 +2205,14 @@ function Spec({ icon: Icon, label }: { icon: typeof Fuel; label: string }) {
   );
 }
 
+/**
+ * Terms the calculator offers, and the one selected on load. Kept as one list so the chips
+ * and the default cannot drift apart — a default that is not in the option list leaves the
+ * UI showing one value while the state holds another.
+ */
+const TERM_OPTIONS = [36, 48, 60, 72, 84];
+const DEFAULT_TERM = 84;
+
 function PaymentCalculator({
   price,
   onPreApprove,
@@ -2192,7 +2221,7 @@ function PaymentCalculator({
   onPreApprove?: (details: Record<string, unknown>) => void;
 }) {
   const [down, setDown] = useState(Math.round(price * 0.1));
-  const [term, setTerm] = useState<36 | 48 | 60 | 72>(60);
+  const [term, setTerm] = useState<number>(DEFAULT_TERM);
   const [apr, setApr] = useState(5.9);
   const monthly = useMemo(() => {
     const principal = Math.max(0, price - down);
@@ -2256,10 +2285,10 @@ function PaymentCalculator({
               Term
             </p>
             <div className="flex flex-wrap gap-2">
-              {[36, 48, 60, 72].map((t) => (
+              {TERM_OPTIONS.map((t) => (
                 <button
                   key={t}
-                  onClick={() => setTerm(t as typeof term)}
+                  onClick={() => setTerm(t)}
                   className={cn(
                     "rounded-md px-3.5 py-1.5 text-xs sm:text-sm font-medium transition",
                     term === t

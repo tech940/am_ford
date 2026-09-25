@@ -6,7 +6,7 @@
  * so this exits non-zero when a rule fails and is safe to wire into CI.
  *
  * Usage:  bun run seo:check-links            (expects a server on :3100)
- *         BASE=https://amford.com bun run seo:check-links
+ *         BASE=https://www.amfordashtabula.com bun run seo:check-links
  */
 import { SERVICE_AREAS } from "../src/lib/serviceAreas";
 import { FORD_MODELS } from "../src/lib/fordModels";

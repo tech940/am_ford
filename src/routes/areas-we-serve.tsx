@@ -18,7 +18,7 @@ import { dealerInfo, DELIVERY_CLAIM, SERVED_MARKETS } from "@/lib/vehicles";
 import { SERVICE_AREAS } from "@/lib/serviceAreas";
 import { COUNTIES } from "@/lib/counties";
 
-const CANONICAL = "https://amford.com/areas-we-serve";
+const CANONICAL = "https://www.amfordashtabula.com/areas-we-serve";
 
 /**
  * Communities that already have their own page. Used to strip them out of the plain-text

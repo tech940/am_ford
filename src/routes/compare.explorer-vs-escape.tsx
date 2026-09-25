@@ -9,7 +9,7 @@ import { articleSchema, faqSchema } from "@/lib/articleSchema";
 import { dealerInfo, DELIVERY_CLAIM, getVehicle } from "@/lib/vehicles";
 
 const PATH = "/compare/explorer-vs-escape";
-const CANONICAL = `https://amford.com${PATH}`;
+const CANONICAL = `https://www.amfordashtabula.com${PATH}`;
 const PUBLISHED = "2026-08-07";
 
 const TITLE = "Ford Explorer vs Ford Escape: Which SUV Fits? | AM Ford";

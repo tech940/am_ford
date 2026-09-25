@@ -117,6 +117,7 @@ export function ExitIntentOffer() {
       phone,
       name: name.trim() || undefined,
       message: `Exit-intent $500 offer claim from ${window.location.pathname}`,
+      consent,
     });
     setSubmitting(false);
     if (result.success) {

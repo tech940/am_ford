@@ -95,7 +95,7 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
   },
   {
     q: "Are there any hidden dealer documentation, prep, or add-on fees at AM Ford?",
-    a: "No. AM Ford upholds a transparent, honest pricing promise: the price you see is the price you pay, with no surprise dealer preparation fees, unexpected administrative markups, or mandatory accessory packages added at signing.",
+    a: "The price shown on a listing is the price of the vehicle. Tax, title, registration, and dealer fees are added on top, and we put the full out-the-door figure in writing before you sign anything. Ask us for that breakdown on any vehicle and we will walk you through every line of it.",
   },
   {
     q: "What automotive services and repairs does the AM Ford Service Center provide?",
@@ -111,7 +111,7 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
   },
   {
     q: "Does AM Ford sell electric and hybrid Ford vehicles with home charging support?",
-    a: "Yes. We carry Ford's advanced electrified lineup including the all-electric F-150 Lightning and Mustang Mach-E, as well as Escape and Maverick Hybrids. Our factory-trained EV specialists assist with home charger installation guidance, public charging networks, and potential utility incentives.",
+    a: "Ford builds electric and hybrid versions across its lineup, and what we have on the lot changes week to week, so the EV and hybrid filters on this page show what is here right now. If the one you want is not listed, we can look for it. We are happy to talk through home charging, public charging networks, and any incentives that currently apply.",
   },
   {
     q: "Can I purchase or lease a commercial work truck or fleet van at AM Ford?",
@@ -420,49 +420,49 @@ const LANDING_CONTENT: Record<string, { heading: string; body: string[] }> = {
   "type:Car": {
     heading: "Ford Cars for Sale in Ashtabula County, OH",
     body: [
-      "Some drivers want a commuting appliance; some want a reason to take the long way home. The cars on this page, including the Ford Mustang GT with its 5.0L V8, deliver the lower center of gravity, sharper steering, and driver-first feel that no crossover can imitate.",
+      "Some drivers want a commuting appliance; some want a reason to take the long way home. A car still gives you the lower centre of gravity and the sharper steering that a taller crossover cannot imitate. Whatever cars are on the lot today are listed above.",
       `Every car at AM Ford passes a comprehensive mechanical and safety inspection before sale, and our finance team works with Ohio credit unions and national lenders to find terms that fit real budgets. Browse the inventory above or call ${dealerInfo.phone} to hold a car for your visit to our ${dealerInfo.locality} lot.`,
     ],
   },
   "type:EV": {
     heading: "Ford EVs for Sale in Ashtabula County, OH",
     body: [
-      "Electric ownership in Northeast Ohio is more practical than most drivers expect: charge overnight on a standard home circuit or a Level 2 charger, wake up to a full battery every morning, and skip the gas station entirely. The EVs on this page, like the F-150 Lightning with its 320-mile extended-range battery and Pro Power Onboard generator capability, prove electric doesn't mean compromise.",
+      "Electric ownership in Northeast Ohio is more practical than most drivers expect: charge overnight on a standard home circuit or a Level 2 charger, start each morning with a full battery, and skip the fuel station entirely. The electric Fords we have in stock are listed above, and we can look for a specific one if it is not here.",
       `AM Ford's technicians are factory-trained on Ford's EV platform, so your battery health check, software updates, and service all happen here in ${dealerInfo.locality}, not at a dealership an hour away in Cleveland. Ask us about home-charger installation guidance with any EV purchase.`,
     ],
   },
   "fuel:Gas": {
     heading: "Gas Fords for Sale in Ashtabula County, OH",
     body: [
-      "Gasoline power remains the simplest ownership story there is: fill up anywhere, service anywhere, and rely on decades of proven Ford powertrain engineering. The gas-powered trucks, SUVs, and cars on this page range from the workhorse F-150 EcoBoost to the 480-horsepower Mustang GT, each fully inspected before it reaches the lot.",
+      "Gasoline power remains the simplest ownership story there is: fill up anywhere, service anywhere, and rely on decades of proven Ford powertrain engineering. The gas trucks, SUVs, and cars we have in stock are listed above, each inspected before it reaches the front line.",
       `If you're weighing gas against hybrid or electric, our sales team will walk you through real cost-of-ownership numbers for your actual commute; no pressure, just math. Visit AM Ford at ${dealerInfo.address} to compare them side by side.`,
     ],
   },
   "fuel:Hybrid": {
     heading: "Hybrid Fords for Sale in Ashtabula County, OH",
     body: [
-      "A hybrid earns its keep in exactly the driving Ashtabula County serves up: stop-and-go around town where the electric motor does the work, and open highway to Cleveland or Erie where the gas engine cruises efficiently. Hybrids like the Escape Titanium on this page are rated over 40 MPG in the city with no charging required, so there are no cords and no planning, just fewer fuel stops.",
+      "A hybrid earns its keep in exactly the driving Ashtabula County serves up: stop-and-go around town where the electric motor does the work, and the open highway to Cleveland or Erie where the gas engine cruises efficiently. There are no cords and no charging to plan for, just fewer fuel stops. Any hybrids we currently have are listed above.",
       `Every hybrid at AM Ford gets a battery-health verification as part of its inspection, and our certified technicians handle hybrid service in-house at our ${dealerInfo.locality} shop. Compare hybrid options above or book a test drive to feel the difference yourself.`,
     ],
   },
   "fuel:Electric": {
     heading: "Electric Fords for Sale in Ashtabula County, OH",
     body: [
-      "An electric Ford is the shortest path to lower running costs without giving up capability. The electric vehicles on this page, like the F-150 Lightning Lariat with 580 horsepower and a 320-mile range, combine instant torque, near-silent cruising, and a far simpler maintenance story: no oil changes, fewer moving parts, and electricity that costs a fraction of gasoline per mile.",
+      "An electric Ford is the shortest path to lower running costs without giving up capability: instant torque, near-silent cruising, and a simpler maintenance story with no oil changes and fewer moving parts. The electric Fords we have in stock are listed above.",
       `AM Ford verifies battery health on every EV we sell, and our factory-trained EV technicians provide full service support right here in ${dealerInfo.locality} for drivers across Ashtabula County and Northeast Ohio. Ask about home charging setup and Ohio utility off-peak rates when you visit.`,
     ],
   },
   "condition:New": {
     heading: "New Ford Trucks, SUVs, Cars, and EVs in Ashtabula County, OH",
     body: [
-      "Buying new means you are the first name on the title: delivery miles on the odometer, the current model year of Ford technology, and a vehicle nobody else has already configured to their own taste. The new inventory on this page runs from the F-150 Platinum and the Bronco Outer Banks through the Mustang GT and the all-electric F-150 Lightning, which between them cover the work week, the weekend, and the school run without asking you to give up any of the three.",
-      `Every new Ford here is prepped and inspected by factory-trained technicians before it reaches the front line, and the price on the listing is the price we quote you, with no hidden dealer fees attached at the desk. ${DELIVERY_CLAIM} If you would rather look first and decide later, we are at ${dealerInfo.address}, and ${dealerInfo.phone} reaches the sales team directly.`,
+      "Buying new means you are the first name on the title: delivery miles on the odometer, the current model year of Ford technology, and a vehicle nobody else has configured to their own taste. The new Fords we have in stock are listed above, covering the work week, the weekend, and the school run.",
+      `Every new Ford here is prepped and inspected before it reaches the front line. The listing price is the price of the vehicle; tax, title, registration, and dealer fees are added separately and we will show you the full figure in writing before you commit. ${DELIVERY_CLAIM} If you would rather look first and decide later, we are at ${dealerInfo.address}, and ${dealerInfo.phone} reaches the sales team directly.`,
     ],
   },
   "condition:Used": {
     heading: "Used Vehicles for Sale in Ashtabula County, OH",
     body: [
-      `AM Ford carries a dependable selection of pre-owned cars, trucks, and SUVs from Ford and other leading automakers at our showroom in ${dealerInfo.locality}. Every vehicle passes a multi-point safety and mechanical inspection before it is offered for front-line sale.`,
+      `AM Ford carries a dependable selection of pre-owned Ford cars, trucks, and SUVs at our showroom in ${dealerInfo.locality}. Every vehicle passes a multi-point safety and mechanical inspection before it is offered for front-line sale.`,
       `Whether you need an affordable commuter car, a tough work truck, or a family SUV, browse our live used inventory above. We offer fair, transparent market pricing, competitive trade-in valuations, and straightforward financing options for all credit profiles.`,
     ],
   },
@@ -524,6 +524,15 @@ function buildInventorySeo(s: InventorySearch) {
   const activeKeys = activeFilterKeys(s);
 
   /**
+   * A facet with nothing behind it must not be indexed. The feed changes daily, so a page like
+   * ?fuel=Hybrid goes from stocked to empty overnight without anyone touching the code.
+   * Submitting it anyway hands Google a soft 404 and shows a shopper a landing page for a
+   * category we cannot currently fill. matchingVehicles is the same function the grid renders
+   * from, so this can never disagree with what the visitor sees.
+   */
+  const emptyFacetRobots = matchingVehicles(s).length === 0 ? "noindex,follow" : undefined;
+
+  /**
    * Page 2 and beyond is never indexable, on a landing page or anywhere else, because it is a
    * partial slice of a list whose page 1 is already indexed. It stays `follow` so the vehicle
    * detail pages reachable only from a later page keep a crawl path. The canonical still points
@@ -547,8 +556,8 @@ function buildInventorySeo(s: InventorySearch) {
       // ?condition=Certified+Pre-Owned. A "%20" canonical would point at a URL string nothing
       // links to, stranding the facet's internal link equity on an orphan. encodeURIComponent
       // is still the right escaper for every other character; only the space needs remapping.
-      canonical: `https://amford.com/inventory?condition=${encodeURIComponent(s.condition).replace(/%20/g, "+")}`,
-      robots: paginatedRobots,
+      canonical: `https://www.amfordashtabula.com/inventory?condition=${encodeURIComponent(s.condition).replace(/%20/g, "+")}`,
+      robots: paginatedRobots ?? emptyFacetRobots,
     };
   }
 
@@ -561,21 +570,21 @@ function buildInventorySeo(s: InventorySearch) {
     return {
       title: `${label} for Sale in Ashtabula County, OH | AM Ford`,
       description: `Shop ${conditionPhrase(matchingVehicles(s))} ${label} at AM Ford in Ashtabula County, OH. Serving Ashtabula, Geneva, Conneaut, and Northeast Ohio.`,
-      canonical: `https://amford.com/inventory?${param}`,
-      robots: paginatedRobots,
+      canonical: `https://www.amfordashtabula.com/inventory?${param}`,
+      robots: paginatedRobots ?? emptyFacetRobots,
     };
   }
 
   return {
     title: `Ford Trucks, SUVs & Cars for Sale in Ashtabula County | AM Ford`,
     description: `Shop the AM Ford lineup in Ashtabula County, OH: new and certified pre-owned Ford trucks, SUVs, cars, and EVs. Serving Northeast Ohio.`,
-    canonical: "https://amford.com/inventory",
+    canonical: "https://www.amfordashtabula.com/inventory",
     robots: activeKeys.length > 0 ? "noindex,follow" : undefined,
   };
 }
 
 /** Structured data needs absolute URLs, so every schema href is built from this origin. */
-const SITE_ORIGIN = "https://amford.com";
+const SITE_ORIGIN = "https://www.amfordashtabula.com";
 
 /** SEO label for an indexable landing page, or null when this URL is not one. */
 function landingLabel(s: InventorySearch): string | null {
@@ -693,7 +702,7 @@ const CONDITION_SCHEMA_URL: Record<Vehicle["condition"], string> = {
 /** Seller block shared by every Offer, built from the single dealer source of truth. */
 const SELLER_SCHEMA = {
   "@type": "AutoDealer",
-  "@id": "https://amford.com/#dealer",
+  "@id": "https://www.amfordashtabula.com/#dealer",
   name: dealerInfo.name,
   telephone: dealerInfo.phone,
   address: {
@@ -1607,10 +1616,10 @@ export function InventoryPage() {
                 Why Buy Your Next Ford from AM Ford in Ashtabula County?
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
-                Shopping for a vehicle in Ohio shouldn't mean compromising on quality or paying
-                hidden fees. At AM Ford, every vehicle on our lot undergoes safety and mechanical
-                testing by factory-certified Ford technicians. From winter-ready 4WD trucks to
-                fuel-efficient hybrid commuters, we stock vehicles tailored for Northeast Ohio
+                Shopping for a vehicle in Ohio should not mean guessing at the numbers. Every
+                vehicle on our lot is inspected before it goes out front, the listing price is the
+                price of the vehicle, and tax, title, registration, and dealer fees are set out in
+                writing before you commit. We stock trucks and SUVs chosen for Northeast Ohio
                 weather and roads.
               </p>
             </div>
@@ -1618,7 +1627,7 @@ export function InventoryPage() {
             <div className="grid gap-8 md:grid-cols-2">
               <div>
                 <h4 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                  <Car className="h-5 w-5 text-[#002c5f]" /> Popular Ford Models in Stock
+                  <Car className="h-5 w-5 text-[#002c5f]" /> Ford models we sell
                 </h4>
                 <ul className="mt-3 space-y-2 text-sm text-slate-600">
                   <li className="flex items-start gap-2">
@@ -1645,8 +1654,8 @@ export function InventoryPage() {
                   <li className="flex items-start gap-2">
                     <Check className="h-4 w-4 shrink-0 text-[#002c5f] mt-0.5" />
                     <span>
-                      <strong className="text-slate-900">Electric & Hybrid Fords:</strong> F-150
-                      Lightning EV and the certified pre-owned Escape Hybrid.
+                      <strong className="text-slate-900">Electric and hybrid Fords:</strong> what
+                      we have changes week to week, so use the EV filter above to see today's.
                     </span>
                   </li>
                 </ul>
@@ -1660,8 +1669,9 @@ export function InventoryPage() {
                   <li className="flex items-start gap-2">
                     <Check className="h-4 w-4 shrink-0 text-[#002c5f] mt-0.5" />
                     <span>
-                      <strong className="text-slate-900">No-Hassle Transparent Pricing:</strong>{" "}
-                      Upfront market-backed prices with zero hidden dealer fees.
+                      <strong className="text-slate-900">Upfront pricing:</strong>{" "}
+                      The listing price is the vehicle price, and tax, title, registration, and
+                      dealer fees are shown in writing before you commit.
                     </span>
                   </li>
                   <li className="flex items-start gap-2">

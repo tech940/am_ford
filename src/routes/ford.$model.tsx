@@ -19,7 +19,7 @@ import { dealerInfo, DELIVERY_CLAIM, getVehicle, type Vehicle, vehicleSlug } fro
 import { getServiceArea, SERVICE_AREAS, type ServiceArea } from "@/lib/serviceAreas";
 import type { InventorySearch } from "./inventory";
 
-const SITE_ORIGIN = "https://amford.com";
+const SITE_ORIGIN = "https://www.amfordashtabula.com";
 
 /**
  * One source for the trail on this route: head() feeds it to breadcrumbSchema() and the

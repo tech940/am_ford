@@ -1,8 +1,11 @@
 import { dealerInfo } from "@/lib/vehicles";
 
-export const TERMS_OF_USE_URL = "https://www.amfordashtabula.com/terms-of-use/";
+// Our own pages. These previously pointed at /terms-of-use/ and /privacy-policy/ on the
+// legacy site, which is behind bot protection today and will 404 after cutover, leaving the
+// consent disclosure linking to nothing.
+export const TERMS_OF_USE_URL = "/terms";
 
-export const PRIVACY_POLICY_URL = "https://www.amfordashtabula.com/privacy-policy/";
+export const PRIVACY_POLICY_URL = "/privacy";
 
 /**
  * One wording for every consent disclosure. The four named exports below are kept because
@@ -11,8 +14,9 @@ export const PRIVACY_POLICY_URL = "https://www.amfordashtabula.com/privacy-polic
  * text, so it is deliberately not part of the string.
  */
 const CONTACT_CONSENT_DISCLOSURE =
-  `By submitting, you agree that ${dealerInfo.name} in ${dealerInfo.city} may contact you. ` +
-  "Message/data rates may apply.";
+  `I agree that ${dealerInfo.name} in ${dealerInfo.city} may call or text me at the number I ` +
+  "provided about my inquiry. Consent is not a condition of purchase. Message and data rates " +
+  "may apply. Reply STOP to opt out.";
 
 export const SMS_CONSENT_DISCLOSURE = CONTACT_CONSENT_DISCLOSURE;
 

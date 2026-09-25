@@ -42,7 +42,7 @@ const SERVICE_SCHEMA = {
   description:
     "Trade-in appraisal at AM Ford in Jefferson, Ohio. We inspect and value your current vehicle, any make or model, put the figure in writing, and apply it to your next Ford purchase. Remote appraisal by photo is available for customers buying at a distance.",
   url: CANONICAL,
-  provider: { "@id": "https://amford.com/#dealer" },
+  provider: { "@id": "https://www.amfordashtabula.com/#dealer" },
   areaServed: [
     { "@type": "AdministrativeArea", name: "Ashtabula County" },
     { "@type": "AdministrativeArea", name: "Northeast Ohio" },

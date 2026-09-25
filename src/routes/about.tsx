@@ -35,9 +35,9 @@ export const Route = createFileRoute("/about")({
         property: "og:description",
         content: `Family-owned Ford dealer in Ashtabula County (${dealerInfo.city}), serving Ashtabula, Geneva, Conneaut, and Northeast Ohio drivers.`,
       },
-      { property: "og:url", content: "https://amford.com/about" },
+      { property: "og:url", content: "https://www.amfordashtabula.com/about" },
     ],
-    links: [{ rel: "canonical", href: "https://amford.com/about" }],
+    links: [{ rel: "canonical", href: "https://www.amfordashtabula.com/about" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -48,11 +48,11 @@ export const Route = createFileRoute("/about")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "AboutPage",
-          "@id": "https://amford.com/about#webpage",
-          url: "https://amford.com/about",
+          "@id": "https://www.amfordashtabula.com/about#webpage",
+          url: "https://www.amfordashtabula.com/about",
           name: `About AM Ford | Ford Dealer in ${dealerInfo.city}`,
           description: `AM Ford is a family-owned Ford dealer in ${dealerInfo.city}, serving Ashtabula County with honest pricing, certified Ford service, and no-pressure buying.`,
-          mainEntity: { "@id": "https://amford.com/#dealer" },
+          mainEntity: { "@id": "https://www.amfordashtabula.com/#dealer" },
         }),
       },
     ],

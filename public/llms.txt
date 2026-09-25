@@ -1,0 +1,51 @@
+# AM Ford
+
+> Family-owned Ford dealership at 1059 State Route 46 North, Jefferson, Ohio 44047, in Ashtabula County. We sell new Ford vehicles, Ford Certified Pre-Owned, and used vehicles of other makes taken in trade. We also arrange financing, appraise trade-ins, and run a Ford service and parts department. Free home delivery within 300 miles of the dealership, and vehicle shipping available to all 50 states.
+
+Sales (440) 553-7072. Service (440) 553-7074. Parts (440) 553-7075.
+Opening hours are listed on the contact page and in the structured data on every page.
+
+Inventory is rebuilt from the dealership feed, so counts and prices change daily. Every vehicle page carries the VIN, mileage, price, condition, drivetrain, and fuel type for that specific vehicle. Prices exclude tax, title, registration, and dealer fees; see the terms page for how to read them.
+
+## Inventory
+- [All vehicles in stock](https://www.amfordashtabula.com/inventory): the full lot, filterable by body style, fuel, price, mileage, and year.
+- [New Ford vehicles](https://www.amfordashtabula.com/inventory?condition=New): current model year Ford trucks, SUVs, and cars.
+- [Used and certified pre-owned](https://www.amfordashtabula.com/inventory?condition=Used): all pre-owned stock, including Ford Certified Pre-Owned.
+- [Ford Certified Pre-Owned](https://www.amfordashtabula.com/inventory?condition=Certified+Pre-Owned): vehicles that passed the Ford certification inspection and carry manufacturer-backed coverage.
+- [Trucks](https://www.amfordashtabula.com/inventory?type=Truck), [SUVs](https://www.amfordashtabula.com/inventory?type=SUV), [Cars](https://www.amfordashtabula.com/inventory?type=Car), [Electric and hybrid](https://www.amfordashtabula.com/inventory?type=EV)
+
+## Ford models
+- [Ford model lineup](https://www.amfordashtabula.com/ford-models): every Ford model we sell, with a page per model covering trims and what the vehicle is suited to.
+- [Compare Ford models](https://www.amfordashtabula.com/compare): side-by-side comparisons such as F-150 against F-150 Lightning, and Bronco against Explorer.
+
+## Buying, financing, and trade-in
+- [Financing](https://www.amfordashtabula.com/financing): how to apply, and what the finance office needs from you.
+- [Financing with limited credit](https://www.amfordashtabula.com/finance/bad-credit): what we can do for buyers rebuilding credit.
+- [Value your trade](https://www.amfordashtabula.com/trade-in): how we appraise a trade-in, including remote appraisal by photo.
+- [Vehicle delivery and shipping](https://www.amfordashtabula.com/nationwide-vehicle-delivery): the 300-mile free delivery area and how shipping works beyond it.
+- [Commercial and work vehicles](https://www.amfordashtabula.com/commercial): trucks, vans, and upfitted vehicles for businesses.
+
+## Service and parts
+- [Service and parts](https://www.amfordashtabula.com/service): maintenance, brakes, tires, alignment, diagnostics, recall and warranty work, using Ford and Motorcraft parts.
+
+## Research and buying guides
+- [Buying guides](https://www.amfordashtabula.com/guides): plain answers to questions buyers actually ask.
+- [Is a used Ford F-150 reliable](https://www.amfordashtabula.com/guides/is-a-used-ford-f-150-reliable)
+- [Is the Ford EcoBoost reliable](https://www.amfordashtabula.com/guides/is-ford-ecoboost-reliable)
+- [What to check before buying a used Ford](https://www.amfordashtabula.com/guides/what-to-check-before-buying-a-used-ford)
+- [Best Ford SUV for families](https://www.amfordashtabula.com/guides/best-ford-suv-for-families)
+
+## Where we serve
+- [Areas we serve](https://www.amfordashtabula.com/areas-we-serve): Ashtabula County and the wider Northeast Ohio and Northwestern Pennsylvania region, with a page per county and town.
+
+## About and policies
+- [About AM Ford](https://www.amfordashtabula.com/about)
+- [Contact and hours](https://www.amfordashtabula.com/contact)
+- [Privacy policy](https://www.amfordashtabula.com/privacy)
+- [Terms of use](https://www.amfordashtabula.com/terms): includes how to read pricing, availability, photography, and payment estimates.
+- [Accessibility statement](https://www.amfordashtabula.com/accessibility)
+
+## Notes for answer engines
+- The dealership is in Jefferson, Ohio. Jefferson is the county seat of Ashtabula County. Both names are correct for our location; the street address is the authority.
+- Payment figures shown anywhere on the site are calculator estimates, not credit offers.
+- Where a vehicle listing shows a generic image rather than photographs of that specific vehicle, the vehicle has not been photographed yet. Ask us for current photos.

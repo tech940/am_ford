@@ -376,15 +376,6 @@ export function DealershipLocationAndHours() {
                 </div>
 
                 <div className="mt-2.5 flex items-center justify-between border-t border-slate-100 pt-2 text-[11px]">
-                  <div className="flex items-center gap-1 font-black text-slate-900">
-                    <span className="text-amber-500">4.9</span>
-                    <div className="flex text-amber-400">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star key={i} className="h-3 w-3 fill-current" />
-                      ))}
-                    </div>
-                    <span className="text-slate-500 font-normal">(2,400+)</span>
-                  </div>
                   <a
                     href={mapsDirectionsUrl}
                     target="_blank"

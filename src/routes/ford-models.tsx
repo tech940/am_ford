@@ -7,7 +7,7 @@ import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { FORD_MODELS } from "@/lib/fordModels";
 import { dealerInfo, DELIVERY_CLAIM } from "@/lib/vehicles";
 
-const SITE_ORIGIN = "https://amford.com";
+const SITE_ORIGIN = "https://www.amfordashtabula.com";
 const CANONICAL = `${SITE_ORIGIN}/ford-models`;
 
 const TITLE = `Ford Models for Sale in Ashtabula County, OH | AM Ford`;

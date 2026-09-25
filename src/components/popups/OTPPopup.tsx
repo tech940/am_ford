@@ -237,7 +237,9 @@ export default function OTPPopup({ onSuccess, onClose, initialCarData }: OTPPopu
         full_name: `${firstName} ${lastName}`.trim(),
         email: email,
         phone: cPhone,
-        message: `Unlocked Instant Price for ${carData.title}. Preferred contact: ${preferredContact}. ${comments} [SMS/call consent granted ${new Date().toISOString()}]`,
+        message: `Unlocked Instant Price for ${carData.title}. Preferred contact: ${preferredContact}. ${comments}`,
+        sms_consent: smsConsent,
+        sms_consent_text: SMS_CONSENT_DISCLOSURE,
       });
 
       if (res.success) {
@@ -513,6 +515,7 @@ export default function OTPPopup({ onSuccess, onClose, initialCarData }: OTPPopu
 
               {error && (
                 <div
+                  role="alert"
                   style={{
                     marginTop: 16,
                     padding: "10px 14px",

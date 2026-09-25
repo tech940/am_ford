@@ -196,7 +196,7 @@ export function TradeValuatorModal(props: {
       `${condition} condition. Estimate shown: $${estimate.lo.toLocaleString()}–` +
       `$${estimate.hi.toLocaleString()}.`;
 
-    const result = await submitQuickLead({ phone, name: name || undefined, message });
+    const result = await submitQuickLead({ phone, name: name || undefined, message, consent });
     setSubmitting(false);
 
     // The estimate is computed locally, so the customer always gets the value they
@@ -252,7 +252,7 @@ export function TradeValuatorModal(props: {
         <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
           <div>
             <h3 className="text-base font-bold text-slate-900">Trade-In Value Estimator</h3>
-            <p className="text-[11px] font-medium text-slate-500">Fast appraisal based on current Ohio market data</p>
+            <p className="text-[11px] font-medium text-slate-500">Fast estimate from the year, mileage, and condition you enter</p>
           </div>
           <button
             type="button"
@@ -333,6 +333,7 @@ export function TradeValuatorModal(props: {
                   </p>
                   {errorMessage ? (
                     <p
+                      role="alert"
                       className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm font-medium
                         text-amber-800 ring-1 ring-amber-200"
                     >
@@ -484,7 +485,10 @@ export function TradeValuatorModal(props: {
                   </p>
 
                   {errorMessage && (
-                    <div className="mt-3 rounded-xl bg-red-50 p-3 text-xs font-semibold text-red-600">
+                    <div
+                      role="alert"
+                      className="mt-3 rounded-xl bg-red-50 p-3 text-xs font-semibold text-red-600"
+                    >
                       {errorMessage}
                     </div>
                   )}

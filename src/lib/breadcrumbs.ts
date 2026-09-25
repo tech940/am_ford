@@ -1,4 +1,4 @@
-export const SITE_ORIGIN = "https://amford.com";
+export const SITE_ORIGIN = "https://www.amfordashtabula.com";
 
 export type Crumb = {
   /** Visible label. Keep it short: this is what Google prints in the result. */

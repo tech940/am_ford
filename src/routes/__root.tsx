@@ -31,12 +31,12 @@ const autoDealerSchema = {
   "@type": "AutoDealer",
   // Stable identity: every other AutoDealer node on the site reuses this @id so
   // Google merges them into ONE dealership rather than reading several.
-  "@id": "https://amford.com/#dealer",
+  "@id": "https://www.amfordashtabula.com/#dealer",
   name: "AM Ford",
   alternateName: "Nassief Ford",
   description:
     "Family-owned Ford dealership in Ashtabula County (Jefferson, Ohio), serving Ashtabula, Geneva, Conneaut, and Northeast Ohio with new Ford trucks and SUVs, used vehicles, commercial vehicles, financing, and Ford-certified service. Free home delivery within 300 miles and vehicle shipping available to all 50 states.",
-  url: "https://amford.com",
+  url: "https://www.amfordashtabula.com",
   telephone: "+14405537072",
   priceRange: "$$$",
   address: {
@@ -91,10 +91,10 @@ const autoDealerSchema = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "https://amford.com/#organization",
+  "@id": "https://www.amfordashtabula.com/#organization",
   name: "AM Ford",
   alternateName: "Nassief Ford",
-  url: "https://amford.com",
+  url: "https://www.amfordashtabula.com",
   logo: "https://di-uploads-development.dealerinspire.com/amford/uploads/2025/08/Am-ford.png",
   telephone: "+14405537072",
   address: {
@@ -114,15 +114,15 @@ const organizationSchema = {
 const webSiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "@id": "https://amford.com/#website",
-  url: "https://amford.com",
+  "@id": "https://www.amfordashtabula.com/#website",
+  url: "https://www.amfordashtabula.com",
   name: "AM Ford",
-  publisher: { "@id": "https://amford.com/#organization" },
+  publisher: { "@id": "https://www.amfordashtabula.com/#organization" },
   potentialAction: {
     "@type": "SearchAction",
     target: {
       "@type": "EntryPoint",
-      urlTemplate: "https://amford.com/inventory?q={search_term_string}",
+      urlTemplate: "https://www.amfordashtabula.com/inventory?q={search_term_string}",
     },
     "query-input": "required name=search_term_string",
   },
@@ -160,7 +160,7 @@ export const Route = createRootRoute({
       // Matches the homepage canonical exactly (with trailing slash). Every other route
       // overrides this in its own head(); a page that forgets would otherwise tell social
       // crawlers it IS the homepage.
-      { property: "og:url", content: "https://amford.com/" },
+      { property: "og:url", content: "https://www.amfordashtabula.com/" },
       // Site-wide social card. Routes with a better image (vehicle pages) override
       // it; without this every other page shared to Facebook or LinkedIn renders
       // as a bare text link, which measurably suppresses click-through.

@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TradeInRouteImport } from './routes/trade-in'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapRouteImport } from './routes/sitemap'
 import { Route as ServiceRouteImport } from './routes/service'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NationwideVehicleDeliveryRouteImport } from './routes/nationwide-vehicle-delivery'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as FordModelsRouteImport } from './routes/ford-models'
@@ -20,6 +22,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CommercialRouteImport } from './routes/commercial'
 import { Route as AreasWeServeRouteImport } from './routes/areas-we-serve'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AccessibilityRouteImport } from './routes/accessibility'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
@@ -42,6 +45,11 @@ const TradeInRoute = TradeInRouteImport.update({
   path: '/trade-in',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapRoute = SitemapRouteImport.update({
   id: '/sitemap',
   path: '/sitemap',
@@ -50,6 +58,11 @@ const SitemapRoute = SitemapRouteImport.update({
 const ServiceRoute = ServiceRouteImport.update({
   id: '/service',
   path: '/service',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NationwideVehicleDeliveryRoute =
@@ -91,6 +104,11 @@ const AreasWeServeRoute = AreasWeServeRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccessibilityRoute = AccessibilityRouteImport.update({
+  id: '/accessibility',
+  path: '/accessibility',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -182,6 +200,7 @@ const FordDealerCountyCountyRoute = FordDealerCountyCountyRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/accessibility': typeof AccessibilityRoute
   '/admin': typeof AdminRoute
   '/areas-we-serve': typeof AreasWeServeRoute
   '/commercial': typeof CommercialRoute
@@ -190,8 +209,10 @@ export interface FileRoutesByFullPath {
   '/ford-models': typeof FordModelsRoute
   '/inventory': typeof InventoryRoute
   '/nationwide-vehicle-delivery': typeof NationwideVehicleDeliveryRoute
+  '/privacy': typeof PrivacyRoute
   '/service': typeof ServiceRoute
   '/sitemap': typeof SitemapRoute
+  '/terms': typeof TermsRoute
   '/trade-in': typeof TradeInRoute
   '/compare/bronco-vs-explorer': typeof CompareBroncoVsExplorerRoute
   '/compare/explorer-vs-escape': typeof CompareExplorerVsEscapeRoute
@@ -211,6 +232,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/accessibility': typeof AccessibilityRoute
   '/admin': typeof AdminRoute
   '/areas-we-serve': typeof AreasWeServeRoute
   '/commercial': typeof CommercialRoute
@@ -219,8 +241,10 @@ export interface FileRoutesByTo {
   '/ford-models': typeof FordModelsRoute
   '/inventory': typeof InventoryRoute
   '/nationwide-vehicle-delivery': typeof NationwideVehicleDeliveryRoute
+  '/privacy': typeof PrivacyRoute
   '/service': typeof ServiceRoute
   '/sitemap': typeof SitemapRoute
+  '/terms': typeof TermsRoute
   '/trade-in': typeof TradeInRoute
   '/compare/bronco-vs-explorer': typeof CompareBroncoVsExplorerRoute
   '/compare/explorer-vs-escape': typeof CompareExplorerVsEscapeRoute
@@ -241,6 +265,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/accessibility': typeof AccessibilityRoute
   '/admin': typeof AdminRoute
   '/areas-we-serve': typeof AreasWeServeRoute
   '/commercial': typeof CommercialRoute
@@ -249,8 +274,10 @@ export interface FileRoutesById {
   '/ford-models': typeof FordModelsRoute
   '/inventory': typeof InventoryRoute
   '/nationwide-vehicle-delivery': typeof NationwideVehicleDeliveryRoute
+  '/privacy': typeof PrivacyRoute
   '/service': typeof ServiceRoute
   '/sitemap': typeof SitemapRoute
+  '/terms': typeof TermsRoute
   '/trade-in': typeof TradeInRoute
   '/compare/bronco-vs-explorer': typeof CompareBroncoVsExplorerRoute
   '/compare/explorer-vs-escape': typeof CompareExplorerVsEscapeRoute
@@ -272,6 +299,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/accessibility'
     | '/admin'
     | '/areas-we-serve'
     | '/commercial'
@@ -280,8 +308,10 @@ export interface FileRouteTypes {
     | '/ford-models'
     | '/inventory'
     | '/nationwide-vehicle-delivery'
+    | '/privacy'
     | '/service'
     | '/sitemap'
+    | '/terms'
     | '/trade-in'
     | '/compare/bronco-vs-explorer'
     | '/compare/explorer-vs-escape'
@@ -301,6 +331,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/accessibility'
     | '/admin'
     | '/areas-we-serve'
     | '/commercial'
@@ -309,8 +340,10 @@ export interface FileRouteTypes {
     | '/ford-models'
     | '/inventory'
     | '/nationwide-vehicle-delivery'
+    | '/privacy'
     | '/service'
     | '/sitemap'
+    | '/terms'
     | '/trade-in'
     | '/compare/bronco-vs-explorer'
     | '/compare/explorer-vs-escape'
@@ -330,6 +363,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/accessibility'
     | '/admin'
     | '/areas-we-serve'
     | '/commercial'
@@ -338,8 +372,10 @@ export interface FileRouteTypes {
     | '/ford-models'
     | '/inventory'
     | '/nationwide-vehicle-delivery'
+    | '/privacy'
     | '/service'
     | '/sitemap'
+    | '/terms'
     | '/trade-in'
     | '/compare/bronco-vs-explorer'
     | '/compare/explorer-vs-escape'
@@ -360,6 +396,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AccessibilityRoute: typeof AccessibilityRoute
   AdminRoute: typeof AdminRoute
   AreasWeServeRoute: typeof AreasWeServeRoute
   CommercialRoute: typeof CommercialRoute
@@ -368,8 +405,10 @@ export interface RootRouteChildren {
   FordModelsRoute: typeof FordModelsRoute
   InventoryRoute: typeof InventoryRoute
   NationwideVehicleDeliveryRoute: typeof NationwideVehicleDeliveryRoute
+  PrivacyRoute: typeof PrivacyRoute
   ServiceRoute: typeof ServiceRoute
   SitemapRoute: typeof SitemapRoute
+  TermsRoute: typeof TermsRoute
   TradeInRoute: typeof TradeInRoute
   CompareBroncoVsExplorerRoute: typeof CompareBroncoVsExplorerRoute
   CompareExplorerVsEscapeRoute: typeof CompareExplorerVsEscapeRoute
@@ -396,6 +435,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TradeInRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap': {
       id: '/sitemap'
       path: '/sitemap'
@@ -408,6 +454,13 @@ declare module '@tanstack/react-router' {
       path: '/service'
       fullPath: '/service'
       preLoaderRoute: typeof ServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/nationwide-vehicle-delivery': {
@@ -464,6 +517,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accessibility': {
+      id: '/accessibility'
+      path: '/accessibility'
+      fullPath: '/accessibility'
+      preLoaderRoute: typeof AccessibilityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -584,6 +644,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AccessibilityRoute: AccessibilityRoute,
   AdminRoute: AdminRoute,
   AreasWeServeRoute: AreasWeServeRoute,
   CommercialRoute: CommercialRoute,
@@ -592,8 +653,10 @@ const rootRouteChildren: RootRouteChildren = {
   FordModelsRoute: FordModelsRoute,
   InventoryRoute: InventoryRoute,
   NationwideVehicleDeliveryRoute: NationwideVehicleDeliveryRoute,
+  PrivacyRoute: PrivacyRoute,
   ServiceRoute: ServiceRoute,
   SitemapRoute: SitemapRoute,
+  TermsRoute: TermsRoute,
   TradeInRoute: TradeInRoute,
   CompareBroncoVsExplorerRoute: CompareBroncoVsExplorerRoute,
   CompareExplorerVsEscapeRoute: CompareExplorerVsEscapeRoute,

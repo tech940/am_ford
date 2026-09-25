@@ -2,23 +2,23 @@ import { createFileRoute } from "@tanstack/react-router";
 import { HomePage } from "@/components/home/HomePage";
 import { dealerInfo, DELIVERY_CLAIM } from "@/lib/vehicles";
 
-const CANONICAL = "https://amford.com/";
+const CANONICAL = "https://www.amfordashtabula.com/";
 
 export const Route = createFileRoute("/")({
   head: () => {
     const dealerSchema = {
       "@context": "https://schema.org",
       "@type": "AutoDealer",
-      "@id": "https://amford.com/#dealer",
+      "@id": "https://www.amfordashtabula.com/#dealer",
       name: dealerInfo.name,
       legalName: dealerInfo.legalName,
       url: CANONICAL,
-      logo: "https://amford.com/am-ford-logo.png",
+      logo: "https://www.amfordashtabula.com/am-ford-logo.png",
       image:
         "https://assets.cai-media-management.com/resize/1024x1024/common-vehicle-media/303504c6-8b4d-463b-9327-a47a0c975418.jpg",
       description: `New and certified Ford dealership in Ashtabula County, OH serving Ashtabula, Geneva, Conneaut, and Northeast Ohio.`,
       telephone: "+14405537072",
-      email: "sales@amford.com",
+      email: "sales@amfordashtabula.com",
       address: {
         "@type": "PostalAddress",
         streetAddress: dealerInfo.street,

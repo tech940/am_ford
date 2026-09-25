@@ -35,10 +35,23 @@ export function hasSubmittedLead(): boolean {
 }
 
 export type QuickLeadInput = {
+  /**
+   * True only when the visitor actually ticked the consent box. The stamp below is evidence
+   * in a TCPA dispute, so it must never be written for someone who did not consent: a record
+   * claiming consent that was never given is worse than having no record at all.
+   */
+  consent?: boolean;
+  /**
+   * The disclosure actually rendered beside the box, for a surface that shows wording of its
+   * own rather than CONSENT_TEXT. What we store has to be what the visitor read, or it is not
+   * evidence of anything. Surfaces using the shared wording can leave this unset.
+   */
+  consentText?: string;
   vehicle?: Vehicle;
   leadType?: LeadInquiry["lead_type"];
   name?: string;
-  phone: string;
+  /** Optional: an email-only signup has no phone, and inventing one is worse than omitting it. */
+  phone?: string;
   email?: string;
   message: string;
   financingDetails?: Record<string, unknown>;
@@ -55,8 +68,13 @@ export async function submitQuickLead(input: QuickLeadInput) {
     vehicle_id: input.vehicle?.id,
     full_name: input.name?.trim() || "Not provided",
     email: input.email?.trim() ?? "",
-    phone: input.phone.trim(),
-    message: `${input.message.trim()} ${consentStamp()}`,
+    phone: input.phone?.trim() || undefined,
+    message: input.message.trim(),
+    // Consent now lands in the table's own sms_consent_checked / _at / _text columns, which is
+    // where it belongs as evidence. Stamping it into free text as well would create a second,
+    // unverifiable copy that could contradict the first.
+    sms_consent: input.consent === true,
+    sms_consent_text: input.consent === true ? (input.consentText ?? CONSENT_TEXT) : undefined,
     financing_details: input.financingDetails,
   });
   if (result.success) markLeadSubmitted();

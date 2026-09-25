@@ -1,8 +1,10 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import "./home.css";
 import { SiteNav } from "@/components/site/SiteNav";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { ChatWidget } from "@/components/convert/ChatWidget";
+import TradeOfferPopup from "@/components/popups/TradeOfferPopup";
+import { hasSubmittedLead } from "@/lib/leads";
 
 // ── Above-the-fold: synchronous for instant FCP/LCP ──
 import { Hero } from "./sections/Hero";
@@ -47,7 +49,20 @@ const CursorGlow = lazy(() =>
  * for below-the-fold performance — the browser defers network requests for
  * off-screen images without removing them from the HTML document.
  */
+/** How long a visitor reads the page before the trade offer opens itself. */
+const AUTO_OFFER_DELAY_MS = 20_000;
+
 export function HomePage() {
+  const [tradeOpen, setTradeOpen] = useState(false);
+
+  // Open the trade offer once, 20s in. Skipped for anyone who has already sent us a lead —
+  // interrupting someone who just converted costs goodwill and gains nothing.
+  useEffect(() => {
+    if (hasSubmittedLead()) return;
+    const timer = setTimeout(() => setTradeOpen(true), AUTO_OFFER_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-slate-50 text-slate-900 antialiased selection:bg-[#002c5f] selection:text-white">
       <Suspense fallback={null}>
@@ -72,8 +87,14 @@ export function HomePage() {
         {/* Phase 3: Dealership Trust & Reputation */}
         <WhyChooseUs />
         <DeliveryHighlight />
-        <Stats />
-        <Reviews />
+        {/* Stats intentionally not rendered: 2,500+ delivered, 98% satisfaction and
+            1,200+ five-star reviews are unsourced, and the review figure contradicts the
+            2,400+ claimed elsewhere on the same page. Restore with numbers the dealership
+            can evidence from its DMS and its Google Business Profile. */}
+        {/* Reviews intentionally not rendered: the four testimonials in Reviews.tsx are
+            invented, carry a "Verified Buyer" badge, and sit under a fabricated 4.9 star /
+            2,400+ Google Reviews figure. Publishing invented endorsements is an FTC matter,
+            not a style one. Restore this once the section reads real reviews. */}
 
         {/* Phase 4: Ownership, Flagship Showcase & Regional Roots */}
         <ExtraordinaryCarousel />
@@ -87,6 +108,8 @@ export function HomePage() {
 
       {/* Live Chat Widget (Bottom Right) */}
       <ChatWidget />
+
+      {tradeOpen && <TradeOfferPopup onClose={() => setTradeOpen(false)} pageSource="Home" />}
     </div>
   );
 }
