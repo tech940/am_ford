@@ -183,7 +183,7 @@ export function SiteNav() {
                             <div key={column.heading}>
                               <h2
                                 id={headingId}
-                                className="text-[10px] font-bold tracking-[0.18em] text-[#002c5f] uppercase"
+                                className="text-[13px] font-bold text-[#002c5f]"
                               >
                                 {column.heading}
                               </h2>
@@ -296,7 +296,7 @@ export function SiteNav() {
                         <div key={column.heading}>
                           <h2
                             id={headingId}
-                            className="text-[10px] font-bold tracking-[0.18em] text-[#002c5f] uppercase"
+                            className="text-[13px] font-bold text-[#002c5f]"
                           >
                             {column.heading}
                           </h2>

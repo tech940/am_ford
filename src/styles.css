@@ -6,9 +6,89 @@
 
 /* AM Ford — premium light theme. Navy accent only. */
 
+/*
+ * Type: Overpass, the open-source revival of Highway Gothic — the lettering on the Route 46,
+ * Route 20 and I-90 signs that bring customers to the lot. Distance is this dealership's
+ * whole position (free delivery within 300 miles, shipping to all 50 states), so the site is
+ * set in the typeface of the road. It was drawn to be read at speed, which suits prices and
+ * phone numbers, and its numerals are the ones people already trust on a mileage sign.
+ *
+ * One family throughout on purpose. Tested against Inter on the real pages: a separate body
+ * face (Public Sans) was indistinguishable from Inter at 15px, which would have left most of
+ * the site unchanged, and Atkinson Hyperlegible rendered slashed zeros in every phone number
+ * and price. Overpass Mono carries the record-style data: VINs, stock numbers, codes.
+ *
+ * Replaced Inter on 2026-09-26 after the MD found the site read as generic.
+ */
+/*
+ * Self-hosted since 2026-09-26 (were loaded from Google Fonts). Latin subset, variable weight,
+ * pulled from fonts.gstatic.com (Overpass v19, Overpass Mono v21) under the SIL Open Font
+ * License; the licence ships beside them in /fonts/OFL.txt. Versioned filenames, so a future
+ * update is a new URL rather than a stale cache hit.
+ *
+ * Hosting them ourselves is what makes the metric overrides possible. Overpass's own metrics
+ * (ascent 88%, descent 38%) centre lowercase exactly but lift capitals and numerals about
+ * 0.1em high, which put "USED", "SUV", page numbers and the header phone number 1.2 to 1.9px
+ * high in their pills. 93/33 keeps the same 1.26em box and splits the difference, so caps sit
+ * 0.045em high and lowercase 0.045em low: half a pixel either way at label sizes.
+ */
+@font-face {
+  font-family: "Overpass";
+  src: url("/fonts/overpass-v19-latin-wght.woff2") format("woff2");
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: swap;
+  ascent-override: 93%;
+  descent-override: 33%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Overpass Mono";
+  src: url("/fonts/overpass-mono-v21-latin-wght.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  /* Overpass ships U+00B7 (the middle dot) with a zero advance width, so every "2008 · FORD"
+     separator on the site collapsed to "2008 ·FORD". This face covers that one character from
+     a system font and sits first in the stack; everything else still resolves to Overpass.
+     Several locals, because a face with none available is skipped and the bug comes back. */
+  font-family: "Overpass Dot";
+  src: local("Arial"), local("Helvetica Neue"), local("Helvetica"), local("Segoe UI"),
+    local("Roboto"), local("Liberation Sans"), local("DejaVu Sans");
+  unicode-range: U+00B7;
+}
+@font-face {
+  /* Arial with the same vertical metrics as the Overpass face above, so text does not jump when
+     the web font arrives. Widths already match to within 0.1% at 400 (0.8% at 800), so no size-adjust. */
+  font-family: "Overpass Fallback";
+  src: local("Arial");
+  ascent-override: 93%;
+  descent-override: 33%;
+  line-gap-override: 0%;
+}
+
 @theme inline {
-  --font-sans: "Inter", "Lato", system-ui, -apple-system, sans-serif;
-  --font-display: "Inter", "Metropolis", system-ui, sans-serif;
+  --font-sans: "Overpass Dot", "Overpass", "Overpass Fallback", system-ui, -apple-system, sans-serif;
+  --font-display: "Overpass Dot", "Overpass", "Overpass Fallback", system-ui, sans-serif;
+  --font-mono: "Overpass Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* Inter at 900 with tight negative tracking was most of the "AI" look: 77 font-black and 59
+     tracking-tight call sites. Retuning the tokens fixes every one of them in place. Overpass
+     is drawn with open spacing, and squeezing it the way Inter was squeezed crushes it. */
+  --font-weight-black: 800;
+  --tracking-tight: -0.01em;
+  --tracking-tighter: -0.02em;
+
+  /* Tailwind sets text-5xl and up to line-height 1. Overpass's descenders run deeper than
+     Inter's, so two-line headings at those sizes ("Drive Something / Extraordinary") put a
+     g or y within a hair of the next line's capitals. */
+  --text-5xl--line-height: 1.08;
+  --text-6xl--line-height: 1.06;
+  --text-7xl--line-height: 1.05;
+  --text-8xl--line-height: 1.04;
+  --text-9xl--line-height: 1.04;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -191,6 +271,17 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  /* Overpass sets wider than Inter did, which pushed single words onto their own line
+     ("Premium terms, zero / friction", "...all 50 / states"). Balance headings; keep
+     prose from ending on a one-word line. */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
   ::selection {
     background: oklch(0.21 0.06 256);
     color: white;
@@ -262,8 +353,10 @@
 
   .display {
     font-family: var(--font-display);
-    letter-spacing: -0.025em;
-    line-height: 1.02;
+    /* Overpass has a deep descender (38% of the em), so the 1.02 Inter could tolerate lets a
+       "y" or "g" in one line touch the capitals of the next. */
+    letter-spacing: -0.01em;
+    line-height: 1.08;
     font-weight: 800;
   }
 
@@ -778,46 +871,43 @@
 }
 
 /* ============================================================================
+   LEGIBILITY FLOOR
+   Nothing renders below 11px. The components carry 93 hardcoded sizes from 8px
+   to 10.5px (badges, "Est. Payment", photo counts, card labels). Overpass has a
+   7% smaller x-height than the Inter they were sized for, so each read smaller
+   again after the typeface change. Raising them here, in one place, rather than
+   editing 22 component files. Unlayered, so it wins over the utilities.
+   ========================================================================== */
+.text-\[8px\],
+.text-\[8\.5px\],
+.text-\[9px\],
+.text-\[9\.5px\],
+.text-\[10px\],
+.text-\[10\.5px\] {
+  font-size: 11px;
+}
+@media (width >= 40rem) {
+  .sm\:text-\[9px\],
+  .sm\:text-\[9\.5px\],
+  .sm\:text-\[10px\] {
+    font-size: 11px;
+  }
+}
+
+/* ============================================================================
    MOBILE TYPE SCALE
-   Below the `sm` breakpoint, display sizes drop 2px and body/label sizes drop
-   1px. Only the unprefixed utilities are adjusted: responsive variants such as
+   Below the `sm` breakpoint, display sizes drop 2px and body sizes (text-base,
+   text-lg) drop 1px. Sizes at text-sm and below are left alone. Only the unprefixed utilities are adjusted: responsive variants such as
    `sm:text-6xl` never apply at these widths, so nothing is double-shrunk.
 
    These rules sit outside Tailwind's @layer so they win over the utilities
    without needing !important. Only font-size is touched; each utility's
    line-height is left alone so vertical rhythm stays intact.
    ========================================================================== */
-/* Exact complement of Tailwind's `sm:` (width >= 40rem). Stated in rem, not px, so the
-   two stay in step if the root font size ever changes. */
 @media (width < 40rem) {
-  /* Small type: 1px down */
-  .text-\[10px\] {
-    font-size: 9px;
-  }
-  .text-\[11px\] {
-    font-size: 10px;
-  }
-  .text-\[12px\] {
-    font-size: 11px;
-  }
-  .text-\[12\.5px\] {
-    font-size: 11.5px;
-  }
-  .text-\[13px\] {
-    font-size: 12px;
-  }
-  .text-\[14px\] {
-    font-size: 13px;
-  }
-  .text-\[15px\] {
-    font-size: 14px;
-  }
-  .text-xs {
-    font-size: 0.6875rem;
-  } /* 12 -> 11 */
-  .text-sm {
-    font-size: 0.8125rem;
-  } /* 14 -> 13 */
+  /* Body type: 1px down. Labels and small print are deliberately NOT shrunk any more: that
+     took 10px labels to 9px on phones, and on Overpass (x-height 0.51, against Inter's
+     0.55) roughly half the mobile homepage's text was 8 to 11px. See LEGIBILITY FLOOR. */
   .text-base {
     font-size: 0.9375rem;
   } /* 16 -> 15 */
@@ -945,7 +1035,10 @@ body::-webkit-scrollbar {
 /* Exact complement of Tailwind's `sm:` (width >= 40rem). Stated in rem, not px, so the
    two stay in step if the root font size ever changes. */
 @media (width < 40rem) {
-  :root {
+  /* Only while a bar is actually on screen. The vehicle page's bar slides in after the first
+     scroll, and lifting the widgets before it arrived parked the offer pill on top of the
+     vehicle's title and price at page load. Each bar marks itself data-bottom-bar="shown". */
+  :root:has([data-bottom-bar="shown"]) {
     /* 73px bar + 11px gap, plus whatever the device reserves at the bottom. */
     --floating-cta-clearance: calc(5.25rem + env(safe-area-inset-bottom));
   }

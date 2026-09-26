@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, HelpCircle, Phone, Snowflake, Users } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { CompareFeatureLists, CompareSpecTable } from "@/components/site/CompareSpecTable";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
@@ -133,8 +132,7 @@ function ExplorerVsEscapePage() {
       <section className="relative overflow-hidden border-b border-slate-200 py-14 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>Model Comparison</SectionTag>
-          <h1 className="display mt-3 max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
             Ford Explorer vs Ford Escape
           </h1>
           <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -176,8 +174,7 @@ function ExplorerVsEscapePage() {
 
       <section className="border-t border-border bg-surface-2/60 py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Side by Side</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">Specifications compared</h2>
+          <h2 className="display text-2xl sm:text-3xl">Specifications compared</h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Trim and drivetrain change what an SUV is, so the table compares the two units we
             actually have rather than the model ranges. Inventory moves, so confirm availability
@@ -291,8 +288,7 @@ function ExplorerVsEscapePage() {
 
       <section className="border-t border-border bg-surface-2/60 py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>The Verdict</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">Which one should you actually buy</h2>
+          <h2 className="display text-2xl sm:text-3xl">Which one should you actually buy</h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             There is no winner here, because these two answer different questions. Count how many
             times in the last twelve months you needed more than four seats. If that number is more
@@ -330,8 +326,7 @@ function ExplorerVsEscapePage() {
 
       <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Common Questions</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">
+          <h2 className="display text-2xl sm:text-3xl">
             Explorer and Escape, answered plainly
           </h2>
           <dl className="mt-8 space-y-4">

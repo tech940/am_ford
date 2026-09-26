@@ -48,13 +48,7 @@ export function Financing() {
         <div className="order-1 lg:order-2">
           <SectionHeading
             align="left"
-            eyebrow="Financing"
-            title={
-              <>
-                Premium terms,
-                <span className="text-slate-500 font-normal"> zero friction</span>
-              </>
-            }
+            title="Premium terms, zero friction"
             copy="Financing should feel as considered as the car. Transparent numbers, fast answers, and a payment built around your life."
           />
           <Stagger className="mt-8 sm:mt-10 space-y-3 sm:space-y-4" gap={0.12}>

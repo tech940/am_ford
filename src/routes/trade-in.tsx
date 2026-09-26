@@ -13,7 +13,6 @@ import {
   Wallet,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { TradeValuatorModal } from "@/components/convert/TradeValuatorModal";
 import { breadcrumbSchema, crumbs, SITE_ORIGIN } from "@/lib/breadcrumbs";
@@ -187,8 +186,7 @@ function TradeInPage() {
       <section className="relative overflow-hidden border-b border-slate-200 py-16 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>Trade-In</SectionTag>
-          <h1 className="display mt-3 max-w-3xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-3xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
             Value Your Trade at AM Ford in Jefferson, Ohio
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -248,8 +246,7 @@ function TradeInPage() {
       <section className="border-t border-border bg-surface-2/60 py-16 sm:py-20">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-2">
           <div>
-            <SectionTag>Before You Come In</SectionTag>
-            <h2 className="display mt-3 text-3xl sm:text-4xl">What to bring with the vehicle</h2>
+            <h2 className="display text-3xl sm:text-4xl">What to bring with the vehicle</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Bringing the paperwork with you is the difference between finishing the same day and
               coming back later in the week. None of it is unusual, and if something is missing we
@@ -271,8 +268,7 @@ function TradeInPage() {
           </div>
 
           <div>
-            <SectionTag>Buying From a Distance</SectionTag>
-            <h2 className="display mt-3 text-3xl sm:text-4xl">Remote appraisal by photo</h2>
+            <h2 className="display text-3xl sm:text-4xl">Remote appraisal by photo</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               You do not have to drive to Jefferson to trade a vehicle. Send us photos, the VIN, the
               mileage, and anything you know about the history, and we will appraise it from that.
@@ -312,8 +308,7 @@ function TradeInPage() {
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Trade Equity</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">
+          <h2 className="display text-3xl sm:text-4xl">
             How your trade applies to the purchase
           </h2>
           <div className="mt-8 space-y-5">
@@ -369,8 +364,7 @@ function TradeInPage() {
 
       <section className="border-t border-border bg-surface-2/60 py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <SectionTag>What You Can Trade Toward</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">
+          <h2 className="display text-3xl sm:text-4xl">
             Pick the Ford first, then the number
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -427,8 +421,7 @@ function TradeInPage() {
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Trade-In Questions</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">The things people ask us first</h2>
+          <h2 className="display text-3xl sm:text-4xl">The things people ask us first</h2>
           <dl className="mt-8 space-y-4">
             {FAQS.map((f) => (
               <div key={f.q} className="rounded-2xl bg-card p-6 ring-1 ring-border">

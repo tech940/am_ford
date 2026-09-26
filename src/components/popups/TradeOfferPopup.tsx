@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDialog } from "@/lib/useDialog";
 import { X, CheckCircle2, ChevronDown } from "lucide-react";
 import {
   SMS_CONSENT_DISCLOSURE,
@@ -37,6 +38,7 @@ export default function TradeOfferPopup({
   pageSource = "",
   initialCarData,
 }: TradeOfferPopupProps) {
+  const panelRef = useDialog<HTMLDivElement>(onClose);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [preferredContact, setPreferredContact] = useState("Text");
@@ -122,7 +124,12 @@ export default function TradeOfferPopup({
   if (submitted) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-3 sm:p-4 overflow-y-auto overflow-x-hidden backdrop-blur-xs animate-in fade-in duration-200">
-        <div className="relative w-full max-w-[460px] max-h-[calc(100dvh-1.5rem)] my-auto overflow-y-auto rounded-2xl bg-white p-6 sm:p-8 text-center shadow-2xl border border-slate-200">
+        <div ref={panelRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Offer request received"
+          tabIndex={-1}
+          className="outline-none relative w-full max-w-[460px] max-h-[calc(100dvh-1.5rem)] my-auto overflow-y-auto rounded-2xl bg-white p-6 sm:p-8 text-center shadow-2xl border border-slate-200">
           <button
             type="button"
             onClick={onClose}
@@ -157,7 +164,12 @@ export default function TradeOfferPopup({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-3 sm:p-4 overflow-y-auto overflow-x-hidden backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-[620px] max-h-[calc(100dvh-1.5rem)] sm:max-h-[92vh] my-auto flex flex-col overflow-y-auto overflow-x-hidden rounded-2xl bg-white shadow-2xl border border-slate-200/90 animate-in zoom-in-95 duration-200">
+      <div ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="$500 more for your trade"
+        tabIndex={-1}
+        className="outline-none relative w-full max-w-[620px] max-h-[calc(100dvh-1.5rem)] sm:max-h-[92vh] my-auto flex flex-col overflow-y-auto overflow-x-hidden rounded-2xl bg-white shadow-2xl border border-slate-200/90 animate-in zoom-in-95 duration-200">
         {/* Top Hero Banner (Side-by-side on all screens to stay compact and within screen bounds) */}
         <div className="grid grid-cols-12 shrink-0 bg-[#002c5f] overflow-hidden">
           {/* Left Promo Half - Main Brand Navy */}
@@ -178,7 +190,7 @@ export default function TradeOfferPopup({
             </div>
 
             {/* Footnote */}
-            <p className="mt-1.5 sm:mt-2 text-[8.5px] sm:text-[9.5px] leading-tight text-white/75 font-normal line-clamp-2 sm:line-clamp-none">
+            <p className="mt-1.5 sm:mt-2 text-[8.5px] sm:text-[9.5px] leading-tight text-white/75 font-normal">
               Cannot be combined with any other discounts or promotions. Please contact dealer for details.
             </p>
           </div>

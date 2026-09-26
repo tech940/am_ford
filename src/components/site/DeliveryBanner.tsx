@@ -26,10 +26,7 @@ export function DeliveryBanner({ variant = "full" }: { variant?: "full" | "compa
     <section className="border-y border-slate-200 bg-white py-8 sm:py-14">
       <div className="mx-auto grid max-w-7xl items-center gap-6 sm:gap-8 px-4 sm:px-6 lg:grid-cols-12">
         <div className="lg:col-span-8">
-          <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-[#002c5f]">
-            Shop from wherever you live
-          </p>
-          <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+          <h2 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
             {DELIVERY_SHORT}, and {DELIVERY_SHIPPING.toLowerCase()}
           </h2>
           <p className="mt-3 max-w-2xl text-xs sm:text-sm leading-relaxed text-slate-600">

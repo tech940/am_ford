@@ -137,7 +137,20 @@ export function mapInventoryRowToVehicle(r: InventoryRawRow): Vehicle {
       photos[0] ||
       "https://assets.cai-media-management.com/resize/1024x1024/common-vehicle-media/303504c6-8b4d-463b-9327-a47a0c975418.jpg",
     images: photos,
-    features: Array.isArray(d.Features) ? d.Features : [],
+    // Same feed quirk as the photos: every feature arrives as ONE comma-joined string, so each
+    // card chip was a 6,000px run of "GVWR: 7,900 lbs Payload Package,6 Speakers,AM/FM...".
+    // Split on commas, except a thousands separator (a digit, a comma, then exactly three
+    // digits), so "GVWR: 7,900 lbs" stays one feature.
+    features: [
+      ...new Set(
+        (Array.isArray(d.Features) ? d.Features : d.Features ? [d.Features] : [])
+          .flatMap((f: unknown) =>
+            typeof f === "string" ? f.split(/(?<!\d),|,(?!\d{3}(?!\d))/) : [],
+          )
+          .map((f: string) => f.trim())
+          .filter(Boolean),
+      ),
+    ] as string[],
     vin: r.vin || d.VIN,
     stockNumber: r.stock_number || d["Stock #"],
     condition,

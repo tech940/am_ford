@@ -143,13 +143,9 @@ export function DealershipLocationAndHours() {
         {/* Top Section Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-slate-200 pb-6">
           <div>
-            <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#002c5f]">
-              <MapPin className="h-3.5 w-3.5" />
-              <span>Dealership Location & Hours</span>
-            </span>
             <h2
               id="dealership-hours-location-title"
-              className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-slate-900"
+              className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-slate-900"
             >
               Visit AM Ford Showroom & Service
             </h2>

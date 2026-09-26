@@ -14,7 +14,6 @@ import {
   Wrench,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs, SITE_ORIGIN } from "@/lib/breadcrumbs";
 import { CONSENT_TEXT, RESPONSE_PROMISE, submitQuickLead } from "@/lib/leads";
@@ -241,8 +240,7 @@ function CommercialPage() {
       <section className="relative overflow-hidden border-b border-slate-200 py-16 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>Commercial</SectionTag>
-          <h1 className="display mt-3 max-w-3xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-3xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
             Commercial and Work Vehicles at AM Ford
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -277,8 +275,7 @@ function CommercialPage() {
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <SectionTag>What We Can Order and Source</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">The Ford commercial platforms</h2>
+          <h2 className="display text-3xl sm:text-4xl">The Ford commercial platforms</h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             Availability and configuration change with Ford production, so treat this as the range
             we work in rather than a stock list. We confirm what is buildable when we take your
@@ -306,8 +303,7 @@ function CommercialPage() {
       <section className="border-t border-border bg-surface-2/60 py-16 sm:py-20">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-2">
           <div>
-            <SectionTag>Upfitting</SectionTag>
-            <h2 className="display mt-3 text-3xl sm:text-4xl">
+            <h2 className="display text-3xl sm:text-4xl">
               A chassis is only half of a work vehicle
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -331,8 +327,7 @@ function CommercialPage() {
           </div>
 
           <div>
-            <SectionTag>Who We Do This For</SectionTag>
-            <h2 className="display mt-3 text-3xl sm:text-4xl">
+            <h2 className="display text-3xl sm:text-4xl">
               Businesses around Ashtabula County
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -364,8 +359,7 @@ function CommercialPage() {
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>How Ordering Works</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">From the job to the keys</h2>
+          <h2 className="display text-3xl sm:text-4xl">From the job to the keys</h2>
           <ol className="mt-8 space-y-4">
             {PROCESS.map((p, i) => (
               <li key={p.step} className="rounded-3xl bg-card p-7 ring-1 ring-border">
@@ -406,8 +400,7 @@ function CommercialPage() {
 
       <section className="border-t border-border bg-surface-2/60 py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Keeping It Working</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">Service for vehicles that earn</h2>
+          <h2 className="display text-3xl sm:text-4xl">Service for vehicles that earn</h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
             A work vehicle off the road costs more than the repair. Our service department handles
             Ford trucks and vans, and we would rather book your maintenance around your work week
@@ -435,8 +428,7 @@ function CommercialPage() {
       <section id="commercial-inquiry" className="scroll-mt-28 py-16 sm:py-20">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <SectionTag>Start Here</SectionTag>
-            <h2 className="display mt-3 text-3xl sm:text-4xl">Tell us what the job needs</h2>
+            <h2 className="display text-3xl sm:text-4xl">Tell us what the job needs</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Send us the shape of the problem and we will come back with what can be ordered,
               roughly when, and what it would take to get it working. No obligation, and you will
@@ -589,8 +581,7 @@ function CommercialPage() {
 
       <section className="border-t border-border bg-surface-2/60 py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Commercial Questions</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">What businesses ask us</h2>
+          <h2 className="display text-3xl sm:text-4xl">What businesses ask us</h2>
           <dl className="mt-8 space-y-4">
             {FAQS.map((f) => (
               <div key={f.q} className="rounded-2xl bg-card p-6 ring-1 ring-border">

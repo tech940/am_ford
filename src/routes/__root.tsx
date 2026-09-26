@@ -210,26 +210,19 @@ export const Route = createRootRoute({
         fetchPriority: "high",
       },
       { rel: "stylesheet", href: appCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      // Non-render-blocking font loading: preload font stylesheet
+      // Self-hosted (see the @font-face notes in styles.css). One file carries every weight of
+      // the text face; preloading it removes the old round trip to fonts.googleapis.com for
+      // the stylesheet before the font could even be requested. The mono face is only used on
+      // vehicle pages, so it is left to load on demand.
       {
         rel: "preload",
-        as: "style",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
+        as: "font",
+        type: "font/woff2",
+        href: "/fonts/overpass-v19-latin-wght.woff2",
+        crossOrigin: "anonymous",
       },
     ],
     scripts: [
-      {
-        children: `
-          (function() {
-            var f = document.createElement('link');
-            f.rel = 'stylesheet';
-            f.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap';
-            document.head.appendChild(f);
-          })();
-        `,
-      },
       {
         type: "application/ld+json",
         children: JSON.stringify(autoDealerSchema),

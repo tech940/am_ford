@@ -63,13 +63,7 @@ export function AreasWeServe() {
       aria-label="Areas we serve"
     >
       <SectionHeading
-        eyebrow="Areas we serve"
-        title={
-          <>
-            Rooted in Ashtabula County,
-            <span className="text-slate-500 font-normal"> driving the whole region</span>
-          </>
-        }
+        title="Rooted in Ashtabula County, driving the whole region"
         copy="People visit AM Ford from all over Ashtabula County, Northeast Ohio, and Northwestern Pennsylvania for the inventory, straightforward pricing, and a process that stays simple from first question to keys in hand. If you live farther out, distance does not have to be the deciding factor; our delivery program closes the gap."
       />
 
@@ -132,10 +126,7 @@ export function AreasWeServe() {
       <Reveal className="mt-12" delay={0.15}>
         <div className="hm-glass-strong flex flex-col gap-6 rounded-lg p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[#002c5f]">
-              One store, one address
-            </p>
-            <p className="mt-3 text-lg font-bold leading-snug text-slate-900">
+            <p className="text-lg font-bold leading-snug text-slate-900">
               {dealerInfo.name}, {dealerInfo.address}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-slate-600">{DELIVERY_CLAIM}</p>

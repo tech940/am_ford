@@ -55,7 +55,6 @@ import {
   type Vehicle,
 } from "@/lib/vehicles";
 import { FORD_MODELS, getRelatedReading } from "@/lib/fordModels";
-import { SectionTag } from "@/components/site/Home";
 import { VehicleCard } from "@/components/site/VehicleCard";
 import type { QuickEnquiryPreset } from "@/components/convert/QuickEnquiryModal";
 
@@ -76,13 +75,13 @@ import { getSpin } from "@/lib/spin360";
 import { Spin360, preloadSpin } from "@/components/site/Spin360";
 
 /**
- * The inspection-report form asks for an email first and a phone only if the visitor offers
+ * The inspection-record form asks for an email first and a phone only if the visitor offers
  * one, so it shows its own disclosure rather than the shared CONSENT_TEXT. It is declared once
  * and both rendered and stored from here: the consent we keep as evidence has to be the exact
  * words on screen, and two copies of a string drift apart.
  */
 const REPORT_CONSENT_TEXT =
-  "I agree AM Ford may email me this report and follow up about this vehicle (and text/call if I provided a number). Reply STOP to opt out.";
+  "I agree AM Ford may email me this vehicle's inspection record and follow up about this vehicle (and text/call if I provided a number). Reply STOP to opt out.";
 
 /**
  * Home > Inventory > this vehicle.
@@ -719,7 +718,9 @@ function VehicleDetail() {
 
                       {/* Dealership Watermark Banner Bar across bottom - like reference image */}
                       <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-slate-950/90 via-slate-950/75 to-transparent pt-6 pb-2.5 px-3 sm:px-4 flex items-center justify-between text-white text-[10px] sm:text-xs font-medium pointer-events-none">
-                        <span className="truncate text-white/90">
+                        {/* Phones only have room for "Free home delivery within 30…", which reads
+                            as thirty miles. Show it where it fits in full. */}
+                        <span className="hidden truncate text-white/90 sm:block">
                           Free home delivery within 300 miles
                         </span>
                         <span className="font-extrabold tracking-wider text-white text-xs sm:text-sm uppercase px-2 shrink-0">
@@ -895,7 +896,7 @@ function VehicleDetail() {
           {/* Sticky CTA panel */}
           <div className="lg:col-span-5 min-w-0 flex flex-col h-full">
             <div className="rounded-lg bg-white p-4 sm:p-6 w-full max-w-full overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between h-full">
-                <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <p className="text-xs sm:text-sm font-semibold text-muted-foreground">
                   {v.condition} · {isInTransit(v) ? "In Transit (Expected Soon)" : "In Stock & Lot Ready"}
                 </p>
                 {/* Full year + make + model + trim: this is the page's target query. */}
@@ -914,9 +915,6 @@ function VehicleDetail() {
                       </p>
                     )}
                   </div>
-                  <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold text-primary">
-                    <Shield className="h-3 w-3" /> Lifetime warranty
-                  </span>
                 </div>
 
                 <div className="mt-3.5 sm:mt-5 grid grid-cols-2 gap-1.5 sm:gap-2 text-xs sm:text-sm">
@@ -955,120 +953,57 @@ function VehicleDetail() {
                   </div>
                 )}
 
-                {/* High-converting action hierarchy */}
+                {/* Two actions carry the decision and everything else is a quiet link. This used to
+                    stack seven: an "extra discount!" bubble, "Get Today's Best Price & E-Quote" and
+                    "Custom Quote" (one request under three names), "Book VIP Test Drive", "Check
+                    Availability", then Call, Text and Watch as grey 11px pills, which made the call a
+                    phone buyer most wants the smallest thing in the box. */}
                 <div className="mt-3.5 sm:mt-4 space-y-2">
-                  {/* "Available for extra discount!" speech bubble pointing to primary CTA */}
-                  <div className="relative mb-1 flex justify-start">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setOtpSource("Extra Discount Request");
-                        setOtpOpen(true);
-                      }}
-                      className="group/bubble relative inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-500 px-3 py-1.5 shadow-xs transition-transform hover:scale-[1.02] active:scale-95 text-left cursor-pointer max-w-full"
-                    >
-                      {/* Shield with % icon */}
-                      <div className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#D92D20] shadow-2xs border border-red-900/40">
-                        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none">
-                          <path
-                            d="M12 21s7-3.5 7-9V5l-7-3-7 3v7c0 5.5 7 9 7 9z"
-                            fill="#B42318"
-                            stroke="#7A150D"
-                            strokeWidth="1.5"
-                          />
-                          <path d="M8.5 15.5L15.5 8.5" stroke="#FEF08A" strokeWidth="2.2" strokeLinecap="round" />
-                          <circle cx="8.5" cy="8.5" r="1.5" fill="#FEF08A" />
-                          <circle cx="15.5" cy="15.5" r="1.5" fill="#FEF08A" />
-                        </svg>
-                      </div>
-
-                      {/* Two-line text */}
-                      <div className="flex flex-col pr-1 leading-tight">
-                        <span className="text-[11px] sm:text-[12px] font-extrabold text-[#002c5f] tracking-tight">
-                          Available for
-                        </span>
-                        <span className="text-[11px] sm:text-[12px] font-extrabold text-[#002c5f] tracking-tight">
-                          extra discount!
-                        </span>
-                      </div>
-
-                      {/* Speech bubble pointer beak pointing down to the CTA */}
-                      <div className="absolute -bottom-1 left-6 h-2 w-2 rotate-45 bg-emerald-500" />
-                    </button>
-                  </div>
-
-                  {/* Primary Green CTA - Unlocks today's best price & VIP E-Quote */}
                   <button
+                    type="button"
                     onClick={() => {
                       setOtpSource("Extra Discount Request");
                       setOtpOpen(true);
                     }}
-                    className="flex w-full items-center justify-center gap-2 rounded-md bg-emerald-600 hover:bg-emerald-500 py-3 px-3 sm:px-4 text-xs sm:text-sm font-bold text-white transition shadow-sm active:scale-[0.99] leading-tight text-center cursor-pointer"
+                    className="flex w-full items-center justify-center gap-2 rounded-md bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-500 active:scale-[0.99] cursor-pointer"
                   >
-                    <Tag className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                    <span>Get Today&apos;s Best Price &amp; E-Quote</span>
+                    <Tag className="h-4 w-4 shrink-0" />
+                    Get today&apos;s price
                   </button>
-
-                  {/* Secondary Navy CTA - Test Drive Booking */}
-                  <button
-                    onClick={() => {
-                      setModalMode("test_drive");
-                      setModalOpen(true);
-                    }}
-                    className="flex w-full items-center justify-center gap-2 rounded-md bg-primary hover:opacity-90 py-2.5 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-primary-foreground transition shadow-sm active:scale-[0.99] leading-tight text-center cursor-pointer"
+                  <a
+                    href={dealerInfo.phoneHref}
+                    className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 active:scale-[0.99]"
                   >
-                    <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                    <span>Book VIP Test Drive</span>
-                  </button>
-
-                  {/* High-intent inquiry split row */}
-                  <div className="grid grid-cols-2 gap-2">
+                    <Phone className="h-4 w-4 shrink-0" />
+                    Call {dealerInfo.phone}
+                  </a>
+                  <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 pt-1 text-xs font-semibold sm:text-sm">
                     <button
-                      onClick={() => setEnquiryPreset("availability")}
-                      className="flex items-center justify-center gap-1.5 rounded-lg border border-border bg-card/90 py-2 px-2 text-[11px] sm:text-xs font-semibold text-ink transition hover:border-primary/40 hover:bg-white shadow-2xs text-center"
-                    >
-                      <MessageSquare className="h-3.5 w-3.5 text-primary shrink-0" />
-                      <span className="truncate">Check Availability</span>
-                    </button>
-                    <button
+                      type="button"
                       onClick={() => {
-                        setModalMode("quote_request");
+                        setModalMode("test_drive");
                         setModalOpen(true);
                       }}
-                      className="flex items-center justify-center gap-1.5 rounded-lg border border-border bg-card/90 py-2 px-2 text-[11px] sm:text-xs font-semibold text-ink transition hover:border-primary/40 hover:bg-white shadow-2xs text-center"
+                      className="inline-flex min-h-6 items-center gap-1.5 text-primary underline-offset-4 hover:underline"
                     >
-                      <DollarSign className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-                      <span className="truncate">Custom Quote</span>
+                      <Calendar className="h-3.5 w-3.5 shrink-0" />
+                      Book a test drive
                     </button>
-                  </div>
-
-                  {/* Direct Contact & Watch utility row */}
-                  <div className="grid grid-cols-3 gap-1.5 pt-0.5">
-                    <a
-                      href={dealerInfo.phoneHref}
-                      className="flex items-center justify-center gap-1 rounded-lg bg-surface-2 py-1.5 px-1.5 text-[11px] font-semibold text-muted-foreground transition hover:text-ink hover:bg-surface-3 text-center"
-                    >
-                      <Phone className="h-3 w-3 shrink-0" />
-                      <span>Call</span>
-                    </a>
                     <a
                       href={smsLink(v)}
-                      className="flex items-center justify-center gap-1 rounded-lg bg-surface-2 py-1.5 px-1.5 text-[11px] font-semibold text-muted-foreground transition hover:text-ink hover:bg-surface-3 text-center"
+                      className="inline-flex min-h-6 items-center gap-1.5 text-primary underline-offset-4 hover:underline"
                     >
-                      <MessageSquare className="h-3 w-3 shrink-0" />
-                      <span>Text</span>
+                      <MessageSquare className="h-3.5 w-3.5 shrink-0" />
+                      Text us
                     </a>
                     <button
+                      type="button"
                       onClick={() => setEnquiryPreset("price_watch")}
-                      className={cn(
-                        "flex items-center justify-center gap-1 rounded-lg py-1.5 px-1.5 text-[11px] font-semibold transition text-center",
-                        watching
-                          ? "bg-primary/10 text-primary font-bold"
-                          : "bg-surface-2 text-muted-foreground hover:text-ink hover:bg-surface-3",
-                      )}
+                      aria-pressed={watching}
+                      className="inline-flex min-h-6 items-center gap-1.5 text-primary underline-offset-4 hover:underline"
                     >
-                      <Bell className={cn("h-3 w-3 shrink-0", watching && "fill-current")} />
-                      <span>{watching ? "Watching" : "Watch"}</span>
+                      <Bell className={cn("h-3.5 w-3.5 shrink-0", watching && "fill-current")} />
+                      {watching ? "Watching this price" : "Watch this price"}
                     </button>
                   </div>
                 </div>
@@ -1085,13 +1020,12 @@ function VehicleDetail() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
             <div className="lg:col-span-4">
-              <SectionTag>Vehicle Overview & Specs</SectionTag>
-              <h2 className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
-                Built for performance & comfort.
+              <h2 className="display text-balance text-2xl sm:text-3xl lg:text-4xl">
+                Vehicle overview and specs
               </h2>
               <p className="mt-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                Every spec on this {v.year} {v.make} {v.model} has been optioned, inspected, and
-                verified by certified technicians at AM Ford.
+                These come from this {v.year} {v.make} {v.model}&apos;s own record in our inventory
+                feed. If a figure matters to your decision, ask us and we will confirm it on the car.
               </p>
             </div>
             <div className="lg:col-span-8">
@@ -1114,17 +1048,55 @@ function VehicleDetail() {
                     <dd className="display mt-0.5 text-base sm:text-lg text-ink font-bold">{val}</dd>
                   </div>
                 ))}
+                {/* Full width so both the 2- and 3-column grids stay whole. The VIN is what a
+                    buyer pastes into Carfax or reads out on the phone, so it is set in the mono
+                    face: every character distinct, nothing to misread. */}
+                <div className="col-span-2 bg-card p-3.5 sm:col-span-3 sm:p-5">
+                  <dt className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    VIN
+                  </dt>
+                  <dd className="mt-0.5 flex flex-wrap items-baseline gap-x-5 gap-y-1 text-ink">
+                    <span className="font-mono text-sm font-semibold tracking-wide sm:text-base">
+                      {v.vin ?? v.id}
+                    </span>
+                    {v.stockNumber && (
+                      <span className="text-xs text-muted-foreground sm:text-sm">
+                        Stock # <span className="font-mono font-semibold text-ink">{v.stockNumber}</span>
+                      </span>
+                    )}
+                  </dd>
+                </div>
               </dl>
 
               <div className="mt-6 rounded-lg bg-card p-4 sm:p-7 ring-1 ring-border">
                 <h3 className="display text-lg sm:text-xl font-bold">Standout Features & Options</h3>
                 <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                  {v.features.map((f) => (
+                  {v.features.slice(0, FEATURE_PREVIEW).map((f) => (
                     <li key={f} className="flex items-start gap-2 text-xs sm:text-sm text-ink">
                       <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" /> {f}
                     </li>
                   ))}
                 </ul>
+                {/* A record carries 26 to 150 features. <details> keeps the rest in the
+                    server-rendered HTML for search engines while the page shows a readable
+                    first dozen. */}
+                {v.features.length > FEATURE_PREVIEW && (
+                  <details className="group mt-4">
+                    <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-md text-sm font-semibold text-primary underline underline-offset-4 hover:no-underline [&::-webkit-details-marker]:hidden">
+                      <span className="group-open:hidden">
+                        Show all {v.features.length} features
+                      </span>
+                      <span className="hidden group-open:inline">Show fewer features</span>
+                    </summary>
+                    <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                      {v.features.slice(FEATURE_PREVIEW).map((f) => (
+                        <li key={f} className="flex items-start gap-2 text-xs sm:text-sm text-ink">
+                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" /> {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                )}
               </div>
             </div>
           </div>
@@ -1155,8 +1127,7 @@ function VehicleDetail() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
               <div className="lg:col-span-4">
-                <SectionTag>Seller&apos;s Notes</SectionTag>
-                <h2 id="seller-notes" className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
+                <h2 id="seller-notes" className="display text-balance text-2xl sm:text-3xl lg:text-4xl">
                   What we would tell you about it.
                 </h2>
                 <p className="mt-3 text-xs sm:text-sm leading-relaxed text-muted-foreground">
@@ -1191,8 +1162,7 @@ function VehicleDetail() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
             <div className="lg:col-span-4">
-              <SectionTag>About This {v.model}</SectionTag>
-              <h2 className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
+              <h2 className="display text-balance text-2xl sm:text-3xl lg:text-4xl">
                 What it's like to own this {typeLabel(v.type)}.
               </h2>
 
@@ -1226,7 +1196,7 @@ function VehicleDetail() {
                   <div className="flex items-center gap-3 rounded-lg bg-primary/5 p-3.5 ring-1 ring-primary/15">
                     <ShieldCheck className="h-4 w-4 shrink-0 text-primary" />
                     <p className="text-xs sm:text-sm text-ink">
-                      <strong>Certified Pre-Owned</strong>: 172-point inspection passed
+                      <strong>Ford Certified Pre-Owned</strong>: passed Ford&apos;s certification inspection
                     </p>
                   </div>
                 )}
@@ -1252,8 +1222,7 @@ function VehicleDetail() {
       <section className="border-t border-border bg-surface-2/60 py-8 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-10 sm:space-y-16">
           <div className="max-w-4xl">
-            <SectionTag>Vehicle Buying Guide</SectionTag>
-            <h2 className="display mt-2 text-2xl font-bold text-ink sm:text-3xl lg:text-4xl">
+            <h2 className="display text-2xl text-ink sm:text-3xl lg:text-4xl">
               Why Buy the {v.year} {v.make} {v.model} {v.trim} at AM Ford in Ashtabula County, OH?
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -1314,8 +1283,7 @@ function VehicleDetail() {
           {/* Vehicle FAQ Section */}
           <div className="w-full space-y-4 sm:space-y-6">
             <div>
-              <SectionTag>Questions About This Vehicle?</SectionTag>
-              <h3 className="display mt-2 text-xl font-bold text-ink sm:text-2xl lg:text-3xl">
+              <h3 className="display text-xl font-bold text-ink sm:text-2xl lg:text-3xl">
                 {v.year} {v.make} {v.model} Frequently Asked Questions
               </h3>
             </div>
@@ -1446,6 +1414,8 @@ function VehicleDetail() {
         initial={false}
         animate={{ y: showMobileBar ? 0 : 100, opacity: showMobileBar ? 1 : 0 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
+        // Floating widgets lift above this bar only while it is showing; see styles.css.
+        data-bottom-bar={showMobileBar ? "shown" : "hidden"}
         className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/80 bg-background/95 p-2.5 backdrop-blur-md shadow-2xl sm:hidden"
         style={{ paddingBottom: "max(0.625rem, env(safe-area-inset-bottom))" }}
       >
@@ -1474,7 +1444,7 @@ function VehicleDetail() {
               className="flex items-center gap-1.5 rounded-md bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-500 active:scale-95"
             >
               <Tag className="h-3.5 w-3.5" />
-              <span>Get Best Price</span>
+              <span>Get today&apos;s price</span>
             </button>
           </div>
         </div>
@@ -1699,8 +1669,7 @@ function ListingDetail({ v }: { v: Vehicle }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <SectionTag>The Detail Behind This Listing</SectionTag>
-            <h2 id="listing-detail" className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
+            <h2 id="listing-detail" className="display text-balance text-2xl sm:text-3xl lg:text-4xl">
               What the record actually says.
             </h2>
             <p className="mt-3 text-xs sm:text-sm leading-relaxed text-muted-foreground">
@@ -1776,9 +1745,8 @@ function VehicleInterlinks({ v }: { v: Vehicle }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <SectionTag>Where To Go From Here</SectionTag>
-            <h2 id="next-steps" className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
-              The rest of the decision.
+            <h2 id="next-steps" className="display text-balance text-2xl sm:text-3xl lg:text-4xl">
+              Where to go from here
             </h2>
             <p className="mt-3 text-xs sm:text-sm leading-relaxed text-muted-foreground">
               Every page linked below is on this site, and every filtered search runs against the
@@ -2029,19 +1997,16 @@ function VehiclePager({ v }: { v: Vehicle }) {
   );
 }
 
-const INSPECTION_AREAS = [
-  { area: "Engine & powertrain", checks: 38 },
-  { area: "Brakes & suspension", checks: 26 },
-  { area: "Tires, wheels & alignment", checks: 18 },
-  { area: "Electrical & battery health", checks: 22 },
-  { area: "Interior, electronics & safety", checks: 30 },
-  { area: "Exterior, glass & lighting", checks: 24 },
-  { area: "Fluids, filters & leaks", checks: 14 },
-] as const;
 
-/** The 172-point inspection summary, revealed after an email gate — a fair trade. */
+/**
+ * A request for this vehicle's inspection record, answered by the dealership's staff. It used to
+ * "unlock" a summary reading "172-point inspection: all categories passed" with a per-category
+ * breakdown that was identical for every vehicle and backed by nothing, then say a copy was on its
+ * way by email. Nothing was ever emailed; the visitor's details only became a lead. It now promises
+ * what actually happens: the request reaches a person, who replies with what is on file.
+ */
 function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
-  const [status, setStatus] = useState<"locked" | "sending" | "unlocked">("locked");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [consent, setConsent] = useState(false);
@@ -2052,64 +2017,34 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid gap-8 sm:gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <SectionTag>Inspection Report</SectionTag>
-            <h2 className="display mt-2 text-balance text-2xl sm:text-3xl lg:text-4xl">
-              See exactly what our technicians checked.
+            <h2 className="display text-balance text-2xl sm:text-3xl lg:text-4xl">
+              Ask for this vehicle&apos;s inspection record
             </h2>
             <p className="mt-3 text-xs sm:text-sm leading-relaxed text-muted-foreground">
-              Every vehicle at AM Ford passes a 172-point inspection before sale. Unlock the
-              category summary for this {vehicle.model}. The full written report is waiting for you
-              at the dealership.
+              Tell us where to send it, and a member of our team will email you what we have on
+              file for this {vehicle.year} {vehicle.model}. For a Ford Certified Pre-Owned vehicle,
+              that includes Ford&apos;s completed certification checklist.
             </p>
           </div>
           <div className="lg:col-span-8">
-            {status === "unlocked" ? (
-              <div className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border">
+            {status === "sent" ? (
+              <div role="status" className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border">
                 <div className="flex items-center gap-2">
                   <ClipboardCheck className="h-5 w-5 text-emerald-600" />
-                  <h3 className="display text-base sm:text-lg font-bold">172-point inspection: all categories passed</h3>
+                  <h3 className="display text-base sm:text-lg font-bold">Request received</h3>
                 </div>
-                <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
-                  {INSPECTION_AREAS.map((item) => (
-                    <li
-                      key={item.area}
-                      className="flex items-center justify-between rounded-md bg-surface-2 px-3.5 py-2.5 text-xs sm:text-sm"
-                    >
-                      <span className="flex items-center gap-2 text-ink">
-                        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-                        {item.area}
-                      </span>
-                      <span className="text-xs font-semibold text-muted-foreground">
-                        {item.checks} checks
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-4 text-xs text-muted-foreground">
-                  A copy is on its way to your email. {RESPONSE_PROMISE}
+                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-ink">
+                  We will email what we have on file for this {vehicle.year} {vehicle.model} to{" "}
+                  {email}.
                 </p>
+                <p className="mt-2 text-xs text-muted-foreground">{RESPONSE_PROMISE}</p>
               </div>
             ) : (
-              <div className="relative overflow-hidden rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border">
-                {/* Blurred teaser behind the gate */}
-                <ul
-                  aria-hidden
-                  className="pointer-events-none grid gap-2.5 opacity-60 blur-[6px] sm:grid-cols-2 select-none"
-                >
-                  {INSPECTION_AREAS.slice(0, 4).map((item) => (
-                    <li
-                      key={item.area}
-                      className="flex items-center justify-between rounded-md bg-surface-2 px-3.5 py-2.5 text-xs sm:text-sm"
-                    >
-                      <span className="text-ink">{item.area}</span>
-                      <span className="text-xs text-muted-foreground">{item.checks} checks</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="relative -mt-16 rounded-lg bg-background/95 p-5 sm:p-6 ring-1 ring-border backdrop-blur">
-                  <h3 className="display text-lg sm:text-xl font-bold">Unlock the inspection summary</h3>
+              <div className="rounded-lg bg-card p-5 sm:p-7 ring-1 ring-border">
+                <div>
+                  <h3 className="display text-lg sm:text-xl font-bold">Request the inspection record</h3>
                   <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
-                    Free, and we'll also email you a copy for your records.
+                    Free. We reply by email, and by phone only if you add a number.
                   </p>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     <label className="relative block">
@@ -2157,7 +2092,7 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
                         return;
                       }
                       if (!consent) {
-                        setError("Please tick the consent box so we can send the report.");
+                        setError("Please tick the consent box so we can email you the record.");
                         return;
                       }
                       setStatus("sending");
@@ -2170,9 +2105,9 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
                         consent,
                         consentText: REPORT_CONSENT_TEXT,
                       });
-                      if (result.success) setStatus("unlocked");
+                      if (result.success) setStatus("sent");
                       else {
-                        setStatus("locked");
+                        setStatus("idle");
                         setError(result.message);
                       }
                     }}
@@ -2184,7 +2119,7 @@ function InspectionUnlock({ vehicle }: { vehicle: Vehicle }) {
                     ) : (
                       <ClipboardCheck className="h-4 w-4" />
                     )}
-                    {status === "sending" ? "Unlocking…" : "Unlock free report"}
+                    {status === "sending" ? "Sending…" : "Request the record"}
                   </button>
                 </div>
               </div>
@@ -2211,6 +2146,9 @@ function Spec({ icon: Icon, label }: { icon: typeof Fuel; label: string }) {
  * UI showing one value while the state holds another.
  */
 const TERM_OPTIONS = [36, 48, 60, 72, 84];
+
+/** How many features the vehicle page lists before the rest fold into "Show all". */
+const FEATURE_PREVIEW = 12;
 const DEFAULT_TERM = 84;
 
 function PaymentCalculator({
@@ -2234,8 +2172,7 @@ function PaymentCalculator({
     <section className="bg-surface py-8 sm:py-16">
       <div className="mx-auto grid max-w-7xl gap-6 sm:gap-10 px-4 sm:px-6 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <SectionTag>Estimate your payment</SectionTag>
-          <h2 className="display mt-2 text-2xl sm:text-3xl lg:text-4xl">Numbers that feel honest.</h2>
+          <h2 className="display text-2xl sm:text-3xl lg:text-4xl">Estimate your payment</h2>
           <p className="mt-3 text-xs sm:text-sm text-muted-foreground">
             A quick estimate based on your inputs. Final terms depend on credit and lender.
           </p>

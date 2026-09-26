@@ -18,7 +18,6 @@ import carExplorer from "@/assets/car-explorer.jpg";
 import carBronco from "@/assets/car-bronco.jpg";
 
 /** Calculate estimated 72mo payment at typical competitive APR */
-const calcEstPayment = (price: number) => Math.round(price * 0.01425);
 
 function getFallbackImage(car: Vehicle): string {
   if (car.type === "Truck" || car.model.includes("F-150") || car.model.includes("F-250") || car.model.includes("Super Duty")) {
@@ -221,19 +220,11 @@ export function NewArrivals() {
                         <span>{car.miles.toLocaleString()} miles</span>
                       </div>
 
-                      {/* Line 4: Price & Estimated Monthly Payment */}
+                      {/* Line 4: Price */}
                       <div className="mt-3.5 flex items-baseline justify-between border-t border-slate-100 pt-3">
                         <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
                           ${car.price.toLocaleString()}
                         </span>
-                        <div className="text-right">
-                          <span className="block text-[10px] text-slate-400 font-medium leading-none">
-                            Est. Payment
-                          </span>
-                          <span className="inline-flex items-center text-xs font-black text-[#002c5f] mt-0.5">
-                            ${calcEstPayment(car.price)}/mo
-                          </span>
-                        </div>
                       </div>
                     </div>
 

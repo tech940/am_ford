@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, HelpCircle, Phone, Plug, Truck } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { CompareFeatureLists, CompareSpecTable } from "@/components/site/CompareSpecTable";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
@@ -136,8 +135,7 @@ function F150VsLightningPage() {
       <section className="relative overflow-hidden border-b border-slate-200 py-14 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>Model Comparison</SectionTag>
-          <h1 className="display mt-3 max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
             Ford F-150 vs Ford F-150 Lightning
           </h1>
           <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -179,8 +177,7 @@ function F150VsLightningPage() {
 
       <section className="border-t border-border bg-surface-2/60 py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Side by Side</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">Specifications compared</h2>
+          <h2 className="display text-2xl sm:text-3xl">Specifications compared</h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Configuration changes what a pickup is, so the table compares the two trucks we actually
             have rather than the model ranges. Inventory moves, so confirm availability first.
@@ -300,8 +297,7 @@ function F150VsLightningPage() {
 
       <section className="border-t border-border bg-surface-2/60 py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>The Verdict</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">Which truck should you actually buy</h2>
+          <h2 className="display text-2xl sm:text-3xl">Which truck should you actually buy</h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             This is not one truck being better than the other; it is one of them matching your
             driveway and your week. If you park overnight at home and drive a predictable local
@@ -336,8 +332,7 @@ function F150VsLightningPage() {
 
       <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Common Questions</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">Gas and electric F-150s, answered</h2>
+          <h2 className="display text-2xl sm:text-3xl">Gas and electric F-150s, answered</h2>
           <dl className="mt-8 space-y-4">
             {FAQS.map((f) => (
               <div key={f.q} className="rounded-2xl bg-card p-6 ring-1 ring-border">

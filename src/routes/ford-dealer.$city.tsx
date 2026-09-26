@@ -16,7 +16,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { dealerInfo, DELIVERY_CLAIM } from "@/lib/vehicles";
@@ -528,10 +527,7 @@ function CityPage() {
       <section className="relative overflow-hidden border-b border-slate-200 py-14 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>
-            {area.county ? `${area.county}, ${area.state}` : `${area.city}, ${area.state}`}
-          </SectionTag>
-          <h1 className="display mt-3 max-w-4xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-4xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
             {area.h1}
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -592,8 +588,7 @@ function CityPage() {
           thing below the fold is the material that distinguishes this page. */}
       <section className="border-b border-border bg-surface-2/60 py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>{area.city} Specific</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">{area.uniqueSection.heading}</h2>
+          <h2 className="display text-3xl sm:text-4xl">{area.uniqueSection.heading}</h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             {area.uniqueSection.body}
           </p>
@@ -650,8 +645,7 @@ function CityPage() {
 
       <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <SectionTag>Model Lineup</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">
+          <h2 className="display text-3xl sm:text-4xl">
             Popular Ford models with {area.city} drivers
           </h2>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">

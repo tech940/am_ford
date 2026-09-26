@@ -3,6 +3,7 @@ import "./home.css";
 import { SiteNav } from "@/components/site/SiteNav";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { ChatWidget } from "@/components/convert/ChatWidget";
+import { MobileStickyCTA } from "@/components/site/MobileStickyCTA";
 import TradeOfferPopup from "@/components/popups/TradeOfferPopup";
 import { hasSubmittedLead } from "@/lib/leads";
 
@@ -105,6 +106,15 @@ export function HomePage() {
         <FinalCTA />
       </main>
       <SiteFooter />
+      {/* Every SiteShell page has the Call/Book bar; the homepage builds its own shell and never
+          got it, so on a phone the only route to a call was through the menu. Same spacer as
+          SiteShell so the bar never covers the footer's last rows. */}
+      <div
+        aria-hidden
+        className="h-24 sm:hidden"
+        style={{ height: "calc(6rem + env(safe-area-inset-bottom))" }}
+      />
+      <MobileStickyCTA />
 
       {/* Live Chat Widget (Bottom Right) */}
       <ChatWidget />

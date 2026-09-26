@@ -246,7 +246,7 @@ export function ChatWidget() {
     <>
       {/* Clean Modern Floating Launcher (Bottom Right) */}
       <div
-        className="fixed bottom-[calc(1.5rem+var(--floating-cta-clearance))] right-4 sm:right-6 z-50 flex items-center gap-3"
+        className="fixed bottom-[calc(1.5rem+var(--floating-cta-clearance))] right-4 sm:right-6 z-50 flex items-center gap-3 transition-[bottom] duration-200 ease-out motion-reduce:transition-none"
       >
         <AnimatePresence>
           {!open && !labelDismissed && (

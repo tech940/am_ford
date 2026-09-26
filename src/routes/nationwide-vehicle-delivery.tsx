@@ -11,7 +11,6 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { dealerInfo, DELIVERY_CLAIM, DELIVERY_SHORT, DELIVERY_SHIPPING } from "@/lib/vehicles";
@@ -143,8 +142,7 @@ function DeliveryPage() {
       <section className="relative overflow-hidden border-b border-slate-200 py-16 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>Delivery and Online Buying</SectionTag>
-          <h1 className="display mt-3 max-w-3xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-3xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
             Shop AM Ford from wherever you live.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -190,8 +188,7 @@ function DeliveryPage() {
 
       <section className="border-t border-border bg-surface-2/60 py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Delivery Questions</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">
+          <h2 className="display text-3xl sm:text-4xl">
             Delivery and shipping, answered plainly
           </h2>
           <dl className="mt-8 space-y-4">

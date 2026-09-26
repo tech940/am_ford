@@ -5,6 +5,7 @@ import { dealerInfo } from "@/lib/vehicles";
 export function MobileStickyCTA() {
   return (
     <div
+      data-bottom-bar="shown"
       className="fixed inset-x-0 bottom-0 z-40 px-3 sm:hidden"
       style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
     >

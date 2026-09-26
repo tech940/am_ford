@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Award, Heart, Users, ArrowRight } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { dealerInfo } from "@/lib/vehicles";
@@ -69,8 +68,7 @@ function AboutPage() {
       <section className="relative overflow-hidden py-20 sm:py-28">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">
-          <SectionTag>Our story</SectionTag>
-          <h1 className="display mt-4 text-balance text-5xl text-ink sm:text-7xl">
+          <h1 className="display text-balance text-5xl text-ink sm:text-7xl">
             A Ford store, built on a <span className="text-primary">handshake.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-pretty text-muted-foreground">
@@ -128,8 +126,7 @@ function AboutPage() {
             <img src={interior} alt="" className="rounded-3xl shadow-elevated ring-1 ring-border" />
           </div>
           <div className="lg:col-span-7">
-            <SectionTag>Since 1962</SectionTag>
-            <h2 className="display mt-3 text-balance text-4xl sm:text-5xl">
+            <h2 className="display text-balance text-4xl sm:text-5xl">
               More than a dealership.
               <br />A piece of the community.
             </h2>

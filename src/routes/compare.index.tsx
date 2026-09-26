@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, HelpCircle, ListChecks, Phone } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs, SITE_ORIGIN } from "@/lib/breadcrumbs";
 import { faqSchema } from "@/lib/articleSchema";
@@ -138,8 +137,7 @@ function CompareHub() {
       <section className="relative overflow-hidden border-b border-slate-200 py-14 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>Head to Head</SectionTag>
-          <h1 className="display mt-3 max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
             Compare Ford Models
           </h1>
           <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -217,8 +215,7 @@ function CompareHub() {
 
       <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Common Questions</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">About these comparison pages</h2>
+          <h2 className="display text-2xl sm:text-3xl">About these comparison pages</h2>
           <dl className="mt-8 space-y-4">
             {FAQS.map((f) => (
               <div key={f.q} className="rounded-2xl bg-card p-6 ring-1 ring-border">

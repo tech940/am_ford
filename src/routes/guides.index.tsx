@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, Phone, ShieldCheck, Wrench } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { guideCtaPrimary, guideCtaSecondary } from "@/components/site/GuideLayout";
 import { breadcrumbSchema, crumbs, SITE_ORIGIN } from "@/lib/breadcrumbs";
@@ -114,8 +113,7 @@ function GuidesHub() {
       <section className="relative overflow-hidden border-b border-slate-200 py-14 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>Guides</SectionTag>
-          <h1 className="display mt-3 max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
             Ford Buying and Ownership Guides
           </h1>
           <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -172,8 +170,7 @@ function GuidesHub() {
 
       <section className="border-t border-border bg-surface-2/60 py-14 sm:py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <SectionTag>How These Are Written</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">
+          <h2 className="display text-2xl sm:text-3xl">
             What you can expect from a guide on this site
           </h2>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

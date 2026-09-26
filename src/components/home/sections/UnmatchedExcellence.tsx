@@ -43,9 +43,6 @@ export function UnmatchedExcellence({
       </motion.div>
 
       <motion.div style={{ opacity }} className="relative z-10 mx-auto max-w-4xl px-6 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1 text-[11px] font-bold uppercase tracking-[0.25em] text-white backdrop-blur-md mb-4 shadow-sm">
-          Ashtabula County, OH
-        </span>
         <h2 className="mb-4 text-3xl font-black tracking-tight text-white drop-shadow-2xl sm:text-4xl md:text-5xl">
           {title}
         </h2>

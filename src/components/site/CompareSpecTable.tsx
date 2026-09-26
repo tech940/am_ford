@@ -14,6 +14,9 @@ import type { Vehicle } from "@/lib/vehicles";
 
 const nf = (n: number) => n.toLocaleString("en-US");
 
+/** Features listed before the rest fold into "Show all". */
+const PREVIEW = 12;
+
 /** Column heading for a vehicle, e.g. "2025 Ford Explorer ST". */
 export const vehicleLabel = (v: Vehicle) => `${v.year} ${v.make} ${v.model} ${v.trim}`;
 
@@ -88,13 +91,30 @@ export function CompareFeatureLists({ a, b }: { a: Vehicle; b: Vehicle }) {
             Equipment listed on this vehicle
           </p>
           <ul className="mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">
-            {v.features.map((f) => (
+            {v.features.slice(0, PREVIEW).map((f) => (
               <li key={f} className="flex gap-2.5">
                 <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                 <span>{f}</span>
               </li>
             ))}
           </ul>
+          {/* Records carry 26 to 150 features; the rest stay in the HTML behind <details>. */}
+          {v.features.length > PREVIEW && (
+            <details className="group mt-3">
+              <summary className="cursor-pointer list-none text-sm font-semibold text-primary underline underline-offset-4 hover:no-underline [&::-webkit-details-marker]:hidden">
+                <span className="group-open:hidden">Show all {v.features.length} features</span>
+                <span className="hidden group-open:inline">Show fewer features</span>
+              </summary>
+              <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
+                {v.features.slice(PREVIEW).map((f) => (
+                  <li key={f} className="flex gap-2.5">
+                    <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
         </div>
       ))}
     </div>

@@ -13,7 +13,6 @@ import {
   Users,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs, SITE_ORIGIN } from "@/lib/breadcrumbs";
 import { dealerInfo } from "@/lib/vehicles";
@@ -186,8 +185,7 @@ function BadCreditFinancePage() {
       <section className="relative overflow-hidden border-b border-slate-200 py-16 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>Financing</SectionTag>
-          <h1 className="display mt-3 max-w-3xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-3xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
             Ford Financing for Every Credit Situation
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -240,8 +238,7 @@ function BadCreditFinancePage() {
 
       <section className="border-t border-border bg-surface-2/60 py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <SectionTag>How Lenders Decide</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">
+          <h2 className="display text-3xl sm:text-4xl">
             What actually gets read on your application
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -265,8 +262,7 @@ function BadCreditFinancePage() {
       <section className="py-16 sm:py-20">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-2">
           <div>
-            <SectionTag>Come Prepared</SectionTag>
-            <h2 className="display mt-3 text-3xl sm:text-4xl">Documents that strengthen a file</h2>
+            <h2 className="display text-3xl sm:text-4xl">Documents that strengthen a file</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               A lender approves what it can verify. Every item here replaces an assumption with a
               fact, and a well-documented application from a modest credit file often does better
@@ -287,8 +283,7 @@ function BadCreditFinancePage() {
           </div>
 
           <div>
-            <SectionTag>Money Down and Trade Equity</SectionTag>
-            <h2 className="display mt-3 text-3xl sm:text-4xl">The part you control</h2>
+            <h2 className="display text-3xl sm:text-4xl">The part you control</h2>
             <div className="mt-6 space-y-5">
               <div className="rounded-3xl bg-card p-7 ring-1 ring-border">
                 <h3 className="text-lg font-bold text-ink">A down payment does three things</h3>
@@ -332,8 +327,7 @@ function BadCreditFinancePage() {
 
       <section className="border-t border-border bg-surface-2/60 py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <SectionTag>Matching the Vehicle to the Approval</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">
+          <h2 className="display text-3xl sm:text-4xl">
             Sometimes the vehicle is what unlocks the deal
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -398,8 +392,7 @@ function BadCreditFinancePage() {
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Straight Answers</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">Questions people are nervous to ask</h2>
+          <h2 className="display text-3xl sm:text-4xl">Questions people are nervous to ask</h2>
           <dl className="mt-8 space-y-4">
             {FAQS.map((f) => (
               <div key={f.q} className="rounded-2xl bg-card p-6 ring-1 ring-border">

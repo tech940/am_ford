@@ -104,13 +104,7 @@ export function ServiceAndParts() {
         <div className="lg:sticky lg:top-24">
           <SectionHeading
             align="left"
-            eyebrow="Service and parts"
-            title={
-              <>
-                Ford service and parts,
-                <span className="text-slate-500 font-normal"> wherever you bought it</span>
-              </>
-            }
+            title="Ford service and parts, wherever you bought it"
             copy="You do not have to buy from us to service with us. Our Ford-trained technicians work on new Fords, older vehicles, and work trucks, using genuine Ford and Motorcraft parts made for your vehicle."
           />
 

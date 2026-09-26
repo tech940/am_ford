@@ -188,7 +188,7 @@ export function SiteFooter() {
         <div className="grid gap-8 border-t border-white/10 pt-8 sm:grid-cols-2 lg:grid-cols-4">
           {FOOTER_COLUMNS.map((col) => (
             <div key={col.heading}>
-              <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-white/60">
+              <h2 className="mb-3 text-sm font-bold text-white/70">
                 {col.heading}
               </h2>
               <ul className="text-xs font-medium">
@@ -207,7 +207,7 @@ export function SiteFooter() {
           ))}
 
           <div>
-            <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-white/60">
+            <h2 className="mb-3 text-sm font-bold text-white/70">
               Visit Us
             </h2>
             <ul className="space-y-2 text-xs font-medium text-white/80">
@@ -231,7 +231,7 @@ export function SiteFooter() {
           aria-label="Ford models, areas served, and research"
           className="mt-8 border-t border-white/10 pt-6"
         >
-          <h2 className="text-xs font-bold uppercase tracking-widest text-white/60">
+          <h2 className="text-sm font-bold text-white/70">
             More ways to browse AM Ford
           </h2>
           <div className="mt-4 space-y-4">
@@ -240,7 +240,7 @@ export function SiteFooter() {
                 key={group.id}
                 group={group}
                 idPrefix="footer-links"
-                headingClassName="text-[10px] font-bold uppercase tracking-[0.18em] text-white/50"
+                headingClassName="text-sm font-bold text-white/70"
                 linkClassName="px-0.5 text-[11px] font-medium text-white/80 hover:text-white"
                 separatorClassName="text-white/25"
               />
@@ -250,7 +250,9 @@ export function SiteFooter() {
 
         <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-white/10 pt-4 text-[11px] font-semibold text-slate-200 sm:flex-row">
           <span>© {new Date().getFullYear()} AM Ford. All rights reserved.</span>
-          <div className="flex items-center gap-4">
+          {/* Wraps below ~360px: five links plus the tagline cannot share one line at 320px,
+              and the footer clips its overflow, so a single row cut the tagline off. */}
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-center">
             <Link to="/privacy" className="text-white/60 hover:text-white transition">
               Privacy
             </Link>

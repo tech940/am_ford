@@ -472,7 +472,7 @@ export function FrequentSearches({
                 <FrequentSearchRow
                   group={group}
                   idPrefix={`fs-${variant}`}
-                  headingClassName="text-[11px] font-bold tracking-[0.18em] text-[#002c5f] uppercase"
+                  headingClassName="text-sm font-bold text-[#002c5f]"
                   linkClassName="px-0.5 text-[13px] font-medium text-slate-700 hover:text-[#002c5f]"
                   separatorClassName="text-slate-300"
                 />

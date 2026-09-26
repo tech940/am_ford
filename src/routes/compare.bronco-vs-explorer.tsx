@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, HelpCircle, Mountain, Phone, Users } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { CompareFeatureLists, CompareSpecTable } from "@/components/site/CompareSpecTable";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
@@ -150,8 +149,7 @@ function BroncoVsExplorerPage() {
       <section className="relative overflow-hidden border-b border-slate-200 py-14 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>Model Comparison</SectionTag>
-          <h1 className="display mt-3 max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
             Ford Bronco vs Ford Explorer
           </h1>
           <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -193,8 +191,7 @@ function BroncoVsExplorerPage() {
 
       <section className="border-t border-border bg-surface-2/60 py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Side by Side</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">Specifications compared</h2>
+          <h2 className="display text-2xl sm:text-3xl">Specifications compared</h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Trim changes a lot on both, so the table compares the two vehicles we have rather than
             the model ranges. Confirm availability before you visit.
@@ -316,8 +313,7 @@ function BroncoVsExplorerPage() {
 
       <section className="border-t border-border bg-surface-2/60 py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>The Verdict</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">Which one should you actually buy</h2>
+          <h2 className="display text-2xl sm:text-3xl">Which one should you actually buy</h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Declaring a winner here would be dishonest, because the two solve different problems and
             only one of those is probably yours. Start with seats. If you need more than five, the
@@ -356,8 +352,7 @@ function BroncoVsExplorerPage() {
 
       <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Common Questions</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">
+          <h2 className="display text-2xl sm:text-3xl">
             Bronco and Explorer, answered plainly
           </h2>
           <dl className="mt-8 space-y-4">

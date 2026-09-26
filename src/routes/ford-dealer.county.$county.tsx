@@ -10,7 +10,6 @@ import {
   Route as RouteIcon,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { dealerInfo } from "@/lib/vehicles";
@@ -201,10 +200,7 @@ function CountyPage() {
       <section className="relative overflow-hidden border-b border-slate-200 py-14 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>
-            {county.county}, {county.state}
-          </SectionTag>
-          <h1 className="display mt-3 max-w-4xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-4xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
             {county.h1}
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -246,8 +242,7 @@ function CountyPage() {
           the material that makes this page different from the other three. */}
       <section className="border-b border-border bg-surface-2/60 py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>{county.county}</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">{county.angle.heading}</h2>
+          <h2 className="display text-3xl sm:text-4xl">{county.angle.heading}</h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             {county.angle.body}
           </p>
@@ -327,8 +322,7 @@ function CountyPage() {
 
       <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <SectionTag>Model Lineup</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">{county.models.heading}</h2>
+          <h2 className="display text-3xl sm:text-4xl">{county.models.heading}</h2>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
             {county.models.intro}
           </p>

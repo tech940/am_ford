@@ -162,7 +162,7 @@ export function ExitIntentOffer() {
                 <X className="h-4 w-4" />
               </button>
 
-              <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
+              <div className="flex items-center gap-2 text-xs font-bold text-white/70">
                 <BadgeDollarSign className="h-4 w-4" aria-hidden="true" />
                 Exclusive online offer
               </div>

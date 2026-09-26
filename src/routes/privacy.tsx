@@ -46,7 +46,7 @@ export const Route = createFileRoute("/privacy")({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-10">
-      <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">{title}</h2>
+      <h2 className="display text-xl text-slate-900 sm:text-2xl">{title}</h2>
       <div className="mt-3 space-y-3 text-sm leading-relaxed text-slate-700 sm:text-[15px]">
         {children}
       </div>

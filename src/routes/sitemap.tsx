@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import {
@@ -240,8 +239,7 @@ function SitemapPage() {
       {/* Hero Header */}
       <section className="relative overflow-hidden py-10 sm:py-14 bg-gradient-to-b from-slate-50 to-white border-b border-slate-200">
         <div className="relative mx-auto max-w-6xl px-6">
-          <SectionTag>Site Directory & URL Index</SectionTag>
-          <h1 className="mt-2.5 text-2xl sm:text-4xl font-black text-[#002c5f] tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-black text-[#002c5f] tracking-tight">
             AM Ford Sitemap & Complete URL List
           </h1>
           <p className="mt-2 max-w-2xl text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">

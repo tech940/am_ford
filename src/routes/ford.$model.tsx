@@ -11,7 +11,6 @@ import {
   Truck,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { getFordModel, getRelatedReading, type FordModel } from "@/lib/fordModels";
@@ -177,8 +176,7 @@ function FordModelPage() {
         <div className="pointer-events-none absolute -top-20 right-10 h-80 w-80 rounded-full bg-amber-200/20 blur-3xl" />
         <div className="pointer-events-none absolute -top-10 left-10 h-72 w-72 rounded-full bg-blue-100/30 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>{model.bodyStyle === "EV" ? "Electric" : model.bodyStyle} Lineup</SectionTag>
-          <h1 className="display mt-3 max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-4xl text-balance text-3xl text-ink sm:text-5xl lg:text-6xl">
             {model.name} for Sale in Ashtabula County, OH
           </h1>
           <p className="mt-4 max-w-2xl text-base font-semibold text-ink sm:text-lg">
@@ -272,8 +270,7 @@ function FordModelPage() {
 
       <section className="border-t border-border bg-surface-2/60 py-14 sm:py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <SectionTag>In Stock Now</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">
+          <h2 className="display text-2xl sm:text-3xl">
             {model.name} listings at our {dealerInfo.locality} lot
           </h2>
 
@@ -364,8 +361,7 @@ function FordModelPage() {
 
       <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>{model.name} Questions</SectionTag>
-          <h2 className="display mt-3 text-2xl sm:text-3xl">
+          <h2 className="display text-2xl sm:text-3xl">
             Questions buyers ask us about the {model.name}
           </h2>
           <dl className="mt-8 space-y-4">
@@ -385,8 +381,7 @@ function FordModelPage() {
       {relatedReading.length > 0 && (
         <section className="border-t border-border bg-surface-2/60 py-14 sm:py-20">
           <div className="mx-auto max-w-4xl px-6">
-            <SectionTag>Related Reading</SectionTag>
-            <h2 className="display mt-3 text-2xl sm:text-3xl">
+            <h2 className="display text-2xl sm:text-3xl">
               Comparisons and guides that cover the {model.name}
             </h2>
             <ul className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -430,7 +425,7 @@ function FordModelPage() {
             <div className="flex items-start gap-3">
               <Truck className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden />
               <div>
-                <h2 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                <h2 className="text-sm font-bold text-ink">
                   Delivery from AM Ford
                 </h2>
                 <p className="mt-1 text-sm font-semibold text-ink">

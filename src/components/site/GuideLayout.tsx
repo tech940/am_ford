@@ -1,6 +1,5 @@
 import { type ReactNode } from "react";
 import { HelpCircle } from "lucide-react";
-import { SectionTag } from "@/components/site/Home";
 
 /**
  * Presentation shell for the /guides articles (spec Template F).
@@ -47,8 +46,7 @@ export function GuideHero({
     <section className="relative overflow-hidden border-b border-slate-200 py-14 sm:py-20">
       <div className="absolute inset-0 bg-gradient-soft" />
       <div className="relative mx-auto max-w-3xl px-6">
-        <SectionTag>{tag}</SectionTag>
-        <h1 className="display mt-3 text-balance text-3xl text-ink sm:text-4xl lg:text-5xl">
+        <h1 className="display text-balance text-3xl text-ink sm:text-4xl lg:text-5xl">
           {title}
         </h1>
         <div className="mt-5 space-y-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -104,8 +102,7 @@ export function GuideFaqs({ faqs, heading }: { faqs: GuideFaq[]; heading: string
   return (
     <section className="border-t border-border bg-surface-2/60 py-14 sm:py-20">
       <div className="mx-auto max-w-3xl px-6">
-        <SectionTag>Frequently Asked</SectionTag>
-        <h2 className="display mt-3 text-2xl sm:text-3xl">{heading}</h2>
+        <h2 className="display text-2xl sm:text-3xl">{heading}</h2>
         <dl className="mt-8 space-y-4">
           {faqs.map((f) => (
             <div key={f.q} className="rounded-2xl bg-card p-6 ring-1 ring-border">

@@ -11,7 +11,6 @@ import {
   Signpost,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { dealerInfo, DELIVERY_CLAIM, SERVED_MARKETS } from "@/lib/vehicles";
@@ -137,8 +136,7 @@ function AreasWeServePage() {
       <section className="relative overflow-hidden border-b border-slate-200 py-16 sm:py-20">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>Areas We Serve</SectionTag>
-          <h1 className="display mt-3 max-w-4xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="display max-w-4xl text-balance text-4xl text-ink sm:text-5xl lg:text-6xl">
             Ford Dealer Serving Ashtabula County and Northeast Ohio
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -173,8 +171,7 @@ function AreasWeServePage() {
           share a sentence. */}
       <section className="border-b border-border bg-surface-2/60 py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <SectionTag>Counties We Serve</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">Start with your county</h2>
+          <h2 className="display text-3xl sm:text-4xl">Start with your county</h2>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
             Four counties have a page of their own, each written around what driving in that county
             actually asks of a vehicle. The dealership is the same one on all of them.
@@ -254,8 +251,7 @@ function AreasWeServePage() {
 
       <section className="border-t border-border bg-surface-2/60 py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <SectionTag>Wider Coverage</SectionTag>
-          <h2 className="display mt-3 text-3xl sm:text-4xl">Other communities we serve</h2>
+          <h2 className="display text-3xl sm:text-4xl">Other communities we serve</h2>
           <p className="mt-3 text-base leading-relaxed text-muted-foreground">
             These towns sit inside the area we regularly sell, service, and deliver to. They do not
             have a page of their own, so call us with questions about the drive, a trade appraisal,

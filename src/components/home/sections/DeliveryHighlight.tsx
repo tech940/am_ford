@@ -68,17 +68,12 @@ export function DeliveryHighlight() {
                 rebuilt here in white, the way FinalCTA handles its own heading. */}
             <Stagger className="max-w-xl" gap={0.12}>
               <StaggerItem>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/70">
-                  Shop from wherever you live
-                </p>
-              </StaggerItem>
-              <StaggerItem>
                 <h2
                   id="delivery-highlight-title"
-                  className="mt-4 text-3xl font-semibold leading-[1.08] tracking-tight text-white sm:text-4xl lg:text-[2.75rem]"
+                  className="display text-3xl text-white sm:text-4xl lg:text-[2.75rem]"
                 >
                   {DELIVERY_SHORT}
-                  <span className="mt-2 block font-normal text-white/60">{DELIVERY_SHIPPING}</span>
+                  <span className="mt-1 block">{DELIVERY_SHIPPING}</span>
                 </h2>
               </StaggerItem>
               <StaggerItem>

@@ -78,15 +78,7 @@ export function FeaturedSpotlight() {
         {/* Top Header Row */}
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-md bg-[#002c5f] px-3.5 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-sm">
-                VIP SPOTLIGHT FLEET
-              </span>
-              <span className="text-xs font-semibold text-slate-500">
-                Live Lot Stock · Updated Daily
-              </span>
-            </div>
-            <h2 className="mt-2 text-xl font-black tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+            <h2 className="text-xl font-black tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
               Featured Vehicle Spotlight
             </h2>
           </div>

@@ -22,7 +22,7 @@ const REASONS: { title: string; copy: string; image: string; alt: string }[] = [
   },
   {
     title: "Certified protection",
-    copy: "Every vehicle passes a 172-point inspection and carries real warranty coverage.",
+    copy: "Every Ford Certified Pre-Owned vehicle passes Ford's own certification inspection and carries Ford-backed coverage.",
     image: "am-ford-lot-banner",
     alt: "Audited vehicles lined up on the AM Ford lot",
   },
@@ -47,13 +47,7 @@ export function WhyChooseUs() {
       aria-label="Why choose us"
     >
       <SectionHeading
-        eyebrow="The difference"
-        title={
-          <>
-            Why drivers
-            <span className="text-slate-500 font-normal"> choose us</span>
-          </>
-        }
+        title="Why drivers choose us"
         copy="A dealership built around the ownership experience, not the transaction."
       />
       <Stagger className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" gap={0.1}>

@@ -54,17 +54,8 @@ export function FinalCTA() {
       <div className="relative mx-auto max-w-3xl text-center">
         <Stagger gap={0.14}>
           <StaggerItem>
-            <p className="text-[11px] font-bold uppercase tracking-[0.38em] text-[#002c5f]">
-              The road is waiting
-            </p>
-          </StaggerItem>
-          <StaggerItem>
-            <h2 className="mt-6 text-balance text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl">
-              Find your perfect
-              <span className="bg-gradient-to-r from-[#002c5f] via-[#004085] to-[#0056b3] bg-clip-text text-transparent">
-                {" "}
-                car today
-              </span>
+            <h2 className="text-balance text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl">
+              Find your perfect car today
             </h2>
           </StaggerItem>
           <StaggerItem>

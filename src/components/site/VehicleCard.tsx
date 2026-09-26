@@ -14,7 +14,6 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { type Vehicle, vehicleSlug, isInTransit } from "@/lib/vehicles";
-import { estMonthlyPayment } from "@/lib/leads";
 import { GARAGE_EVENT, isSaved, toggleSaved } from "@/lib/garage";
 
 export function VehicleCard({
@@ -180,7 +179,7 @@ export function VehicleCard({
                   />
                 ))}
                 {imageList.length > 6 && (
-                  <span className="text-[9px] text-white/80 font-mono pl-0.5 leading-none">
+                  <span className="text-[9px] text-white/80 tabular-nums pl-0.5 leading-none">
                     +{imageList.length - 6}
                   </span>
                 )}
@@ -215,7 +214,7 @@ export function VehicleCard({
               </h3>
             </div>
             <div className="text-right shrink-0">
-              <p className="text-xl sm:text-2xl font-black text-[#002c5f] tabular-nums tracking-tight">
+              <p className="text-xl sm:text-2xl font-black text-[#002c5f] tracking-tight">
                 ${v.price.toLocaleString()}
               </p>
               {v.msrp && v.msrp > v.price && (
@@ -223,9 +222,6 @@ export function VehicleCard({
                   MSRP ${v.msrp.toLocaleString()}
                 </p>
               )}
-              <p className="mt-0.5 text-[10.5px] font-bold text-emerald-700">
-                ~${estMonthlyPayment(v.price)}/mo est.
-              </p>
             </div>
           </div>
 
@@ -261,46 +257,6 @@ export function VehicleCard({
       </div>
 
       <div className="p-4 pt-0">
-        {/* Speech bubble: "Available for extra discount!" pointing to Get Price */}
-        <div className="relative mb-2 flex justify-start">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              (onExtraDiscount ?? onGetPrice)?.(v);
-            }}
-            className="group/bubble relative inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-500 px-3 py-1.5 shadow-sm transition-transform hover:scale-[1.02] active:scale-95 text-left cursor-pointer"
-          >
-            {/* Shield with % icon */}
-            <div className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#D92D20] shadow-2xs border border-red-900/40">
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none">
-                <path
-                  d="M12 21s7-3.5 7-9V5l-7-3-7 3v7c0 5.5 7 9 7 9z"
-                  fill="#B42318"
-                  stroke="#7A150D"
-                  strokeWidth="1.5"
-                />
-                <path d="M8.5 15.5L15.5 8.5" stroke="#FEF08A" strokeWidth="2.2" strokeLinecap="round" />
-                <circle cx="8.5" cy="8.5" r="1.5" fill="#FEF08A" />
-                <circle cx="15.5" cy="15.5" r="1.5" fill="#FEF08A" />
-              </svg>
-            </div>
-
-            {/* Two-line text */}
-            <div className="flex flex-col pr-0.5 leading-tight">
-              <span className="text-[11px] font-extrabold text-[#002c5f] tracking-tight">
-                Available for
-              </span>
-              <span className="text-[11px] font-extrabold text-[#002c5f] tracking-tight">
-                extra discount!
-              </span>
-            </div>
-
-            {/* Speech bubble pointer beak pointing down */}
-            <div className="absolute -bottom-1 left-6 h-2 w-2 rotate-45 bg-emerald-500" />
-          </button>
-        </div>
 
         <div className="flex gap-2">
           {onGetPrice && (

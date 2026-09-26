@@ -2,7 +2,6 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle2, Loader2 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { dealerInfo } from "@/lib/vehicles";
@@ -73,8 +72,7 @@ function ContactPage() {
       <section className="relative overflow-hidden py-20 sm:py-24">
         <div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <SectionTag>Contact</SectionTag>
-          <h1 className="display mt-3 max-w-3xl text-balance text-5xl text-ink sm:text-6xl">
+          <h1 className="display max-w-3xl text-balance text-5xl text-ink sm:text-6xl">
             Let's get you on the road.
           </h1>
           <p className="mt-4 max-w-xl text-muted-foreground">

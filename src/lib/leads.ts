@@ -81,19 +81,6 @@ export async function submitQuickLead(input: QuickLeadInput) {
   return result;
 }
 
-/**
- * Payment-shopper estimate shown on vehicle cards: 10% down, 72 months, 7.49% APR.
- * Marketing estimate only — the calculator on the vehicle page does the real math.
- */
-export function estMonthlyPayment(price: number): number {
-  const principal = price * 0.9;
-  const monthlyRate = 0.0749 / 12;
-  const months = 72;
-  const payment =
-    (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
-    (Math.pow(1 + monthlyRate, months) - 1);
-  return Math.round(payment);
-}
 
 /** Pre-filled "text us" deep link (the ?& form keeps iOS and Android both happy). */
 export function smsLink(vehicle?: Vehicle): string {

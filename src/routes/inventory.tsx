@@ -1523,10 +1523,7 @@ export function InventoryPage() {
       {landing && (
         <section className="border-t border-slate-200 bg-white py-16">
           <div className="mx-auto max-w-4xl px-6">
-            <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
-              Local Buying Guide
-            </p>
-            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
               {landing.heading}
             </h2>
             {landing.body.map((paragraph, i) => (
@@ -1543,10 +1540,7 @@ export function InventoryPage() {
         <div className="mx-auto max-w-7xl px-6 space-y-16">
           {/* Main SEO Intro Header */}
           <div className="max-w-4xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
-              Your {dealerInfo.locality}, Ohio Ford Dealership
-            </p>
-            <h2 className="mt-3 text-3xl font-extrabold text-slate-900 sm:text-4xl lg:text-5xl tracking-tight">
+            <h2 className="text-3xl font-extrabold text-slate-900 sm:text-4xl lg:text-5xl tracking-tight">
               {landingLabel(search)
                 ? `Explore ${landingLabel(search)} at AM Ford in Ashtabula County, OH`
                 : `Shop Ford Trucks, SUVs & Cars for Sale in Ashtabula County, OH`}
@@ -1721,10 +1715,7 @@ export function InventoryPage() {
           {/* Frequently Asked Questions Accordion (Structured for Google Rank #1 Rich FAQ Snippets) */}
           <div className="w-full space-y-6">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
-                Got Questions?
-              </p>
-              <h3 className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">
+              <h3 className="text-2xl font-bold text-slate-900 sm:text-3xl">
                 Frequently Asked Questions About Buying a Ford in Ashtabula County, OH
               </h3>
               <p className="mt-1 text-sm text-slate-600">
@@ -2912,10 +2903,7 @@ function InventoryBuyingGuide() {
   return (
     <section className="border-t border-slate-200 bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-3xl px-5 sm:px-6">
-        <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
-          How this page works
-        </p>
-        <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
           How to shop this lot
         </h2>
 
@@ -3176,7 +3164,7 @@ function SavedCarsStrip() {
   return (
     <div className="mt-14">
       <div className="flex items-center gap-2">
-        <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
+        <p className="text-sm font-bold text-[#002c5f]">
           Your garage
         </p>
         <span className="rounded-full bg-[#002c5f]/10 px-2.5 py-0.5 text-[11px] font-bold text-[#002c5f] ring-1 ring-[#002c5f]/20">
@@ -3224,7 +3212,7 @@ function RecentlyViewedStrip() {
 
   return (
     <div className="mt-14">
-      <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
+      <p className="text-sm font-bold text-[#002c5f]">
         Recently viewed
       </p>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

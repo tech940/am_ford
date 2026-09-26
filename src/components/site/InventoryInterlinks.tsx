@@ -132,10 +132,7 @@ export function InventoryInterlinks({
   return (
     <section className="border-t border-slate-200 bg-white py-14 sm:py-16">
       <div className="mx-auto max-w-7xl px-6">
-        <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#002c5f]">
-          Keep Shopping
-        </p>
-        <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+        <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
           Where would you like to go next?
         </h2>
 

@@ -134,14 +134,16 @@ export function StaggerItem({
   );
 }
 
-/** Eyebrow + headline + copy block every section opens with. */
+/**
+ * Headline + copy block every section opens with. It used to open with a letter-spaced uppercase
+ * eyebrow and set the headline at 600 with its second half greyed out; both read as template
+ * furniture, and inner pages already set section headings at the 800 display weight.
+ */
 export function SectionHeading({
-  eyebrow,
   title,
   copy,
   align = "center",
 }: {
-  eyebrow: string;
   title: ReactNode;
   copy?: string;
   align?: "center" | "left";
@@ -150,16 +152,7 @@ export function SectionHeading({
   return (
     <Stagger className={`max-w-2xl ${align === "center" ? "mx-auto" : ""}`} gap={0.12}>
       <StaggerItem>
-        <p
-          className={`text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.3em] text-[#002c5f] ${alignCls}`}
-        >
-          {eyebrow}
-        </p>
-      </StaggerItem>
-      <StaggerItem>
-        <h2
-          className={`mt-2.5 sm:mt-4 text-2xl font-semibold leading-[1.1] tracking-tight text-slate-900 sm:text-4xl lg:text-[2.75rem] ${alignCls}`}
-        >
+        <h2 className={`display text-2xl text-slate-900 sm:text-4xl lg:text-[2.75rem] ${alignCls}`}>
           {title}
         </h2>
       </StaggerItem>

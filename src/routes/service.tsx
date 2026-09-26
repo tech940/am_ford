@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { CONSENT_TEXT, RESPONSE_PROMISE, submitQuickLead } from "@/lib/leads";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { dealerInfo } from "@/lib/vehicles";
@@ -145,8 +144,7 @@ function ServicePage() {
         <div className="grid lg:grid-cols-2">
           <div className="relative px-6 py-20 sm:px-12 lg:py-28">
             <div className="mx-auto max-w-xl">
-              <SectionTag>Service</SectionTag>
-              <h1 className="display mt-3 text-balance text-5xl text-ink sm:text-6xl">
+              <h1 className="display text-balance text-5xl text-ink sm:text-6xl">
                 Certified Ford service, <span className="text-primary">done right.</span>
               </h1>
               <p className="mt-4 text-muted-foreground">

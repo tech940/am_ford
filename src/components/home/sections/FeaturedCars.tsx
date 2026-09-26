@@ -157,13 +157,7 @@ export function FeaturedCars() {
       aria-label="Featured vehicles"
     >
       <SectionHeading
-        eyebrow="Curated stock"
-        title={
-          <>
-            Featured vehicles,
-            <span className="text-slate-500 font-normal"> ready today</span>
-          </>
-        }
+        title="Featured vehicles, ready today"
         copy="Every car on this lot passed a 172-point inspection before it earned a spot here."
       />
       <Stagger className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" gap={0.09}>

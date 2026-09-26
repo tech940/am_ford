@@ -12,7 +12,6 @@ import {
   Loader2,
 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SectionTag } from "@/components/site/Home";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { breadcrumbSchema, crumbs } from "@/lib/breadcrumbs";
 import { CONSENT_TEXT, RESPONSE_PROMISE, submitQuickLead } from "@/lib/leads";
@@ -167,8 +166,7 @@ function FinancingPage() {
         <div className="absolute -right-20 -top-10 h-96 w-96 rounded-full bg-radial-navy" />
         <div className="relative mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-7">
-            <SectionTag>Financing</SectionTag>
-            <h1 className="display mt-3 text-balance text-5xl text-ink sm:text-6xl">
+            <h1 className="display text-balance text-5xl text-ink sm:text-6xl">
               Pre-approved in <span className="text-primary">60 seconds.</span>
             </h1>
             <p className="mt-4 max-w-xl text-muted-foreground">

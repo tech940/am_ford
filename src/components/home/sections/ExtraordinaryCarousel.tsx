@@ -95,12 +95,8 @@ export function ExtraordinaryCarousel() {
   return (
     <section className="py-20 sm:py-28 bg-[#f4f7fb] border-b border-slate-200/80 overflow-hidden relative">
       <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-12 text-center">
-        {/* Header Badge */}
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-[#002c5f]/10 px-4 py-1 text-[11px] font-black uppercase tracking-[0.25em] text-[#002c5f]">
-          EXPLORE THE COLLECTION
-        </div>
 
-        <h2 className="mt-3 text-3xl font-black tracking-tight text-[#002c5f] sm:text-5xl lg:text-6xl">
+        <h2 className="text-3xl font-black tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
           Drive Something <br className="hidden sm:inline" />
           Extraordinary
         </h2>

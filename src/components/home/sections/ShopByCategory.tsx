@@ -93,13 +93,7 @@ export function ShopByCategory() {
       aria-label="Shop by category"
     >
       <SectionHeading
-        eyebrow="Shop by need"
-        title={
-          <>
-            New Fords and
-            <span className="text-slate-500 font-normal"> certified pre-owned</span>
-          </>
-        }
+        title="New Fords and certified pre-owned"
         copy="Most people arrive knowing the job the vehicle has to do. Pick the closest fit and we will take it from there."
       />
 
